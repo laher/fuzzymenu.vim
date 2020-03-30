@@ -21,7 +21,9 @@ endfunction
 
 
 function! Menu_sink(arg)
- call function(s:menu_mappings[a:arg])()
+"call function(funcref(
+ echo s:menu_mappings[a:arg]
+ execute s:menu_mappings[a:arg]
 endfunction
 
 function! Menu_source()
