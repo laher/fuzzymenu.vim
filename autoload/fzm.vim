@@ -5,7 +5,7 @@
 let s:menu_structure = { }
 let s:menu_mappings = { }
 
-function! fzm#fzm#add_item_ft(ft, name, def)
+function! fzm#add_item_ft(ft, name, def)
   let items = [] 
   if has_key(s:menu_structure, a:ft)
     let items = s:menu_structure[a:ft]
@@ -15,8 +15,8 @@ function! fzm#fzm#add_item_ft(ft, name, def)
   let s:menu_mappings[a:name] = a:def
 endfunction
 
-function! fzm#fzm#add_item(name, def)
-  call fzm#fzm#add_item_ft('any', a:name, a:def)
+function! fzm#add_item(name, def)
+  call fzm#add_item_ft('any', a:name, a:def)
 endfunction
 
 
@@ -34,7 +34,7 @@ function! Menu_source()
   return ret
 endfunction
 
-function! fzm#fzm#run()
+function! fzm#run()
   call fzf#run({'source': Menu_source(), 'sink': function('Menu_sink'), 'left': '25%'})
 endfunction
 
