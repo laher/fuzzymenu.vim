@@ -1,7 +1,4 @@
-
-
 nnoremap <buffer> <silent> <Plug>Fzm :call fzm#run()<cr>
-
 
 function! CaseIns()
   set ignorecase
@@ -17,13 +14,15 @@ if &rtp =~ 'todo.vim'
 endif
 
 if &rtp =~ 'vim-lsp'
-  call fzm#add_item('GoToDef', 'LspDefinition')
+  call fzm#add_item('Go To Definition', 'LspDefinition')
+  call fzm#add_item('Find References', 'LspReferences')
+  call fzm#add_item('Rename', 'LspRename')
 endif
 
+call fzm#add_item('Git Grep', "GGrep")
 call fzm#add_item('No Ignore Case', 'call CaseSens()')
 call fzm#add_item('Ignore Case', 'call CaseIns()')
 
-call fzm#add_item('sudo write', 'w !sudo tee %')
 
 if !hasmapto('<Plug>Fzm', 'n')
    nmap <buffer> <Leader><Leader> <Plug>Fzm
