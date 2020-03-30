@@ -19,6 +19,11 @@ if &rtp =~ 'vim-lsp'
   call fzm#add_item('Rename', 'LspRename')
 endif
 
+if &rtp =~ 'vim-fugitive'
+  call fzm#add_item('Find Commit', 'Commits')
+  call fzm#add_item('Find git File', 'GFiles')
+endif
+
 call fzm#add_item('Git Grep', "GGrep")
 call fzm#add_item('No Ignore Case', 'call CaseSens()')
 call fzm#add_item('Ignore Case', 'call CaseIns()')
