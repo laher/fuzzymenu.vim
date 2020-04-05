@@ -21,9 +21,9 @@ if &rtp =~ 'vim-lsp'
 endif
 
 if &rtp =~ 'vim-fugitive'
-  call fzm#Add('Find Commit', {'exec': 'call fzm#WithInsertMode("Commits")'})
-  call fzm#Add('Find git File', {'exec': 'call fzm#WithInsertMode("GFiles")'})
-  call fzm#Add('Git Grep', {'exec': 'call fzm#WithInsertMode("GGrep")'})
+  call fzm#Add('Find Commit', {'exec': 'Commits', 'mode': 'insert'})
+  call fzm#Add('Find git File', {'exec': 'GFiles', 'mode': 'insert'})
+  call fzm#Add('Git Grep', {'exec': 'GGrep', 'mode': 'insert'})
 endif
 
 if &rtp =~ 'gothx.vim'
