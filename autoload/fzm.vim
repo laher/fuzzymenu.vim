@@ -5,7 +5,7 @@
 let s:menu_structure = { }
 let s:menu_mappings = { }
 
-function! fzm#add_item_ft(ft, name, def)
+function! fzm#AddItemFT(ft, name, def)
   let items = [] 
   if has_key(s:menu_structure, a:ft)
     let items = s:menu_structure[a:ft]
@@ -15,18 +15,26 @@ function! fzm#add_item_ft(ft, name, def)
   let s:menu_mappings[a:name] = a:def
 endfunction
 
-function! fzm#add_item(name, def)
-  call fzm#add_item_ft('any', a:name, a:def)
+function! fzm#AddItem(name, def)
+  call fzm#AddItemFT('any', a:name, a:def)
 endfunction
 
+function! fzm#WithInsertMode(def)
+   execute a:def
+   if has("nvim")
+    call feedkeys('i')
+   else
+     startinsert
+   endif
+endfunction
 
-function! Menu_sink(arg)
+function! MenuSink(arg)
 "call function(funcref(
  echo s:menu_mappings[a:arg]
  execute s:menu_mappings[a:arg]
 endfunction
 
-function! Menu_source()
+function! MenuSource()
   let extension = expand("%:e")
   let ret = s:menu_structure['any']
   let others = get(s:menu_structure, extension, [])
@@ -34,8 +42,8 @@ function! Menu_source()
   return ret
 endfunction
 
-function! fzm#run()
-  call fzf#run({'source': Menu_source(), 'sink': function('Menu_sink'), 'left': '25%'})
+function! fzm#Run()
+  call fzf#run({'source': MenuSource(), 'sink': function('MenuSink'), 'left': '25%'})
 endfunction
 
 
