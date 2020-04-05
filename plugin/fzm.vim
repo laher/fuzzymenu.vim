@@ -9,15 +9,16 @@ function! CaseSens()
 endfunction
 
 if &rtp =~ 'todo.vim'
-  call fzm#Add('Todo Prompt', {'exec': 'call todo#prompt()'})
-  call fzm#Add('Todo Split', {'exec': 'call todo#split()'})
-  call fzm#Add('Todo Refile', {'exec': 'call todo#refile()'})
+  call fzm#Add('Todo: Prompt', {'exec': 'call todo#Prompt()'})
+  call fzm#Add('Todo: Split', {'exec': 'call todo#Split()'})
+  call fzm#Add('Todo: Refile', {'exec': 'call todo#Refile()', 'for': 'md'})
+  call fzm#Add('Todo: chooser', {'exec': 'call todo#FzTodo()', 'mode': 'insert'})
 endif
 
 if &rtp =~ 'vim-lsp'
-  call fzm#Add('Go To Definition', {'exec': 'LspDefinition'})
-  call fzm#Add('Find References', {'exec': 'LspReferences'})
-  call fzm#Add('Rename', {'exec': 'LspRename'})
+  call fzm#Add('LSP: Go To Definition', {'exec': 'LspDefinition'})
+  call fzm#Add('LSP: Find References', {'exec': 'LspReferences'})
+  call fzm#Add('LSP: Rename', {'exec': 'LspRename'})
 endif
 
 if &rtp =~ 'vim-fugitive'
