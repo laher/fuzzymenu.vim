@@ -11,8 +11,8 @@ endfunction
 if &rtp =~ 'todo.vim'
   call fzm#Add('Todo: Prompt', {'exec': 'call todo#Prompt()'})
   call fzm#Add('Todo: Split', {'exec': 'call todo#Split()'})
-  call fzm#Add('Todo: Refile', {'exec': 'call todo#Refile()', 'for': 'md'})
-  call fzm#Add('Todo: chooser', {'exec': 'call todo#FzTodo()', 'mode': 'insert'})
+  call fzm#Add('Todo: Refile', {'exec': 'call todo#Refile()', 'mode': 'insert', 'for': 'md'})
+  call fzm#Add('Todo: Chooser', {'exec': 'call todo#FzTodo()', 'mode': 'insert'})
 endif
 
 if &rtp =~ 'vim-lsp'
