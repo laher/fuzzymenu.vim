@@ -1,13 +1,5 @@
 nnoremap <buffer> <silent> <Plug>Fzm :call fzm#Run()<cr>
 
-if &rtp =~ 'today.vim'
-  call fzm#Add('Today: Prompt', {'exec': 'call today#Prompt()'})
-  call fzm#Add('Today: Split', {'exec': 'call today#Split()'})
-  call fzm#Add('Today: Rollover', {'exec': 'call today#Rollover()'})
-  call fzm#Add('Today: Refile', {'exec': 'call today#Refile()', 'mode': 'insert', 'for': 'md'})
-  call fzm#Add('Today: Chooser', {'exec': 'call today#FzTodo()', 'mode': 'insert'})
-endif
-
 if &rtp =~ 'vim-lsp'
   call fzm#Add('LSP: Go To Definition', {'exec': 'LspDefinition'})
   call fzm#Add('LSP: Find References', {'exec': 'LspReferences'})
