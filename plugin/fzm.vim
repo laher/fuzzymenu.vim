@@ -13,12 +13,6 @@ if &rtp =~ 'vim-fugitive'
   call fzm#Add('Git Grep', {'exec': 'GGrep', 'mode': 'insert'})
 endif
 
-if &rtp =~ 'gothx.vim'
-  call fzm#Add('Go: Run', {'exec': 'call gothx#run#Run()', 'for': 'go'})
-  call fzm#Add('Go: Test', {'exec': 'call gothx#test#Test()', 'for': 'go'})
-  call fzm#Add('Go: Keyify', {'exec': 'call gothx#keyify#Keyify()', 'for': 'go'})
-endif
-
 call fzm#Add('No Ignore Case', {'exec': 'set noignorecase'})
 call fzm#Add('Ignore Case', {'exec': 'set ignorecase'})
 
