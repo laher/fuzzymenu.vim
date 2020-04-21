@@ -5,6 +5,7 @@ if &rtp =~ 'vim-lsp'
   call fzm#Add('LSP: find references', {'exec': 'LspReferences'})
   call fzm#Add('LSP: rename', {'exec': 'LspRename'})
   call fzm#Add('LSP: organize imports', {'exec': 'LspCodeActionSync source.organizeImports'})
+  call fzm#Add('LSP: go to implementation', {'exec': 'LspImplementation'})
 endif
 
 if &rtp =~ 'vim-fugitive'
