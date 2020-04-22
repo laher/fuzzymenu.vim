@@ -16,9 +16,13 @@ if &rtp =~ 'vim-fugitive'
   call fzm#Add('Git: browse', {'exec': 'GBrowse', 'mode': 'insert'})
 endif
 
-" options
+" basic options
 call fzm#Add('No ignore case (case-sensitive)', {'exec': 'set noignorecase'})
 call fzm#Add('Ignore case (case-insensitive)', {'exec': 'set ignorecase'})
+call fzm#Add('set nonumber (hide line numbers)', {'exec': 'set nonumber'})
+call fzm#Add('set number (show line numbers)', {'exec': 'set number'})
+call fzm#Add('set nolist (hide whitespace characters)', {'exec': 'set nolist'})
+call fzm#Add('set list (show whitespace characters)', {'exec': 'set list'})
 
 """ fzf tools
 call fzm#Add('Key mappings', {'exec': 'Maps', 'mode': 'insert'})
