@@ -1,4 +1,4 @@
-# fzm.vim - fuzzy menu using fzf
+# fuzzy-menu.vim - fuzzy menu using fzf
 
 A fuzzy starting point for vim.
 
