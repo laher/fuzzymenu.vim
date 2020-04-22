@@ -65,7 +65,7 @@ endfunction
 
 function! fzm#Run()
   let pos = get(g:, 'fuzzy_menu_position', 'down')
-  let amt = get(g:, 'fuzzy_menu_amount', '25%')
+  let amt = get(g:, 'fuzzy_menu_amount', '33%')
   let dict = {'source': fzm#MenuSource(), 'sink': function('fzm#MenuSink'), 
   \ 'options': '--ansi'}
   let dict[pos] = amt
