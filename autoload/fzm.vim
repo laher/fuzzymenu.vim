@@ -50,7 +50,7 @@ function! fzm#MenuSink(arg)
   if has_key(def, 'exec')
     execute def['exec']
   else
-    echom "invalid key " . key
+    echo "invalid key for fuzzy-menu: " . key
   endif
   if has_key(def, 'mode') 
    if def['mode'] == 'insert'
