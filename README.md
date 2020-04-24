@@ -21,23 +21,31 @@ Plug 'laher/fuzzymenu.vim'
 
 `:Fzm`: You can invoke fuzzymenu with a command `:Fzm`
 
-For convenience, I like to use <Leader><Leader>. By default, the leader is mapped to `\\`. (I map leader to ' ': `mapleader=' '`)
+For convenience, you can create a key mapping. 
 
-This can be specified in your .vimrc (or init.vim - for neovim users):
+ * I like using space as a 'leader' key, and to hit space twice to bring up fuzzymenu.
+ * By default, the leader key is mapped to `\\`. (I map leader to ' ': `mapleader=' '`)
+
+This can be specified in your .vimrc (or init.vim, for neovim users):
 
 ```vim
-        let mapleader=" "
-	nmap <Leader><Leader> :Fzm<CR>
+  let mapleader=" "
+  nmap <Leader><Leader> <Plug>Fzm
 ```
 
-Once you have an appropriate mapping, you can use 'fuzzy search' to isolate menu items. Just bring up fuzzymenu, and start typing what you want...
+Now you can use 'fuzzy search' & up/down keys to choose menu items. 
+
+Just bring up fuzzymenu, and start typing what you want...
 
 ## Bundled menu items
 
  * Various fzf.vim commands.
+ * A few fundamentals: setting case-[in]sensitive searches, show/hiding line numbers and whitespace characters.
  * Various LSP features (requires [vim-lsp](https://github.com/prabirshrestha/vim-lsp): go to definition/implementation/references. rename, format, organize imports).
  * Various go tools (requires [gothx.vim](https://github.com/laher/gothx.vim) ).
 
+
+More to follow
 
 ## Extend fuzzymenu.vim
 
@@ -72,9 +80,9 @@ call fuzzymenu#Add('teddy bingo', {'exec': 'TddyBingo', 'for': 'ted'})
 endif
 ```
 
-## Configuration
+Please use a central `plugin/*.vim` file to define filetype-specific mappings (rather than `ftplugin/`). fuzzymenu will look after which entries to show based on the `for` parameter and the filetype. It's just how fuzzymenu's registration mechanism works.
 
-There's just a few items.
+## Configuration
 
 `g:fuzzymenu_auto_add`: set to `0` to prevent fuzzymenu adding its own entries. Now define your own instead. Default is 1
 `g:fuzzymenu_position`: position of menu (default is 'down'. See fzf.vim) 
@@ -83,9 +91,10 @@ There's just a few items.
 
 ## Areas of interest
 
-I'm keen to focus on particular areas of functionality:
+Contributors: I'm keen to focus on particular areas of functionality:
 
  * Fundamentals - any more general purpose tools like 'set nonumber', where the naming is not intuitive? Give it a more intuitive key name (fuzzymenu will still find it by the original name if necessary).
  * LSP clients - keen to add coc, LanguageClient-neovim, etc.
  * FZF - any more useful fzf-based commands? Happy to add the definitions here.
- * Language-specific features - e.g. some vim-go mappings, and whichever other languages
+ * Language-specific features ... _BUT I'd prefer NOT to include language-specific features whenever LSP has an equivalent._
+
