@@ -42,6 +42,7 @@ Just bring up fuzzymenu, and start typing what you want...
  * Various fzf.vim commands.
  * A few fundamentals: setting case-[in]sensitive searches, show/hiding line numbers and whitespace characters.
  * Various LSP features (requires [vim-lsp](https://github.com/prabirshrestha/vim-lsp): go to definition/implementation/references. rename, format, organize imports).
+ * Various git features (requires [fugitive](https://github.com/tpope/vim-fugitive) ).
  * Various go tools (requires [gothx.vim](https://github.com/laher/gothx.vim) ).
 
 
