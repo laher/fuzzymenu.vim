@@ -1,18 +1,37 @@
-# fuzzymenu.vim - fuzzy menu using fzf
+# fuzzymenu.vim
 
-A fuzzy-finder menu for vim, built on top of fzf. Discover vim features easily, without needing a mouse.
+ * A menu for vim or neovim, built on top of [fzf](https://github.com/junegunn/fzf). 
+ * Discover some vim features easily, without needing a mouse.
 
-For now this just includes go-to features which I don't always remember. ...
+For now this includes a bunch of features which often need but I don't always remember. ...
 
 ## Install
 
+Install fuzzymenu and dependencies using a plugin manager.
 
+For example, use vim-plug:
 
-## Recommended config:
+```vim
+Plug 'junegunn/fzf'
+Plug 'junegunn/fzf.vim'
+Plug 'laher/fuzzymenu.vim'
+```
 
+## Recommended mapping
+
+The main way to invoke fuzzymenu is <Leader><Leader>. By default this means `\\`
+
+```vim
 	nmap <Leader><Leader> :Fzm<CR>
+```
 
-Once you have an appropriate mapping
+Once you have an appropriate mapping, you can use 'fuzzy search' to isolate menu items. Just start typing.
+
+## Bundled menu items
+
+ * various fzf.vim commands
+ * various LSP features (requires vim-lsp: go to definition/implementation/references. rename, format, organize imports)
+ * various go tools (requires gothx.vim)
 
 ## Extend fuzzymenu.vim
 
