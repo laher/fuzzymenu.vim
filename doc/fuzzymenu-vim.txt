@@ -1,4 +1,4 @@
-*fuzzymenu.vim.txt* Go plugin, thx
+*fuzzymenu-vim.txt* menu system based on fzf
 *fuzzymenu*
 
 ==============================================================================
@@ -12,8 +12,10 @@ CONTENTS                                                  *fuzzymenu-contents*
 ==============================================================================
 INTRO                                                        *fuzzymenu-intro*
 
-A fuzzy-finder menu for vim, built on top of fzf. Discover vim features easily, 
+A fuzzy-finder menu for vim, built on top of {fzf}{1}. Discover vim features easily, 
 just start typing.
+          
+          {1} https://github.com/junegunn/fzf
 
 ==============================================================================
 README                                                      *fuzzymenu-readme*
