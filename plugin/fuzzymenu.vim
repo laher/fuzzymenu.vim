@@ -1,8 +1,8 @@
 nnoremap <buffer> <silent> <Plug>Fzm :call fuzzymenu#Run()<cr>
 
-let auto_mappings = get(g:, 'fuzzymenu_auto_mappings', 1)
+let auto_add = get(g:, 'fuzzymenu_auto_add', 1)
   
-if auto_mappings
+if auto_add
   if &rtp =~ 'vim-lsp'
     call fuzzymenu#Add('LSP: go to definition', {'exec': 'LspDefinition'})
     call fuzzymenu#Add('LSP: find references', {'exec': 'LspReferences'})
