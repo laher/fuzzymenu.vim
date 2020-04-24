@@ -5,7 +5,7 @@ set cpo&vim
 """ internal state
 let s:menuItems = { }
 
-function! fzm#Add(name, def)
+function! fuzzymenu#Add(name, def)
   if !has_key(a:def, 'exec')
     echom "definition not valid"
     return
@@ -17,7 +17,7 @@ func! s:compare(i1, i2)
   return a:i1[0] == a:i2[0] ? 0 : a:i1[0] > a:i2[0] ? 1 : -1
 endfunc
 
-function! fzm#MenuSource()
+function! fuzzymenu#MenuSource()
   let extension = expand("%:e")
   let ret = []
   let pairs = items(s:menuItems)
@@ -44,13 +44,13 @@ function! fzm#MenuSource()
   return ret
 endfunction
 
-function! fzm#MenuSink(arg)
+function! fuzzymenu#MenuSink(arg)
   let key = split(a:arg, "\t")[0]
   let def = s:menuItems[key]
   if has_key(def, 'exec')
     execute def['exec']
   else
-    echo "invalid key for fuzzy-menu: " . key
+    echo "invalid key for fuzzymenu: " . key
   endif
   if has_key(def, 'mode') 
    if def['mode'] == 'insert'
@@ -63,10 +63,10 @@ function! fzm#MenuSink(arg)
   endif
 endfunction
 
-function! fzm#Run()
-  let pos = get(g:, 'fuzzy_menu_position', 'down')
-  let amt = get(g:, 'fuzzy_menu_amount', '33%')
-  let dict = {'source': fzm#MenuSource(), 'sink': function('fzm#MenuSink'), 
+function! fuzzymenu#Run()
+  let pos = get(g:, 'fuzzymenu_position', 'down')
+  let amt = get(g:, 'fuzzymenu_amount', '33%')
+  let dict = {'source': fuzzymenu#MenuSource(), 'sink': function('fuzzymenu#MenuSink'), 
   \ 'options': '--ansi'}
   let dict[pos] = amt
   call fzf#run(dict)
