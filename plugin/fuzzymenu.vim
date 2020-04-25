@@ -28,14 +28,14 @@ if auto_add
   call fuzzymenu#Add('Show whitespace characters', {'exec': 'set list'})
 
   """ fzf tools
-  call fuzzymenu#Add('FZF: Key mappings', {'exec': 'Maps', 'mode': 'insert', 'help': 'vim key mappings'})
-  call fuzzymenu#Add('FZF: Ex commands', {'exec': 'Commands', 'mode': 'insert'})
-  call fuzzymenu#Add('FZF: History', {'exec': 'History', 'mode': 'insert'})
-  call fuzzymenu#Add('FZF: Command history', {'exec': 'History:', 'mode': 'insert'})
-  call fuzzymenu#Add('FZF: Search history', {'exec': 'History/', 'mode': 'insert'})
-  call fuzzymenu#Add('FZF: Help tags', {'exec': 'Helptags', 'mode': 'insert'})
-  call fuzzymenu#Add('FZF: Lines in loaded buffers', {'exec': 'Lines', 'mode': 'insert'})
-  call fuzzymenu#Add('FZF: Lines in current buffer', {'exec': 'BLines', 'mode': 'insert'})
+  call fuzzymenu#Add('Key mappings', {'exec': 'Maps', 'mode': 'insert', 'help': 'vim key mappings'})
+  call fuzzymenu#Add('Vim commands', {'exec': 'Commands', 'mode': 'insert'})
+  call fuzzymenu#Add('Recent files', {'exec': 'History', 'mode': 'insert'})
+  call fuzzymenu#Add('Recent commands', {'exec': 'History:', 'mode': 'insert'})
+  call fuzzymenu#Add('Recent searches', {'exec': 'History/', 'mode': 'insert'})
+  call fuzzymenu#Add('Help', {'exec': 'Helptags', 'mode': 'insert'})
+  call fuzzymenu#Add('Find lines in loaded buffers', {'exec': 'Lines', 'mode': 'insert'})
+  call fuzzymenu#Add('Find lines in current buffer', {'exec': 'BLines', 'mode': 'insert'})
 
   if !hasmapto('<Plug>Fzm', 'n')
      nmap <buffer> <Leader><Leader> <Plug>Fzm

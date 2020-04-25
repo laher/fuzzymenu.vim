@@ -1,21 +1,28 @@
 # fuzzymenu.vim
 
  * A menu for vim or neovim, built on top of [fzf](https://github.com/junegunn/fzf). 
- * Discover some vim features easily, without needing a mouse.
+ * Discover some vim features easily, without needing to memorise so many commands and mappings.
 
-For now this includes a bunch of features which often need but I don't always remember. ...
+## Background 
+
+ * The goal of this plugin is to make particular vim features more discoverable, and more easily available. 
+ * At this point the feature set is limited to commands and function calls. I don't have plans to add support for motions, text objects and such (partly because I don't know how to make it work).
+ * The project was inspired by a combination of fzf (fuzzy finders) and spacemacs/(spacevim) - easily discoverable feature set, where you only need to remember a single key mapping.
+ * The advantage of a fuzzy menu is the _immediacy_ of a large, filterable, top-level menu.
 
 ## Install
 
 Install fuzzymenu and dependencies using a plugin manager.
 
-For example, use vim-plug:
+For example, using vim-plug:
 
 ```vim
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'laher/fuzzymenu.vim'
 ```
+
+* fzf itself depends on a binary file. Please see fzf installation instructions.
 
 ## Invoking fuzzymenu
 
@@ -26,7 +33,7 @@ For convenience, you can create a key mapping.
  * I like using space as a 'leader' key, and to hit space twice to bring up fuzzymenu.
  * By default, the leader key is mapped to `\\`. (I map leader to ' ': `mapleader=' '`)
 
-This can be specified in your .vimrc (or init.vim, for neovim users):
+e.g. this can be specified in your .vimrc (or init.vim, for neovim users):
 
 ```vim
   let mapleader=" "
@@ -90,12 +97,21 @@ Please use a central `plugin/*.vim` file to define filetype-specific mappings (r
 `g:fuzzymenu_size`: relative size of menu (default is `33%`. See fzf.vim) 
 
 
-## Areas of interest
+## For contributors
 
-Contributors: I'm keen to focus on particular areas of functionality:
+Some guidance for anyone wanting to contribute ...
+
+1. I'm keen to implement menu entries for particular areas of functionality:
 
  * Fundamentals - any more general purpose tools like 'set nonumber', where the naming is not intuitive? Give it a more intuitive key name (fuzzymenu will still find it by the original name if necessary).
  * LSP clients - keen to add coc, LanguageClient-neovim, etc.
  * FZF - any more useful fzf-based commands? Happy to add the definitions here.
  * Language-specific features ... _BUT I'd prefer NOT to include language-specific features whenever LSP has an equivalent._
 
+2. I'd like to extend the usefulness of the plugin a little:
+
+ * Hint the ':help' for a given entry
+ * Show key mappings for a given entry
+
+_I'd love to make these available as a preview window. I'm not exactly sure how to do that (typically fzf.vim uses an external program - a wrapper around cat/bat. I don't know how to print a vim help from an external command - vim/view or otherwise...)._
+Alternatively, it might just work to implement a key mapping within the fzf window, to view help/mappings for a menu item - including some visual cue.
