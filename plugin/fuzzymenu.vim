@@ -46,6 +46,7 @@ if auto_add
   call fuzzymenu#Add('Find lines in loaded buffers', {'exec': 'Lines', 'mode': 'insert'})
   call fuzzymenu#Add('Find lines in current buffer', {'exec': 'BLines', 'mode': 'insert'})
 
+
 ""
 " @section Mappings, mappings
 " There are one normal-mode mapping, "<Leader><Leader>" to invoke fuzzymenu
@@ -61,3 +62,11 @@ endif
 ""
 " Fzm invokes fuzzymenu 
 command -nargs=0 -buffer Fzm call fuzzymenu#Run()<cr>
+
+""
+"" An fzf function which is recommended in fzf docs
+"" Find a file using git as a base dir
+command! -bang -nargs=* GGrep
+  \ call fzf#vim#grep(
+  \   'git grep --line-number '.shellescape(<q-args>), 0,
+  \   fzf#vim#with_preview({ 'dir': systemlist('git rev-parse --show-toplevel')[0] }), <bang>0)
