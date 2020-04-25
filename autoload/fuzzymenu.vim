@@ -5,6 +5,11 @@ set cpo&vim
 """ internal state
 let s:menuItems = { }
 
+""
+" @public
+" @usage {name} {def}
+" Add a menu item to fuzzymenu. {name} are unique.
+" {def} is a dics with a mandatory member, 'exec'
 function! fuzzymenu#Add(name, def)
   if !has_key(a:def, 'exec')
     echom "definition not valid"
@@ -63,12 +68,22 @@ function! fuzzymenu#MenuSink(arg)
   endif
 endfunction
 
+""
+" @public
+" Invoke fuzzymenu
 function! fuzzymenu#Run()
+""
+" @setting g:fuzzymenu_position
+" Position of the fuzzymenu (using fzf positions down/up/left/right)
   let pos = get(g:, 'fuzzymenu_position', 'down')
-  let amt = get(g:, 'fuzzymenu_amount', '33%')
+""
+" @setting g:fuzzymenu_size
+" Relative size of menu
+  let size = get(g:, 'fuzzymenu_size', '33%')
+
   let dict = {'source': fuzzymenu#MenuSource(), 'sink': function('fuzzymenu#MenuSink'), 
   \ 'options': '--ansi'}
-  let dict[pos] = amt
+  let dict[pos] = size
   call fzf#run(dict)
 
 endfunction

@@ -1,3 +1,12 @@
+
+""
+" @section Introduction, intro
+" {fuzzymenu}{1} is a fuzzy-finder menu for vim, built on top of {fzf}{2}. Discover vim features easily, just invoke fuzzymenu and start typing. See the fuzzymenu.vim README for more background.
+"
+" {1} https://github.com/laher/fuzzymenu.vim
+" {2} https://github.com/junegunn/fzf
+
+
 nnoremap <buffer> <silent> <Plug>Fzm :call fuzzymenu#Run()<cr>
 
 let auto_add = get(g:, 'fuzzymenu_auto_add', 1)
@@ -37,9 +46,18 @@ if auto_add
   call fuzzymenu#Add('Find lines in loaded buffers', {'exec': 'Lines', 'mode': 'insert'})
   call fuzzymenu#Add('Find lines in current buffer', {'exec': 'BLines', 'mode': 'insert'})
 
+""
+" @section Mappings, mappings
+" There are one normal-mode mapping, "<Leader><Leader>" to invoke fuzzymenu
   if !hasmapto('<Plug>Fzm', 'n')
      nmap <buffer> <Leader><Leader> <Plug>Fzm
   endif
 endif
 
+""
+" @section Commands, commands
+" There is a single command, @command(Fzm), to invoke fuzzymenu.
+
+""
+" Fzm invokes fuzzymenu 
 command -nargs=0 -buffer Fzm call fuzzymenu#Run()<cr>

@@ -1,0 +1,38 @@
+*fuzzymenu.vim.txt*
+                                                               *fuzzymenu.vim*
+
+==============================================================================
+CONTENTS                                              *fuzzymenu.vim-contents*
+  1. Introduction........................................|fuzzymenu.vim-intro|
+  2. Commands.........................................|fuzzymenu.vim-commands|
+  3. Functions.......................................|fuzzymenu.vim-functions|
+
+==============================================================================
+INTRODUCTION                                             *fuzzymenu.vim-intro*
+
+{fuzzymenu}{1} is a fuzzy-finder menu for vim, built on top of {fzf}{2}.
+Discover vim features easily, just invoke fuzzymenu and start typing. See the
+fuzzymenu.vim README for more background.
+
+{1} https://github.com/laher/fuzzymenu.vim {2} https://github.com/junegunn/fzf
+
+==============================================================================
+COMMANDS                                              *fuzzymenu.vim-commands*
+
+There is a single command, |:Fzm|, to invoke fuzzymenu.
+
+:[N]Fzm                                                                 *:Fzm*
+  Fzm invokes fuzzymenu
+
+==============================================================================
+FUNCTIONS                                            *fuzzymenu.vim-functions*
+
+fuzzymenu#Add({name}, {def})                                 *fuzzymenu#Add()*
+  Add a menu item to fuzzymenu. {name} are unique. {def} is a dics with a
+  mandatory member, 'exec'
+
+fuzzymenu#Run()                                              *fuzzymenu#Run()*
+  Invoke fuzzymenu
+
+
+vim:tw=78:ts=8:ft=help:norl:
