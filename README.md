@@ -2,6 +2,7 @@
 
  * A menu for vim or neovim, built on top of [fzf](https://github.com/junegunn/fzf). 
  * Discover some vim features easily, without needing to memorise so many commands and mappings.
+ * See also [help docs](./doc/fuzzymenu.vim.txt)
 
 ## Background 
 
