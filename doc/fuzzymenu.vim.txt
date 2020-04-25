@@ -24,6 +24,10 @@ There is a single command, |:Fzm|, to invoke fuzzymenu.
 :[N]Fzm                                                                 *:Fzm*
   Fzm invokes fuzzymenu
 
+:GGrep[!]                                                             *:GGrep*
+  " An fzf function which is recommended in fzf docs " Find a file using git
+  as a base dir
+
 ==============================================================================
 FUNCTIONS                                            *fuzzymenu.vim-functions*
 
