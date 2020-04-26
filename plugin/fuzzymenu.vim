@@ -8,6 +8,7 @@
 
 
 nnoremap <buffer> <silent> <Plug>Fzm :call fuzzymenu#Run()<cr>
+xnoremap <buffer> <silent> <Plug>FzmVisual :call fuzzymenu#Run()<cr>
 
 let auto_add = get(g:, 'fuzzymenu_auto_add', 1)
 
@@ -39,6 +40,7 @@ call fuzzymenu#Add('Show whitespace characters', {'exec': 'set list'})
 " common editor features
 call fuzzymenu#Add('Select all', {'exec': 'normal! ggVG'})
 call fuzzymenu#Add('Yank (copy) all', {'exec': '%y'})
+call fuzzymenu#Add('Yank (copy) selection', {'exec': '%y', 'modes': 'v'})
 call fuzzymenu#Add('Delete all', {'exec': '%d'})
 
 """ fzf tools
@@ -58,6 +60,10 @@ call fuzzymenu#Add('Find (in current buffer)', {'exec': 'BLines', 'after': 'call
 if !hasmapto('<Plug>Fzm', 'n')
    nmap <buffer> <Leader><Leader> <Plug>Fzm
 endif
+if !hasmapto('<Plug>Fzm', 'v')
+   vmap <Leader><Leader> <Plug>FzmVisual
+endif
+
 endif
 
 ""

@@ -22,7 +22,7 @@ func! s:compare(i1, i2)
   return a:i1[0] == a:i2[0] ? 0 : a:i1[0] > a:i2[0] ? 1 : -1
 endfunc
 
-function! fuzzymenu#MenuSource()
+function! s:MenuSource(currentMode)
   let extension = expand("%:e")
   let ret = []
   let pairs = items(s:menuItems)
@@ -39,7 +39,13 @@ function! fuzzymenu#MenuSource()
     if has_key(def, 'help') 
       let help = def['help']
     endif
-
+    if has_key(def, 'modes')
+      let modes = def['modes']
+      if  modes !~ a:currentMode
+        " doesn't apply
+        continue
+      endif
+    endif
     let name= printf("%s\t\t%s\t%s",
             \ s:green(name),
             \ ':'.def['exec'],
@@ -69,11 +75,21 @@ function! fuzzymenu#InsertMode()
        startinsert
      endif
 endfunction
+""
+" @public
+" Invoke fuzzymenu from visual mode
+function! fuzzymenu#RunVisual()
+  call s:Run('n')
+endfunction
 
 ""
 " @public
-" Invoke fuzzymenu
+" Invoke fuzzymenu from normal mode
 function! fuzzymenu#Run()
+  call s:Run('n')
+endfunction
+
+function! s:Run(mode)
 ""
 " @setting g:fuzzymenu_position
 " Position of the fuzzymenu (using fzf positions down/up/left/right)
@@ -83,7 +99,7 @@ function! fuzzymenu#Run()
 " Relative size of menu
   let size = get(g:, 'fuzzymenu_size', '33%')
 
-  let dict = {'source': fuzzymenu#MenuSource(), 'sink': function('fuzzymenu#MenuSink'), 
+  let dict = {'source': s:MenuSource(a:mode), 'sink': function('fuzzymenu#MenuSink'), 
   \ 'options': '--ansi'}
   let dict[pos] = size
   call fzf#run(dict)
