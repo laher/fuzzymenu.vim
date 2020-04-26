@@ -69,7 +69,7 @@ There are a few ways you can introduce your own entries...
 Adding an entry looks like this:
 
 ```vim
-call fuzzymenu#Add('FZF: Key mappings', {'exec': 'Maps', 'mode': 'insert', 'help': 'vim key mappings'})
+call fuzzymenu#Add('FZF: Key mappings', {'exec': 'Maps', 'after': 'call fuzzymenu#InsertMode()', 'help': 'vim key mappings'})
 ```
 
 The first parameter is a unique key. The second parameter is a map of options:

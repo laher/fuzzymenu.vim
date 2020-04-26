@@ -10,49 +10,54 @@
 nnoremap <buffer> <silent> <Plug>Fzm :call fuzzymenu#Run()<cr>
 
 let auto_add = get(g:, 'fuzzymenu_auto_add', 1)
-  
+
 if auto_add
-  if &rtp =~ 'vim-lsp'
-    call fuzzymenu#Add('LSP: go to definition', {'exec': 'LspDefinition'})
-    call fuzzymenu#Add('LSP: find references', {'exec': 'LspReferences'})
-    call fuzzymenu#Add('LSP: rename', {'exec': 'LspRename'})
-    call fuzzymenu#Add('LSP: organize imports', {'exec': 'LspCodeActionSync source.organizeImports'})
-    call fuzzymenu#Add('LSP: go to implementation', {'exec': 'LspImplementation'})
-  endif
+if &rtp =~ 'vim-lsp'
+  call fuzzymenu#Add('LSP: go to definition', {'exec': 'LspDefinition'})
+  call fuzzymenu#Add('LSP: find references', {'exec': 'LspReferences'})
+  call fuzzymenu#Add('LSP: rename', {'exec': 'LspRename'})
+  call fuzzymenu#Add('LSP: organize imports', {'exec': 'LspCodeActionSync source.organizeImports'})
+  call fuzzymenu#Add('LSP: go to implementation', {'exec': 'LspImplementation'})
+endif
 
-  if &rtp =~ 'vim-fugitive'
-    call fuzzymenu#Add('Git: find commit', {'exec': 'Commits', 'mode': 'insert'})
-    call fuzzymenu#Add('Git: find commit in current buffer', {'exec': 'BCommits', 'mode': 'insert'})
-    call fuzzymenu#Add('Git: find file', {'exec': 'GFiles', 'mode': 'insert'})
-    call fuzzymenu#Add('Git: grep', {'exec': 'GGrep', 'mode': 'insert'})
-    call fuzzymenu#Add('Git: browse', {'exec': 'GBrowse', 'mode': 'insert'})
-  endif
+if &rtp =~ 'vim-fugitive'
+  call fuzzymenu#Add('Git: find commit', {'exec': 'Commits', 'after': 'call fuzzymenu#InsertMode()'})
+  call fuzzymenu#Add('Git: find commit in current buffer', {'exec': 'BCommits', 'after': 'call fuzzymenu#InsertMode()'})
+  call fuzzymenu#Add('Git: open file', {'exec': 'GFiles', 'after': 'call fuzzymenu#InsertMode()'})
+  call fuzzymenu#Add('Git: find in files', {'exec': 'GGrep', 'after': 'call fuzzymenu#InsertMode()'})
+  call fuzzymenu#Add('Github: browse to file/selection', {'exec': 'GBrowse', 'after': 'call fuzzymenu#InsertMode()'})
+endif
 
-  " basic options
-  call fuzzymenu#Add('Set case-sensitive searches', {'exec': 'set noignorecase'})
-  call fuzzymenu#Add('Set case-insensitive searches', {'exec': 'set ignorecase'})
-  call fuzzymenu#Add('Hide line numbers', {'exec': 'set nonumber'})
-  call fuzzymenu#Add('Show line numbers', {'exec': 'set number'})
-  call fuzzymenu#Add('Hide whitespace characters', {'exec': 'set nolist'})
-  call fuzzymenu#Add('Show whitespace characters', {'exec': 'set list'})
+" basic options
+call fuzzymenu#Add('Set case-sensitive searches', {'exec': 'set noignorecase'})
+call fuzzymenu#Add('Set case-insensitive searches', {'exec': 'set ignorecase'})
+call fuzzymenu#Add('Hide line numbers', {'exec': 'set nonumber'})
+call fuzzymenu#Add('Show line numbers', {'exec': 'set number'})
+call fuzzymenu#Add('Hide whitespace characters', {'exec': 'set nolist'})
+call fuzzymenu#Add('Show whitespace characters', {'exec': 'set list'})
 
-  """ fzf tools
-  call fuzzymenu#Add('Key mappings', {'exec': 'Maps', 'mode': 'insert', 'help': 'vim key mappings'})
-  call fuzzymenu#Add('Vim commands', {'exec': 'Commands', 'mode': 'insert'})
-  call fuzzymenu#Add('Recent files', {'exec': 'History', 'mode': 'insert'})
-  call fuzzymenu#Add('Recent commands', {'exec': 'History:', 'mode': 'insert'})
-  call fuzzymenu#Add('Recent searches', {'exec': 'History/', 'mode': 'insert'})
-  call fuzzymenu#Add('Help', {'exec': 'Helptags', 'mode': 'insert'})
-  call fuzzymenu#Add('Find lines in loaded buffers', {'exec': 'Lines', 'mode': 'insert'})
-  call fuzzymenu#Add('Find lines in current buffer', {'exec': 'BLines', 'mode': 'insert'})
+" common editor features
+call fuzzymenu#Add('Select all', {'exec': 'normal! ggVG'})
+call fuzzymenu#Add('Yank (copy) all', {'exec': '%y'})
+call fuzzymenu#Add('Delete all', {'exec': '%d'})
+
+""" fzf tools
+call fuzzymenu#Add('Key mappings', {'exec': 'Maps', 'after': 'call fuzzymenu#InsertMode()', 'help': 'vim key mappings'})
+call fuzzymenu#Add('Vim commands', {'exec': 'Commands', 'after': 'call fuzzymenu#InsertMode()'})
+call fuzzymenu#Add('Open recent file', {'exec': 'History', 'after': 'call fuzzymenu#InsertMode()'})
+call fuzzymenu#Add('Recent commands', {'exec': 'History:', 'after': 'call fuzzymenu#InsertMode()'})
+call fuzzymenu#Add('Recent searches', {'exec': 'History/', 'after': 'call fuzzymenu#InsertMode()'})
+call fuzzymenu#Add('Help', {'exec': 'Helptags', 'after': 'call fuzzymenu#InsertMode()'})
+call fuzzymenu#Add('Find in open buffers (files)', {'exec': 'Lines', 'after': 'call fuzzymenu#InsertMode()'})
+call fuzzymenu#Add('Find (in current buffer)', {'exec': 'BLines', 'after': 'call fuzzymenu#InsertMode()'})
 
 
 ""
 " @section Mappings, mappings
 " There are one normal-mode mapping, "<Leader><Leader>" to invoke fuzzymenu
-  if !hasmapto('<Plug>Fzm', 'n')
-     nmap <buffer> <Leader><Leader> <Plug>Fzm
-  endif
+if !hasmapto('<Plug>Fzm', 'n')
+   nmap <buffer> <Leader><Leader> <Plug>Fzm
+endif
 endif
 
 ""
@@ -67,6 +72,6 @@ command -nargs=0 -buffer Fzm call fuzzymenu#Run()<cr>
 "" An fzf function which is recommended in fzf docs
 "" Find a file using git as a base dir
 command! -bang -nargs=* GGrep
-  \ call fzf#vim#grep(
-  \   'git grep --line-number '.shellescape(<q-args>), 0,
-  \   fzf#vim#with_preview({ 'dir': systemlist('git rev-parse --show-toplevel')[0] }), <bang>0)
+\ call fzf#vim#grep(
+\   'git grep --line-number '.shellescape(<q-args>), 0,
+\   fzf#vim#with_preview({ 'dir': systemlist('git rev-parse --show-toplevel')[0] }), <bang>0)

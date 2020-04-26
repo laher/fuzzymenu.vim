@@ -57,15 +57,17 @@ function! fuzzymenu#MenuSink(arg)
   else
     echo "invalid key for fuzzymenu: " . key
   endif
-  if has_key(def, 'mode') 
-   if def['mode'] == 'insert'
+  if has_key(def, 'after') 
+   execute def['after']
+  endif
+endfunction
+
+function! fuzzymenu#InsertMode()
      if has("nvim")
        call feedkeys('i')
      else
        startinsert
      endif
-   endif
-  endif
 endfunction
 
 ""
