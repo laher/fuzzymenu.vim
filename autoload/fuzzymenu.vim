@@ -10,7 +10,7 @@ let s:menuItems = { }
 " @usage {name} {def}
 " Add a menu item to fuzzymenu. {name} are unique.
 " {def} is a dics with a mandatory member, 'exec'
-function! fuzzymenu#Add(name, def)
+function! fuzzymenu#Add(name, def) abort
   if !has_key(a:def, 'exec')
     echom "definition not valid"
     return
@@ -22,7 +22,7 @@ func! s:compare(i1, i2)
   return a:i1[0] == a:i2[0] ? 0 : a:i1[0] > a:i2[0] ? 1 : -1
 endfunc
 
-function! s:MenuSource(currentMode)
+function! s:MenuSource(currentMode) abort
   let extension = expand("%:e")
   let ret = []
   let pairs = items(s:menuItems)
@@ -47,15 +47,15 @@ function! s:MenuSource(currentMode)
       endif
     endif
     let name= printf("%s\t\t%s\t%s",
-            \ s:green(name),
+            \ s:color('green', name),
             \ ':'.def['exec'],
-            \ s:cyan(help))
+            \ s:color('cyan', help))
     call add(ret, name)
   endfor
   return ret
 endfunction
 
-function! fuzzymenu#MenuSink(arg)
+function! fuzzymenu#MenuSink(arg) abort
   let key = split(a:arg, "\t")[0]
   let def = s:menuItems[key]
   if has_key(def, 'exec')
@@ -68,7 +68,7 @@ function! fuzzymenu#MenuSink(arg)
   endif
 endfunction
 
-function! fuzzymenu#InsertMode()
+function! fuzzymenu#InsertMode() abort
      if has("nvim")
        call feedkeys('i')
      else
@@ -78,18 +78,18 @@ endfunction
 ""
 " @public
 " Invoke fuzzymenu from visual mode
-function! fuzzymenu#RunVisual()
+function! fuzzymenu#RunVisual() abort
   call s:Run('n')
 endfunction
 
 ""
 " @public
 " Invoke fuzzymenu from normal mode
-function! fuzzymenu#Run()
+function! fuzzymenu#Run() abort
   call s:Run('n')
 endfunction
 
-function! s:Run(mode)
+function! s:Run(mode) abort
 ""
 " @setting g:fuzzymenu_position
 " Position of the fuzzymenu (using fzf positions down/up/left/right)
@@ -106,7 +106,7 @@ function! s:Run(mode)
 
 endfunction
 
-function! s:get_color(attr, ...)
+function! s:get_color(attr, ...) abort
   let gui = has('termguicolors') && &termguicolors
   let fam = gui ? 'gui' : 'cterm'
   let pat = gui ? '^#[a-f0-9]\+' : '^[0-9]\+$'
@@ -121,7 +121,7 @@ endfunction
 
 let s:ansi = {'black': 30, 'red': 31, 'green': 32, 'yellow': 33, 'blue': 34, 'magenta': 35, 'cyan': 36}
 
-function! s:csi(color, fg)
+function! s:csi(color, fg) abort
   let prefix = a:fg ? '38;' : '48;'
   if a:color[0] == '#'
     return prefix.'2;'.join(map([a:color[1:2], a:color[3:4], a:color[5:6]], 'str2nr(v:val, 16)'), ';')
@@ -129,19 +129,17 @@ function! s:csi(color, fg)
   return prefix.'5;'.a:color
 endfunction
 
-function! s:ansi(str, group, default, ...)
+function! s:ansi(str, group, default, ...) abort
   let fg = s:get_color('fg', a:group)
   let bg = s:get_color('bg', a:group)
   let color = (empty(fg) ? s:ansi[a:default] : s:csi(fg, 1)) .
         \ (empty(bg) ? '' : ';'.s:csi(bg, 0))
   return printf("\x1b[%s%sm%s\x1b[m", color, a:0 ? ';1' : '', a:str)
 endfunction
-
-for s:color_name in keys(s:ansi)
-  execute "function! s:".s:color_name."(str, ...)\n"
-        \ "  return s:ansi(a:str, get(a:, 1, ''), '".s:color_name."')\n"
-        \ "endfunction"
-endfor
+  
+function! s:color(color_name, str, ...) abort
+  return s:ansi(a:str, get(a:, 1, ''), a:color_name)
+endfunc
 
 let &cpo = s:cpo_save
 unlet s:cpo_save
