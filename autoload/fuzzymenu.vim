@@ -55,11 +55,24 @@ function! s:MenuSource(currentMode) abort
   return ret
 endfunction
 
-function! fuzzymenu#MenuSink(arg) abort
+function! s:MenuSinkv(arg) abort
+  call s:MenuSink(a:arg, 'v')
+endfunction
+
+function! s:MenuSinkn(arg) abort
+  call s:MenuSink(a:arg, 'n')
+endfunction
+
+function! s:MenuSink(arg, mode) abort
   let key = split(a:arg, "\t")[0]
   let def = s:menuItems[key]
   if has_key(def, 'exec')
-    execute def['exec']
+    if a:mode == 'v'
+      " execute on selected range
+      execute "'<,'>" . def['exec']
+    else
+      execute def['exec']
+    endif
   else
     echo "invalid key for fuzzymenu: " . key
   endif
@@ -99,7 +112,7 @@ function! s:Run(mode) abort
 " Relative size of menu
   let size = get(g:, 'fuzzymenu_size', '33%')
 
-  let dict = {'source': s:MenuSource(a:mode), 'sink': function('fuzzymenu#MenuSink'), 
+  let dict = {'source': s:MenuSource(a:mode), 'sink': function('s:MenuSink' . a:mode), 
   \ 'options': '--ansi'}
   let dict[pos] = size
   call fzf#run(dict)
