@@ -2,14 +2,15 @@
 
  * A menu for vim or neovim, built on top of [fzf](https://github.com/junegunn/fzf). 
  * Discover some vim features easily, without needing to memorise so many commands and mappings.
- * See also [help docs](./doc/fuzzymenu.vim.txt)
+ * Search for items using vim terminology OR non-vim terminology (e.g. 'search buffers' vs 'Find in files')
+ * See also [help docs](./doc/fuzzymenu.vim.txt).
 
 ## Background 
 
  * The goal of this plugin is to make particular vim features more discoverable, and more easily available. 
- * At this point the feature set is limited to commands and function calls. I don't have plans to add support for motions, text objects and such (partly because I don't know how to make it work).
- * The project was inspired by a combination of fzf (fuzzy finders) and spacemacs/(spacevim) - easily discoverable feature set, where you only need to remember a single key mapping.
+ * The project was inspired by a combination of fzf (fuzzy finders) and spacemacs/(spacevim) - providing an easily discoverable feature set, where you only need to remember a single key mapping.
  * The advantage of a fuzzy menu is the _immediacy_ of a large, filterable, top-level menu.
+ * At this point the feature set is limited to commands and function calls. I don't have plans to add support for motions, text objects and such (partly because it's kinda endless).
 
 ## Install
 
@@ -66,22 +67,26 @@ There are a few ways you can introduce your own entries...
 
 ## Defining entries
 
-Adding an entry looks like this:
+Adding an entry looks like one of these 3 examples:
 
 ```vim
 call fuzzymenu#Add('FZF: Key mappings', {'exec': 'Maps', 'after': 'call fuzzymenu#InsertMode()', 'help': 'vim key mappings'})
+call fuzzymenu#Add('Select all', {'exec': 'normal! ggVG'})
+if &rtp =~ 'vim-lsp' " <- if this plugin is loaded
+  call fuzzymenu#Add('LSP: rename', {'exec': 'LspRename'})
+endif
 ```
 
 The first parameter is a unique key. The second parameter is a map of options:
 
-- `exec` is compulsory. This is the command which will be invoked. For example, `'Maps'` above is the same as running `:Maps` from normal mode. If you want to invoke a function instead, use `call`, e.g. `'call function#name()'`.
-- `mode` is optional. If you need fuzzymenu to drop into insert mode after running your command, specify `'mode': 'insert'` (only insert mode is implemented). This is necessary for fzf features.
+- `exec` is mandatory. This is the command which will be invoked. For example, `'Maps'` above is the same as running `:Maps` from normal mode. Use `call MyFunction()` to run a function. Use `normal!` to run some normal mode commands.
+- `after` is optional. Fuzzymenu runs this command _after_ this command. It is not printed in the fzf entry. For example, if you need fuzzymenu to drop into insert mode after running your command, specify `'after': 'call fuzzymenu#InsertMode()'`. _Insert mode is necessary for fzf features._
 - `help` is for adding an additional explanation.
 - `for` specifies a filetype. 
 
-### Defining an entry in your plugin
+### Defining an entry from your plugin
 
-Your plugin can add some entries to fuzzymenu, but just make sure to add them _only_ when fuzzymenu is installed. Like this (for an imaginary plugin 'teddy', which works on `.ted` files):
+A plugin can add some entries to fuzzymenu, but just make sure to add them _only_ when fuzzymenu is installed. Like this (for an imaginary plugin 'teddy', which works on `.ted` files):
 
 ```vim
 if &rtp =~ 'fuzzymenu.vim'
@@ -89,9 +94,13 @@ call fuzzymenu#Add('teddy bingo', {'exec': 'TddyBingo', 'for': 'ted'})
 endif
 ```
 
-Please use a central `plugin/*.vim` file to define filetype-specific mappings (rather than `ftplugin/`). fuzzymenu will look after which entries to show based on the `for` parameter and the filetype. It's just how fuzzymenu's registration mechanism works.
+From within your plugin, please use a central `plugin/*.vim` file to define filetype-specific mappings (rather than `ftplugin/`). fuzzymenu will look after which entries to show based on the `for` parameter and the filetype. It's just how fuzzymenu's registration mechanism works.
 
 ## Configuration
+
+See [./doc/fuzzymenu.txt](./doc/fuzzymenu.vim.txt) for full details ...
+
+Some starting points:
 
 `g:fuzzymenu_auto_add`: set to `0` to prevent fuzzymenu adding its own entries. Now define your own instead. Default is 1
 `g:fuzzymenu_position`: position of menu (default is 'down'. See fzf.vim) 

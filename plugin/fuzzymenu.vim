@@ -7,8 +7,12 @@
 " {2} https://github.com/junegunn/fzf
 
 
+""
+" Open fuzzymenu in normal mode.
 nnoremap <buffer> <silent> <Plug>Fzm :call fuzzymenu#Run()<cr>
-xnoremap <buffer> <silent> <Plug>FzmVisual :call fuzzymenu#Run()<cr>
+""
+" Open fuzzymenu in normal mode.
+xnoremap <buffer> <silent> <Plug>FzmVisual :call fuzzymenu#RunVisual()<cr>
 
 let auto_add = get(g:, 'fuzzymenu_auto_add', 1)
 

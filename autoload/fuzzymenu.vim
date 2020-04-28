@@ -79,7 +79,7 @@ endfunction
 " @public
 " Invoke fuzzymenu from visual mode
 function! fuzzymenu#RunVisual() abort
-  call s:Run('n')
+  call s:Run('v')
 endfunction
 
 ""
