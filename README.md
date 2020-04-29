@@ -54,6 +54,14 @@ Just bring up fuzzymenu, and start typing what you want...
  * Various git features (requires [fugitive](https://github.com/tpope/vim-fugitive) ).
  * Various go tools (requires [gothx.vim](https://github.com/laher/gothx.vim) ).
 
+| Area           | Dependencies   | Registered by fuzzymenu | Registered by dependency |
+|----------------|----------------|----------------------|--------------------------|
+| fundamentals   | n/a            | [x] |     |
+| FZF            | (fzf, fzf.vim) | [x] |     |
+| LSP            | [vim-lsp](https://github.com/prabirshrestha/vim-lsp) | [x] |     |
+| Go             | [gothx][https://github.com/laher/gothx.vim)           |     | [x] |
+| git            | [fugitive][https://github.com/tpope/vim-fugitive     | [x] |     |
+
 
 More to follow
 
@@ -67,7 +75,7 @@ There are a few ways you can introduce your own entries...
 
 ## Defining entries
 
-Adding an entry looks like one of these 3 examples:
+Adding an entry to your vimrc, looks like one of these 3 examples:
 
 ```vim
 call fuzzymenu#Add('FZF: Key mappings', {'exec': 'Maps', 'after': 'call fuzzymenu#InsertMode()', 'help': 'vim key mappings'})

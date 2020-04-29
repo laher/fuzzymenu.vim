@@ -65,7 +65,7 @@ if !hasmapto('<Plug>Fzm', 'n')
    nmap <buffer> <Leader><Leader> <Plug>Fzm
 endif
 if !hasmapto('<Plug>Fzm', 'v')
-   vmap <Leader><Leader> <Plug>FzmVisual
+   xmap <buffer> <Leader><Leader> <Plug>FzmVisual
 endif
 
 endif
