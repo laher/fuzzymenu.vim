@@ -50,10 +50,10 @@ function! s:MenuSource(currentMode) abort
     if has_key(def, 'tags')
       let tags = '[' . join(def['tags'], ',') . '] '
     endif
-    let name= printf("%s%s\t\t%s\t%s",
-            \ tags,
+    let name= printf("%s\t\t%s\t%s\t%s",
             \ s:color('green', name),
             \ ':'.def['exec'],
+            \ tags,
             \ s:color('cyan', help))
     call add(ret, name)
   endfor
