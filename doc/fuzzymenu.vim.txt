@@ -4,8 +4,9 @@
 ==============================================================================
 CONTENTS                                              *fuzzymenu.vim-contents*
   1. Introduction........................................|fuzzymenu.vim-intro|
-  2. Commands.........................................|fuzzymenu.vim-commands|
-  3. Functions.......................................|fuzzymenu.vim-functions|
+  2. Configuration......................................|fuzzymenu.vim-config|
+  3. Commands.........................................|fuzzymenu.vim-commands|
+  4. Functions.......................................|fuzzymenu.vim-functions|
 
 ==============================================================================
 INTRODUCTION                                             *fuzzymenu.vim-intro*
@@ -15,6 +16,19 @@ Discover vim features easily, just invoke fuzzymenu and start typing. See the
 fuzzymenu.vim README for more background.
 
 {1} https://github.com/laher/fuzzymenu.vim {2} https://github.com/junegunn/fzf
+
+==============================================================================
+CONFIGURATION                                           *fuzzymenu.vim-config*
+
+                                                        *g:fuzzymenu_position*
+Position of the fuzzymenu (using fzf positions down/up/left/right)
+
+                                                            *g:fuzzymenu_size*
+Relative size of menu
+
+                                                        *g:fuzzymenu_auto_add*
+Automatically add menu items. Note: I'll break these up in future into several
+categories
 
 ==============================================================================
 COMMANDS                                              *fuzzymenu.vim-commands*

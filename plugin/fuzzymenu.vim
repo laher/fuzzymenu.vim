@@ -14,23 +14,28 @@ nnoremap <buffer> <silent> <Plug>Fzm :call fuzzymenu#Run()<cr>
 " Open fuzzymenu in normal mode.
 xnoremap <buffer> <silent> <Plug>FzmVisual :call fuzzymenu#RunVisual()<cr>
 
-let auto_add = get(g:, 'fuzzymenu_auto_add', 1)
+""
+" @setting g:fuzzymenu_auto_add
+" Automatically add menu items. Note: I'll break these up in future into
+" several categories
+let g:fuzzymenu_auto_add = get(g:, 'fuzzymenu_auto_add', 1)
 
-if auto_add
+if g:fuzzymenu_auto_add
+
 if &rtp =~ 'vim-lsp'
-  call fuzzymenu#Add('LSP: go to definition', {'exec': 'LspDefinition'})
-  call fuzzymenu#Add('LSP: find references', {'exec': 'LspReferences'})
-  call fuzzymenu#Add('LSP: rename', {'exec': 'LspRename'})
-  call fuzzymenu#Add('LSP: organize imports', {'exec': 'LspCodeActionSync source.organizeImports'})
-  call fuzzymenu#Add('LSP: go to implementation', {'exec': 'LspImplementation'})
+  call fuzzymenu#Add('Go to definition', {'exec': 'LspDefinition', 'tags': ['LSP']})
+  call fuzzymenu#Add('Find references', {'exec': 'LspReferences', 'tags': ['LSP']})
+  call fuzzymenu#Add('Rename', {'exec': 'LspRename', 'tags': ['LSP']})
+  call fuzzymenu#Add('Organize imports', {'exec': 'LspCodeActionSync source.organizeImports', 'tags': ['LSP']})
+  call fuzzymenu#Add('Go to implementation', {'exec': 'LspImplementation', 'tags': ['LSP']})
 endif
 
 if &rtp =~ 'vim-fugitive'
-  call fuzzymenu#Add('Git: find commit', {'exec': 'Commits', 'after': 'call fuzzymenu#InsertMode()'})
-  call fuzzymenu#Add('Git: find commit in current buffer', {'exec': 'BCommits', 'after': 'call fuzzymenu#InsertMode()'})
-  call fuzzymenu#Add('Git: open file', {'exec': 'GFiles', 'after': 'call fuzzymenu#InsertMode()'})
-  call fuzzymenu#Add('Git: find in files', {'exec': 'GGrep', 'after': 'call fuzzymenu#InsertMode()'})
-  call fuzzymenu#Add('Github: browse to file/selection', {'exec': 'GBrowse', 'after': 'call fuzzymenu#InsertMode()'})
+  call fuzzymenu#Add('Find commit', {'exec': 'Commits', 'after': 'call fuzzymenu#InsertMode()', 'tags': ['git']})
+  call fuzzymenu#Add('Find commit in current buffer', {'exec': 'BCommits', 'after': 'call fuzzymenu#InsertMode()', 'tags': ['git']})
+  call fuzzymenu#Add('Open file', {'exec': 'GFiles', 'after': 'call fuzzymenu#InsertMode()', 'tags': ['git']})
+  call fuzzymenu#Add('Find in files', {'exec': 'GGrep', 'after': 'call fuzzymenu#InsertMode()', 'tags': ['git']})
+  call fuzzymenu#Add('Browse to file/selection', {'exec': 'GBrowse', 'after': 'call fuzzymenu#InsertMode()', 'tags': ['git', 'github']})
 endif
 
 " basic options
@@ -48,14 +53,14 @@ call fuzzymenu#Add('Yank (copy) selection', {'exec': '%y', 'modes': 'v'})
 call fuzzymenu#Add('Delete all', {'exec': '%d'})
 
 """ fzf tools
-call fuzzymenu#Add('Key mappings', {'exec': 'Maps', 'after': 'call fuzzymenu#InsertMode()', 'help': 'vim key mappings'})
-call fuzzymenu#Add('Vim commands', {'exec': 'Commands', 'after': 'call fuzzymenu#InsertMode()'})
-call fuzzymenu#Add('Open recent file', {'exec': 'History', 'after': 'call fuzzymenu#InsertMode()'})
-call fuzzymenu#Add('Recent commands', {'exec': 'History:', 'after': 'call fuzzymenu#InsertMode()'})
-call fuzzymenu#Add('Recent searches', {'exec': 'History/', 'after': 'call fuzzymenu#InsertMode()'})
-call fuzzymenu#Add('Help', {'exec': 'Helptags', 'after': 'call fuzzymenu#InsertMode()'})
-call fuzzymenu#Add('Find in open buffers (files)', {'exec': 'Lines', 'after': 'call fuzzymenu#InsertMode()'})
-call fuzzymenu#Add('Find (in current buffer)', {'exec': 'BLines', 'after': 'call fuzzymenu#InsertMode()'})
+call fuzzymenu#Add('Key mappings', {'exec': 'Maps', 'after': 'call fuzzymenu#InsertMode()', 'help': 'vim key mappings', 'tags': ['fzf']})
+call fuzzymenu#Add('Vim commands', {'exec': 'Commands', 'after': 'call fuzzymenu#InsertMode()', 'tags': ['fzf']})
+call fuzzymenu#Add('Open recent file', {'exec': 'History', 'after': 'call fuzzymenu#InsertMode()', 'tags': ['fzf']})
+call fuzzymenu#Add('Recent commands', {'exec': 'History:', 'after': 'call fuzzymenu#InsertMode()', 'tags': ['fzf']})
+call fuzzymenu#Add('Recent searches', {'exec': 'History/', 'after': 'call fuzzymenu#InsertMode()', 'tags': ['fzf']})
+call fuzzymenu#Add('Help', {'exec': 'Helptags', 'after': 'call fuzzymenu#InsertMode()', 'tags': ['fzf']})
+call fuzzymenu#Add('Find in open buffers (files)', {'exec': 'Lines', 'after': 'call fuzzymenu#InsertMode()', 'tags': ['fzf']})
+call fuzzymenu#Add('Find (in current buffer)', {'exec': 'BLines', 'after': 'call fuzzymenu#InsertMode()', 'tags': ['fzf']})
 
 
 ""

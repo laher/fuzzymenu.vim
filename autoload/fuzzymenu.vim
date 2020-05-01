@@ -46,7 +46,12 @@ function! s:MenuSource(currentMode) abort
         continue
       endif
     endif
-    let name= printf("%s\t\t%s\t%s",
+    let tags = ''
+    if has_key(def, 'tags')
+      let tags = '[' . join(def['tags'], ',') . '] '
+    endif
+    let name= printf("%s%s\t\t%s\t%s",
+            \ tags,
             \ s:color('green', name),
             \ ':'.def['exec'],
             \ s:color('cyan', help))
@@ -69,6 +74,7 @@ function! s:MenuSink(arg, mode) abort
   if has_key(def, 'exec')
     if a:mode == 'v'
       " execute on selected range
+      " TODO: only support range when it makes sense to? ... or should we just allow it? Someone can always just use normal-mode if it fails
       execute "'<,'>" . def['exec']
     else
       execute def['exec']
@@ -102,19 +108,22 @@ function! fuzzymenu#Run() abort
   call s:Run('n')
 endfunction
 
+
+
 function! s:Run(mode) abort
 ""
-" @setting g:fuzzymenu_position
+" @setting fuzzymenu_position
 " Position of the fuzzymenu (using fzf positions down/up/left/right)
-  let pos = get(g:, 'fuzzymenu_position', 'down')
+  let g:fuzzymenu_position = get(g:, 'fuzzymenu_position', 'down')
+
 ""
-" @setting g:fuzzymenu_size
+" @setting fuzzymenu_size
 " Relative size of menu
-  let size = get(g:, 'fuzzymenu_size', '33%')
+  let g:fuzzymenu_size = get(g:, 'fuzzymenu_size', '33%')
 
   let dict = {'source': s:MenuSource(a:mode), 'sink': function('s:MenuSink' . a:mode), 
   \ 'options': '--ansi'}
-  let dict[pos] = size
+  let dict[g:fuzzymenu_position] = g:fuzzymenu_size
   call fzf#run(dict)
 
 endfunction
