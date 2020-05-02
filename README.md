@@ -28,7 +28,7 @@ Plug 'laher/fuzzymenu.vim'
 
 ## Invoking fuzzymenu
 
-`:Fzm`: You can invoke fuzzymenu with a command `:Fzm`
+`:Fzm`: You can invoke fuzzymenu with a command `:Fzm` (fullscreen with `:Fzm!`)
 
 For convenience, you can create a key mapping. 
 

@@ -61,6 +61,7 @@ call fuzzymenu#Add('Recent searches', {'exec': 'History/', 'after': 'call fuzzym
 call fuzzymenu#Add('Help', {'exec': 'Helptags', 'after': 'call fuzzymenu#InsertMode()', 'tags': ['fzf']})
 call fuzzymenu#Add('Find in open buffers (files)', {'exec': 'Lines', 'after': 'call fuzzymenu#InsertMode()', 'tags': ['fzf']})
 call fuzzymenu#Add('Find (in current buffer)', {'exec': 'BLines', 'after': 'call fuzzymenu#InsertMode()', 'tags': ['fzf']})
+call fuzzymenu#Add('Open file', {'exec': 'Files', 'after': 'call fuzzymenu#InsertMode()', 'tags': ['fzf']})
 
 
 ""
@@ -81,7 +82,7 @@ endif
 
 ""
 " Fzm invokes fuzzymenu 
-command -bang -nargs=0 -buffer Fzm call fuzzymenu#Run({'fullscreen': <bang>0})<cr>
+command -bang -nargs=0 -buffer Fzm call fuzzymenu#Run({'fullscreen': <bang>0})
 
 ""
 "" An fzf function which is recommended in fzf docs
