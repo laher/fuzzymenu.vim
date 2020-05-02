@@ -5,6 +5,8 @@
 "
 " {1} https://github.com/laher/fuzzymenu.vim
 " {2} https://github.com/junegunn/fzf
+"
+" See also, |fzf|
 
 
 ""

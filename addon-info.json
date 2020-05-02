@@ -1,0 +1,9 @@
+{
+  "name": "fuzzymenu",
+  "description": "a fuzzy-finder menu for vim",
+  "author": "Am Laher",
+  "dependencies": {
+    "fzf": {"type": "git", "url": "git://github.com/junegunn/fzf"},
+    "fzf.vim": {"type": "git", "url": "git://github.com/junegunn/fzf.vim"}
+  }
+}
