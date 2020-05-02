@@ -3,6 +3,7 @@ let s:cpo_save = &cpo
 set cpo&vim
 
 """ internal state
+let s:menuItemsColored = { }
 let s:menuItems = { }
 
 ""
@@ -15,7 +16,21 @@ function! fuzzymenu#Add(name, def) abort
     echom "definition not valid"
     return
   endif
-  let s:menuItems[a:name] = a:def
+  let s:menuItemsColored[s:key(a:name, a:def, 1)] = a:def
+  let s:menuItems[s:key(a:name, a:def, 0)] = a:def
+endfunction
+
+function s:key(name, def, colored)
+  let k = ''
+  let kc = ''
+  if has_key(a:def, 'tags')
+    let k = '[' . join(a:def['tags'], ',') . ']'
+    let kc = s:color('cyan', k)
+  endif
+  if a:colored
+    return kc.s:color('green', a:name)
+  endif
+  return k.a:name
 endfunction
 
 func! s:compare(i1, i2)
@@ -25,10 +40,10 @@ endfunc
 function! s:MenuSource(currentMode) abort
   let extension = expand("%:e")
   let ret = []
-  let pairs = items(s:menuItems)
-  "call sort(pairs, 's:compare')
+  let pairs = items(s:menuItemsColored)
+  call sort(pairs, 's:compare')
   for i in pairs 
-    let name = i[0]
+    let k = i[0]
     let def = i[1]
     if has_key(def, 'for') 
      if extension != def['for'] 
@@ -46,16 +61,11 @@ function! s:MenuSource(currentMode) abort
         continue
       endif
     endif
-    let tags = ''
-    if has_key(def, 'tags')
-      let tags = '[' . join(def['tags'], ',') . '] '
-    endif
-    let name= printf("%s\t\t%s\t%s\t%s",
-            \ s:color('green', name),
+    let row= printf("%s\t\t%s\t%s",
+            \ k,
             \ ':'.def['exec'],
-            \ tags,
             \ s:color('cyan', help))
-    call add(ret, name)
+    call add(ret, row)
   endfor
   return ret
 endfunction
@@ -70,6 +80,11 @@ endfunction
 
 function! s:MenuSink(arg, mode) abort
   let key = split(a:arg, "\t")[0]
+  if !has_key(s:menuItems, key)
+    "echo s:color('red', printf("key '%s' not found!", key))
+    echo printf("key '%s' not found!", key)
+    "return
+  endif
   let def = s:menuItems[key]
   if has_key(def, 'exec')
     if a:mode == 'v'
@@ -98,19 +113,19 @@ endfunction
 " @public
 " Invoke fuzzymenu from visual mode
 function! fuzzymenu#RunVisual() range
-  call s:Run('v')
+  call s:Run('v', {})
 endfunction
 
 ""
 " @public
 " Invoke fuzzymenu from normal mode
-function! fuzzymenu#Run() abort
-  call s:Run('n')
+function! fuzzymenu#Run(dict) abort
+  call s:Run('n', a:dict)
 endfunction
 
 
 
-function! s:Run(mode) abort
+function! s:Run(mode, params) abort
 ""
 " @setting fuzzymenu_position
 " Position of the fuzzymenu (using fzf positions down/up/left/right)
@@ -118,16 +133,19 @@ function! s:Run(mode) abort
 
 ""
 " @setting fuzzymenu_size
-" Relative size of menu
+" Relative size of menu (default is '33%')
   let g:fuzzymenu_size = get(g:, 'fuzzymenu_size', '33%')
 
-  let dict = {
+  let opts = {
     \ 'source': s:MenuSource(a:mode),
     \ 'sink': function('s:MenuSink' . a:mode),
     \ 'options': '--ansi'}
-  let dict[g:fuzzymenu_position] = g:fuzzymenu_size
-  call fzf#run(dict)
-
+  let opts[g:fuzzymenu_position] = g:fuzzymenu_size
+  let fullscreen = 0
+  if has_key(a:params, 'fullscreen')
+    let fullscreen = a:params['fullscreen']
+  endif
+  call fzf#run(fzf#wrap('fuzzymenu', opts, fullscreen))
 endfunction
 
 function! s:get_color(attr, ...) abort

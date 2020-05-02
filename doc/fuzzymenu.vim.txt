@@ -24,7 +24,7 @@ CONFIGURATION                                           *fuzzymenu.vim-config*
 Position of the fuzzymenu (using fzf positions down/up/left/right)
 
                                                             *g:fuzzymenu_size*
-Relative size of menu
+Relative size of menu (default is '33%')
 
                                                         *g:fuzzymenu_auto_add*
 Automatically add menu items. Note: I'll break these up in future into several
@@ -35,7 +35,7 @@ COMMANDS                                              *fuzzymenu.vim-commands*
 
 There is a single command, |:Fzm|, to invoke fuzzymenu.
 
-:[N]Fzm                                                                 *:Fzm*
+:[N]Fzm[!]                                                              *:Fzm*
   Fzm invokes fuzzymenu
 
 :GGrep[!]                                                             *:GGrep*
@@ -52,7 +52,7 @@ fuzzymenu#Add({name}, {def})                                 *fuzzymenu#Add()*
 fuzzymenu#RunVisual()                                  *fuzzymenu#RunVisual()*
   Invoke fuzzymenu from visual mode
 
-fuzzymenu#Run()                                              *fuzzymenu#Run()*
+fuzzymenu#Run({dict})                                        *fuzzymenu#Run()*
   Invoke fuzzymenu from normal mode
 
 

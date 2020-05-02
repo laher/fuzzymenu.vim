@@ -9,7 +9,7 @@
 
 ""
 " Open fuzzymenu in normal mode.
-nnoremap <buffer> <silent> <Plug>Fzm :call fuzzymenu#Run()<cr>
+nnoremap <buffer> <silent> <Plug>Fzm :call fuzzymenu#Run({})<cr>
 ""
 " Open fuzzymenu in normal mode.
 xnoremap <buffer> <silent> <Plug>FzmVisual :call fuzzymenu#RunVisual()<cr>
@@ -81,7 +81,7 @@ endif
 
 ""
 " Fzm invokes fuzzymenu 
-command -nargs=0 -buffer Fzm call fuzzymenu#Run()<cr>
+command -bang -nargs=0 -buffer Fzm call fuzzymenu#Run({'fullscreen': <bang>0})<cr>
 
 ""
 "" An fzf function which is recommended in fzf docs
