@@ -121,8 +121,10 @@ function! s:Run(mode) abort
 " Relative size of menu
   let g:fuzzymenu_size = get(g:, 'fuzzymenu_size', '33%')
 
-  let dict = {'source': s:MenuSource(a:mode), 'sink': function('s:MenuSink' . a:mode), 
-  \ 'options': '--ansi'}
+  let dict = {
+    \ 'source': s:MenuSource(a:mode),
+    \ 'sink': function('s:MenuSink' . a:mode),
+    \ 'options': '--ansi'}
   let dict[g:fuzzymenu_position] = g:fuzzymenu_size
   call fzf#run(dict)
 

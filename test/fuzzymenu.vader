@@ -1,0 +1,5 @@
+Execute (initialize):
+  call fzf#install()
+
+Execute (learning test):
+  call fuzzymenu#Add('my entry', {'exec': 'nada'})
