@@ -109,23 +109,23 @@ function! fuzzymenu#InsertMode() abort
        startinsert
      endif
 endfunction
-""
-" @public
-" Invoke fuzzymenu from visual mode
-function! fuzzymenu#RunVisual() range
-  call s:Run('v', {})
-endfunction
 
 ""
 " @public
-" Invoke fuzzymenu from normal mode
+" Invoke fuzzymenu
 function! fuzzymenu#Run(dict) abort
-  call s:Run('n', a:dict)
+  call s:Run(a:dict)
 endfunction
 
+function! s:Run(params) abort
 
+  let mode = 'n'
+  if has_key(a:params, 'visual')
+    if a:params['visual'] == 1
+      mode = 'v'
+    endif
+  endif
 
-function! s:Run(mode, params) abort
 ""
 " @setting fuzzymenu_position
 " Position of the fuzzymenu (using fzf positions down/up/left/right)
@@ -137,8 +137,8 @@ function! s:Run(mode, params) abort
   let g:fuzzymenu_size = get(g:, 'fuzzymenu_size', '33%')
 
   let opts = {
-    \ 'source': s:MenuSource(a:mode),
-    \ 'sink': function('s:MenuSink' . a:mode),
+    \ 'source': s:MenuSource(mode),
+    \ 'sink': function('s:MenuSink' . mode),
     \ 'options': '--ansi'}
   let opts[g:fuzzymenu_position] = g:fuzzymenu_size
   let fullscreen = 0

@@ -51,11 +51,8 @@ fuzzymenu#Add({name}, {def})                                 *fuzzymenu#Add()*
   Add a menu item to fuzzymenu. {name} are unique. {def} is a dics with a
   mandatory member, 'exec'
 
-fuzzymenu#RunVisual()                                  *fuzzymenu#RunVisual()*
-  Invoke fuzzymenu from visual mode
-
 fuzzymenu#Run({dict})                                        *fuzzymenu#Run()*
-  Invoke fuzzymenu from normal mode
+  Invoke fuzzymenu
 
 
 vim:tw=78:ts=8:ft=help:norl:

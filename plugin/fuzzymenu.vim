@@ -14,7 +14,7 @@
 nnoremap <silent> <Plug>Fzm :call fuzzymenu#Run({})<cr>
 ""
 " Open fuzzymenu in normal mode.
-xnoremap <silent> <Plug>FzmVisual :call fuzzymenu#RunVisual()<cr>
+xnoremap <silent> <Plug>FzmVisual :call fuzzymenu#Run({'visual':1})<cr>
 
 ""
 " @setting g:fuzzymenu_auto_add
