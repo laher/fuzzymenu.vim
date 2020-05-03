@@ -1,9 +1,12 @@
 # fuzzymenu.vim ![build-status](https://travis-ci.org/laher/fuzzymenu.vim.svg?branch=master)
 
- * A menu for vim or neovim, built on top of [fzf](https://github.com/junegunn/fzf). 
- * Discover some vim features easily, without needing to memorise so many commands and mappings.
- * Search for items using vim terminology OR non-vim terminology (e.g. 'search buffers' vs 'Find in files')
- * See also [help docs](./doc/fuzzymenu.vim.txt).
+fuzzymenu is an _experimental_ menu for vim or neovim, built on top of [fzf](https://github.com/junegunn/fzf). 
+
+Learn `vim` more easily, but still learn vim: 
+
+ * Discover some features quickly and easily.
+ * You don't _need_ to know so many commands and mappings, BUT fuzzymenu reminds you how to use them directly, as you choose the entry.
+ * Search for items using vim terminology OR non-vim terminology (e.g. 'search buffers' vs 'Find in open files').
 
 ## Background 
 
@@ -11,6 +14,7 @@
  * The project was inspired by a combination of fzf (fuzzy finders) and spacemacs/(spacevim) - providing an easily discoverable feature set, where you only need to remember a single key mapping.
  * The advantage of a fuzzy menu is the _immediacy_ of a large, filterable, top-level menu.
  * At this point the feature set is limited to commands and function calls. I don't have plans to add support for motions, text objects and such (partly because it's kinda endless).
+ * See also [help docs](./doc/fuzzymenu.txt).
 
 ## Install
 
@@ -24,11 +28,17 @@ Plug 'junegunn/fzf.vim'
 Plug 'laher/fuzzymenu.vim'
 ```
 
-* fzf itself depends on a binary file. Please see fzf installation instructions.
+ * The fzf plugin itself depends on a binary file `fzf`. If you don't have it already, `:call fzf#install()` (or see fzf docs).
 
-## Invoking fuzzymenu
+## Usage
 
-`:Fzm`: You can invoke fuzzymenu with a command `:Fzm` (fullscreen with `:Fzm!`)
+### 1. Invoke fuzzymenu
+
+#### 1a. `:Fzm` or `:Fzm!`
+
+You can invoke fuzzymenu with a command `:Fzm` (fullscreen with `:Fzm!`)
+
+#### 1b. Create key mapping(s)
 
 For convenience, you can create a key mapping. 
 
@@ -42,28 +52,50 @@ e.g. this can be specified in your .vimrc (or init.vim, for neovim users):
   nmap <Leader><Leader> <Plug>Fzm
 ```
 
-Now you can use 'fuzzy search' & up/down keys to choose menu items. 
+### 2. Using the menu
 
-Just bring up fuzzymenu, and start typing what you want...
+#### 2a. using fzf
+
+fuzzymenu uses the `fzf` user interface.
+
+ * Type some letters to filter the menu contents. 
+ * fzf will match entries containing the letters you type, BUT they don't need to appear consecutively in the target menu entry. 
+  * e.g. Typing `cnsctv` would match an entry named `consecutive`. 
+  * e.g.2. `vto` would not match - those letters do exist in the word `consecutive`, but in a different order. 
+ * fzf uses case-insensitive 
+ * Use Up/Down arrows (or k/j), to select the item you want. 
+ * Press Enter to select the item, which _may_ be another fzf entry, in some cases.
+ * To cancel, `Esc`/`Ctrl-C`/`:q` to cancel.
+
+#### 2b. Fuzzymenu specifics: 
+
+Fuzzymenu entries are intended to be easy to search for:
+
+* You can search using the name of the item (which may be specified by 'general IDE terminology' AND 'vim terminology').
+  * e.g. `
+* search using part of the command name which will be executed.
+* Search by entry [tags].e.g. 'search buffers' vs 'Find in open files'
+* If you want to search for a combination of these, then order is important - `[tag]name :command`.
 
 ## Bundled menu items
 
- * Various fzf.vim commands.
+fuzzymenu comes with a GROWING list of menu items (please submit more via pull requests).
+
+ * Various commands from fzm.vim.
  * A few fundamentals: setting case-[in]sensitive searches, show/hiding line numbers and whitespace characters.
  * Various LSP features (requires [vim-lsp](https://github.com/prabirshrestha/vim-lsp): go to definition/implementation/references. rename, format, organize imports).
  * Various git features (requires [fugitive](https://github.com/tpope/vim-fugitive) ).
  * Various go tools (requires [gothx.vim](https://github.com/laher/gothx.vim) ).
 
 | Area           | Dependencies   | Registered by fuzzymenu | Registered by dependency |
-|----------------|----------------|----------------------|--------------------------|
-| fundamentals   | n/a            | [x] |     |
-| FZF            | (fzf, fzf.vim) | [x] |     |
-| LSP            | [vim-lsp](https://github.com/prabirshrestha/vim-lsp) | [x] |     |
-| Go             | [gothx][https://github.com/laher/gothx.vim)           |     | [x] |
-| git            | [fugitive][https://github.com/tpope/vim-fugitive     | [x] |     |
+|----------------|----------------|-------------------------|--------------------------|
+| fundamentals   | n/a            | [x]                     |                          |
+| FZF            | (fzf, fzf.vim) | [x]                     |                          |
+| LSP            | [vim-lsp](https://github.com/prabirshrestha/vim-lsp) | [x] |        |
+| Go             | [gothx][https://github.com/laher/gothx.vim)          |     | [x]    |
+| git            | [fugitive][https://github.com/tpope/vim-fugitive     | [x] |        |
 
-
-More to follow
+More to follow... _For example, I'm keen to support multiple providers for given features ... for LSP, this could include vim-lsp, coc.vim & languageclient-neovim. For Go, gothx.vim and vim-go._
 
 ## Extend fuzzymenu.vim
 
@@ -92,27 +124,9 @@ The first parameter is a unique key. The second parameter is a map of options:
 - `help` is for adding an additional explanation.
 - `for` specifies a filetype. 
 
-### Defining an entry from your plugin
-
-A plugin can add some entries to fuzzymenu, but just make sure to add them _only_ when fuzzymenu is installed. Like this (for an imaginary plugin 'teddy', which works on `.ted` files):
-
-```vim
-if &rtp =~ 'fuzzymenu.vim'
-call fuzzymenu#Add('teddy bingo', {'exec': 'TddyBingo', 'for': 'ted'})
-endif
-```
-
-From within your plugin, please use a central `plugin/*.vim` file to define filetype-specific mappings (rather than `ftplugin/`). fuzzymenu will look after which entries to show based on the `for` parameter and the filetype. It's just how fuzzymenu's registration mechanism works.
-
 ## Configuration
 
-See [./doc/fuzzymenu.txt](./doc/fuzzymenu.vim.txt) for full details ...
-
-Some starting points:
-
-`g:fuzzymenu_auto_add`: set to `0` to prevent fuzzymenu adding its own entries. Now define your own instead. Default is 1
-`g:fuzzymenu_position`: position of menu (default is 'down'. See fzf.vim) 
-`g:fuzzymenu_size`: relative size of menu (default is `33%`. See fzf.vim) 
+See [./doc/fuzzymenu.txt](./doc/fuzzymenu.txt) for configuration options ...
 
 
 ## For contributors
@@ -133,3 +147,15 @@ Some guidance for anyone wanting to contribute ...
 
 _I'd love to make these available as a preview window. I'm not exactly sure how to do that (typically fzf.vim uses an external program - a wrapper around cat/bat. I don't know how to print a vim help from an external command - vim/view or otherwise...)._
 Alternatively, it might just work to implement a key mapping within the fzf window, to view help/mappings for a menu item - including some visual cue.
+
+### Defining an entry from your plugin
+
+A plugin can add some entries to fuzzymenu, but just make sure to add them _only_ when fuzzymenu is installed. Like this (for an imaginary plugin 'teddy', which works on `.ted` files):
+
+```vim
+if &rtp =~ 'fuzzymenu.vim'
+call fuzzymenu#Add('teddy bingo', {'exec': 'TddyBingo', 'for': 'ted'})
+endif
+```
+
+From within your plugin, please use a central `plugin/*.vim` file to define filetype-specific mappings (rather than `ftplugin/`). fuzzymenu will look after which entries to show based on the `for` parameter and the filetype. It's just how fuzzymenu's registration mechanism works.

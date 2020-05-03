@@ -11,10 +11,10 @@
 
 ""
 " Open fuzzymenu in normal mode.
-nnoremap <buffer> <silent> <Plug>Fzm :call fuzzymenu#Run({})<cr>
+nnoremap <silent> <Plug>Fzm :call fuzzymenu#Run({})<cr>
 ""
 " Open fuzzymenu in normal mode.
-xnoremap <buffer> <silent> <Plug>FzmVisual :call fuzzymenu#RunVisual()<cr>
+xnoremap <silent> <Plug>FzmVisual :call fuzzymenu#RunVisual()<cr>
 
 ""
 " @setting g:fuzzymenu_auto_add
@@ -70,10 +70,10 @@ call fuzzymenu#Add('Open file', {'exec': 'Files', 'after': 'call fuzzymenu#Inser
 " @section Mappings, mappings
 " There are one normal-mode mapping, "<Leader><Leader>" to invoke fuzzymenu
 if !hasmapto('<Plug>Fzm', 'n')
-   nmap <buffer> <Leader><Leader> <Plug>Fzm
+   nmap <Leader><Leader> <Plug>Fzm
 endif
 if !hasmapto('<Plug>Fzm', 'v')
-   xmap <buffer> <Leader><Leader> <Plug>FzmVisual
+   xmap <Leader><Leader> <Plug>FzmVisual
 endif
 
 endif
