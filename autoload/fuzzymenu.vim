@@ -28,7 +28,7 @@ function s:key(name, def, colored)
     let kc = s:color('cyan', k)
   endif
   if a:colored
-    return kc.s:color('green', a:name)
+    return kc.a:name "s:color('green', a:name)
   endif
   return k.a:name
 endfunction
