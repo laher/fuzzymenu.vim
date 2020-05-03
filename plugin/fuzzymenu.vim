@@ -47,6 +47,9 @@ call fuzzymenu#Add('Hide line numbers', {'exec': 'set nonumber'})
 call fuzzymenu#Add('Show line numbers', {'exec': 'set number'})
 call fuzzymenu#Add('Hide whitespace characters', {'exec': 'set nolist'})
 call fuzzymenu#Add('Show whitespace characters', {'exec': 'set list'})
+call fuzzymenu#Add('Undo', {'exec': 'normal! u'})
+call fuzzymenu#Add('Redo', {'exec': 'normal! <c-r>'})
+
 
 " common editor features
 call fuzzymenu#Add('Select all', {'exec': 'normal! ggVG'})

@@ -3,8 +3,8 @@ let s:cpo_save = &cpo
 set cpo&vim
 
 """ internal state
-let s:menuItemsColored = { }
-let s:menuItems = { }
+let s:menuItemsSource = { }
+let s:menuItemsSink = { }
 
 ""
 " @public
@@ -16,8 +16,8 @@ function! fuzzymenu#Add(name, def) abort
     echom "definition not valid"
     return
   endif
-  let s:menuItemsColored[s:key(a:name, a:def, 1)] = a:def
-  let s:menuItems[s:key(a:name, a:def, 0)] = a:def
+  let s:menuItemsSource[s:key(a:name, a:def, 1)] = a:def
+  let s:menuItemsSink[s:key(a:name, a:def, 0)] = a:def
 endfunction
 
 function s:key(name, def, colored)
@@ -40,7 +40,7 @@ endfunc
 function! s:MenuSource(currentMode) abort
   let extension = expand("%:e")
   let ret = []
-  let pairs = items(s:menuItemsColored)
+  let pairs = items(s:menuItemsSource)
   call sort(pairs, 's:compare')
   for i in pairs 
     let k = i[0]
@@ -61,9 +61,17 @@ function! s:MenuSource(currentMode) abort
         continue
       endif
     endif
+    let execu = def['exec']
+    if execu =~ '^normal!'
+      let execu = substitute(execu, '^normal!', s:color('cyan', ':normal!'), '')
+    elseif execu =~ '^call '
+      let execu = substitute(execu, '^call ', s:color('cyan', ':call '), '')
+    else
+      let execu = s:color('cyan', ':') . execu
+    endif
     let row= printf("%s\t\t%s\t%s",
             \ k,
-            \ ':'.def['exec'],
+            \ execu,
             \ s:color('cyan', help))
     call add(ret, row)
   endfor
@@ -80,12 +88,12 @@ endfunction
 
 function! s:MenuSink(arg, mode) abort
   let key = split(a:arg, "\t")[0]
-  if !has_key(s:menuItems, key)
+  if !has_key(s:menuItemsSink, key)
     "echo s:color('red', printf("key '%s' not found!", key))
     echo printf("key '%s' not found!", key)
     "return
   endif
-  let def = s:menuItems[key]
+  let def = s:menuItemsSink[key]
   if has_key(def, 'exec')
     if a:mode == 'v'
       " execute on selected range
