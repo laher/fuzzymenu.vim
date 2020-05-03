@@ -65,13 +65,13 @@ call fuzzymenu#Add('Find in open buffers (files)', {'exec': 'Lines', 'after': 'c
 call fuzzymenu#Add('Find (in current buffer)', {'exec': 'BLines', 'after': 'call fuzzymenu#InsertMode()', 'tags': ['fzf']})
 call fuzzymenu#Add('Open file', {'exec': 'Files', 'after': 'call fuzzymenu#InsertMode()', 'tags': ['fzf']})
 
-
 ""
 " @section Mappings, mappings
 " There are one normal-mode mapping, "<Leader><Leader>" to invoke fuzzymenu
 if !hasmapto('<Plug>Fzm', 'n')
    nmap <Leader><Leader> <Plug>Fzm
 endif
+
 if !hasmapto('<Plug>Fzm', 'v')
    xmap <Leader><Leader> <Plug>FzmVisual
 endif
@@ -87,8 +87,8 @@ endif
 command -bang -nargs=0 -buffer Fzm call fuzzymenu#Run({'fullscreen': <bang>0})
 
 ""
-"" An fzf function which is recommended in fzf docs
-"" Find a file using git as a base dir
+" GGrep finds a file using git as a base dir
+" GGrep runs fzf#vim#grep with git-grep. This is recommended in fzf docs
 command! -bang -nargs=* GGrep
 \ call fzf#vim#grep(
 \   'git grep --line-number '.shellescape(<q-args>), 0,

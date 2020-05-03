@@ -41,8 +41,8 @@ There is a single command, |:Fzm|, to invoke fuzzymenu.
   Fzm invokes fuzzymenu
 
 :GGrep[!]                                                             *:GGrep*
-  " An fzf function which is recommended in fzf docs " Find a file using git
-  as a base dir
+  GGrep finds a file using git as a base dir GGrep runs fzf#vim#grep with
+  git-grep. This is recommended in fzf docs
 
 ==============================================================================
 FUNCTIONS                                                *fuzzymenu-functions*
