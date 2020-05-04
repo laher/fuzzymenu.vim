@@ -121,7 +121,7 @@ endfunction
 ""
 " @public
 " Invoke fuzzymenu
-function! fuzzymenu#Run(dict) abort
+function! fuzzymenu#Run(dict) abort range
   call s:Run(a:dict)
 endfunction
 
@@ -130,7 +130,7 @@ function! s:Run(params) abort
   let mode = 'n'
   if has_key(a:params, 'visual')
     if a:params['visual'] == 1
-      mode = 'v'
+      let mode = 'v'
     endif
   endif
 
