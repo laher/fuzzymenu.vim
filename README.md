@@ -71,11 +71,18 @@ fuzzymenu uses the `fzf` user interface.
 
 Fuzzymenu entries are intended to be easy to search for:
 
-* You can search using the name of the item (which may be specified by 'general IDE terminology' AND 'vim terminology').
-  * e.g. `
+* You can search using the name of the item (which may be specified by 'general IDE terminology' AND 'vim terminology'. e.g. 'search buffers' vs 'Find in open files').
 * search using part of the command name which will be executed.
-* Search by entry [tags].e.g. 'search buffers' vs 'Find in open files'
+* Search by entry [tags]. 
 * If you want to search for a combination of these, then order is important - `[tag]name :command`.
+
+### 3. Types of menu item
+
+fuzzymenu items can use one of three types of invocation. The menu shows the definitions, which are searchable:
+
+* Commands, e.g. `:Helptags`
+* Function calls, e.g. `:call func#name()`
+* normal mode input sequences, e.g. `normal: ggVG`
 
 ## Bundled menu items
 
