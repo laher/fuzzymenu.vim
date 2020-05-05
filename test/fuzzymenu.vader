@@ -9,7 +9,7 @@ Execute (add test):
       \ },
       \ {'for': 'thing', 'tags':['thing']})
   let r = fuzzymenu#Get('[thing]Run')
-  echo printf('%s', r)
+  echo printf('%p', r)
 
   let r = fuzzymenu#Get('my entry')
-  echo printf('%s', r)
+  echo printf('%p', r)
