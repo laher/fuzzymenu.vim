@@ -76,13 +76,17 @@ Fuzzymenu entries are intended to be easy to search for:
 * Search by entry [tags]. 
 * If you want to search for a combination of these, then order is important - `[tag]name :command`.
 
-### 3. Types of menu item
+### 3. Learning vim through fuzzymenu
 
-fuzzymenu items can use one of three types of invocation. The menu shows the definitions, which are searchable:
+Fuzzymenu isn't a general purpose vim helper. Try `vimtutor` and many other resources.
+However, fuzzymenu does make a small effort to teach you how to use its content directly...
 
-* Commands, e.g. `:Helptags`
-* Function calls, e.g. `:call func#name()`
-* normal mode input sequences, e.g. `normal: ggVG`
+* Please see the 'definition' on the right of each menu item - the definition is also searchable.
+* Menu items use one of three types of invocation:
+  * Commands. From normal mode, type `:`, e.g. `:Helptags`
+  * Function calls. From normal mode, type `:call `, e.g. `:call func#name()`
+  * Normal mode input sequence. From normal mode, just type the sequence, e.g. `ggVG`
+* Use `:Fzm` -> `help` (another fzf menu for help tags) to navigate vim's help system more easily.
 
 ## Bundled menu items
 
