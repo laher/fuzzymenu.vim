@@ -8,7 +8,6 @@
 "
 " See also, |fzf|
 
-
 ""
 " Open fuzzymenu in normal mode.
 nnoremap <silent> <Plug>Fzm :call fuzzymenu#Run({})<cr>
@@ -26,20 +25,28 @@ if g:fuzzymenu_auto_add
 
 " vim-lsp mappings
 if &rtp =~ 'vim-lsp'
-  call fuzzymenu#Add('Go to definition', {'exec': 'LspDefinition', 'tags': ['LSP']})
-  call fuzzymenu#Add('Find references', {'exec': 'LspReferences', 'tags': ['LSP']})
-  call fuzzymenu#Add('Rename', {'exec': 'LspRename', 'tags': ['LSP']})
-  call fuzzymenu#Add('Organize imports', {'exec': 'LspCodeActionSync source.organizeImports', 'tags': ['LSP']})
-  call fuzzymenu#Add('Go to implementation', {'exec': 'LspImplementation', 'tags': ['LSP']})
+  call fuzzymenu#AddAll({
+        \ 'Go to definition': {'exec': 'LspDefinition'},
+        \ 'Find references': {'exec': 'LspReferences'},
+        \ 'Rename': {'exec': 'LspRename'},
+        \ 'Organize imports': {'exec': 'LspCodeActionSync source.organizeImports'},
+        \ 'Go to implementation': {'exec': 'LspImplementation'},
+      \ },
+      \ {'tags': ['lsp', 'vim-lsp']})
 endif
 
 " git mappings
 if &rtp =~ 'vim-fugitive'
-  call fuzzymenu#Add('Find commit', {'exec': 'Commits', 'after': 'call fuzzymenu#InsertMode()', 'tags': ['git']})
-  call fuzzymenu#Add('Find commit in current buffer', {'exec': 'BCommits', 'after': 'call fuzzymenu#InsertMode()', 'tags': ['git']})
-  call fuzzymenu#Add('Open file', {'exec': 'GFiles', 'after': 'call fuzzymenu#InsertMode()', 'tags': ['git']})
-  call fuzzymenu#Add('Find in files', {'exec': 'GGrep', 'after': 'call fuzzymenu#InsertMode()', 'tags': ['git']})
-  call fuzzymenu#Add('Browse to file/selection', {'exec': 'GBrowse', 'after': 'call fuzzymenu#InsertMode()', 'tags': ['git', 'github']})
+  call fuzzymenu#AddAll({
+        \ 'Find commit': {'exec': 'Commits'},
+        \ 'Find commit in current buffer': {'exec': 'BCommits'},
+        \ 'Open file': {'exec': 'GFiles'},
+        \ 'Find in files': {'exec': 'GGrep'}
+      \ },
+      \ {'after': 'call fuzzymenu#InsertMode()', 'tags': ['git', 'fzf']})
+  " this one is also tagged github
+  call fuzzymenu#Add('Browse to file/selection', {'exec': 'GBrowse', 'after': 'call fuzzymenu#InsertMode()', 'tags': ['git', 'github', 'fzf']})
+
 endif
 
 " basic options
@@ -52,7 +59,6 @@ call fuzzymenu#Add('Show whitespace characters', {'exec': 'set list'})
 call fuzzymenu#Add('Undo', {'exec': 'normal! u'})
 call fuzzymenu#Add('Redo', {'exec': 'normal! <c-r>'})
 
-
 " common editor features
 call fuzzymenu#Add('Select all', {'exec': 'normal! ggVG'})
 call fuzzymenu#Add('Yank (copy) all', {'exec': '%y'})
@@ -60,15 +66,18 @@ call fuzzymenu#Add('Yank (copy) selection', {'exec': '%y', 'modes': 'v'})
 call fuzzymenu#Add('Delete all', {'exec': '%d'})
 
 """ fzf tools
-call fuzzymenu#Add('Key mappings', {'exec': 'Maps', 'after': 'call fuzzymenu#InsertMode()', 'help': 'vim key mappings', 'tags': ['fzf']})
-call fuzzymenu#Add('Vim commands', {'exec': 'Commands', 'after': 'call fuzzymenu#InsertMode()', 'tags': ['fzf']})
-call fuzzymenu#Add('Open recent file', {'exec': 'History', 'after': 'call fuzzymenu#InsertMode()', 'tags': ['fzf']})
-call fuzzymenu#Add('Recent commands', {'exec': 'History:', 'after': 'call fuzzymenu#InsertMode()', 'tags': ['fzf']})
-call fuzzymenu#Add('Recent searches', {'exec': 'History/', 'after': 'call fuzzymenu#InsertMode()', 'tags': ['fzf']})
-call fuzzymenu#Add('Help', {'exec': 'Helptags', 'after': 'call fuzzymenu#InsertMode()', 'tags': ['fzf']})
-call fuzzymenu#Add('Find in open buffers (files)', {'exec': 'Lines', 'after': 'call fuzzymenu#InsertMode()', 'tags': ['fzf']})
-call fuzzymenu#Add('Find (in current buffer)', {'exec': 'BLines', 'after': 'call fuzzymenu#InsertMode()', 'tags': ['fzf']})
-call fuzzymenu#Add('Open file', {'exec': 'Files', 'after': 'call fuzzymenu#InsertMode()', 'tags': ['fzf']})
+call fuzzymenu#AddAll({
+      \ 'Key mappings': {'exec': 'Maps', 'help': 'vim key mappings'},
+      \ 'Vim commands': {'exec': 'Commands'},
+      \ 'Open recent file': {'exec': 'History'},
+      \ 'Recent commands': {'exec': 'History:'},
+      \ 'Recent searches': {'exec': 'History/'},
+      \ 'Help': {'exec': 'Helptags'},
+      \ 'Find in open buffers (files)': {'exec': 'Lines'},
+      \ 'Find (in current buffer)': {'exec': 'BLines'},
+      \ 'Open file': {'exec': 'Files'},
+    \ },
+    \ {'after': 'call fuzzymenu#InsertMode()', 'tags': ['fzf']})
 
 " vim-go. (see also gothx.vim) 
 if &rtp =~ 'vim-go'
