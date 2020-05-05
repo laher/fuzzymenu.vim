@@ -41,7 +41,7 @@ if &rtp =~ 'vim-fugitive'
         \ 'Find commit': {'exec': 'Commits'},
         \ 'Find commit in current buffer': {'exec': 'BCommits'},
         \ 'Open file': {'exec': 'GFiles'},
-        \ 'Find in files': {'exec': 'GGrep'}
+        \ 'Find in files': {'exec': 'GGrep'},
       \ },
       \ {'after': 'call fuzzymenu#InsertMode()', 'tags': ['git', 'fzf']})
   " this one is also tagged github
@@ -64,6 +64,7 @@ call fuzzymenu#Add('Select all', {'exec': 'normal! ggVG'})
 call fuzzymenu#Add('Yank (copy) all', {'exec': '%y'})
 call fuzzymenu#Add('Yank (copy) selection', {'exec': '%y', 'modes': 'v'})
 call fuzzymenu#Add('Delete all', {'exec': '%d'})
+call fuzzymenu#Add('Find word under cursor', {'exec': 'normal! *'})
 
 """ fzf tools
 call fuzzymenu#AddAll({

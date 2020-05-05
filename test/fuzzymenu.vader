@@ -1,7 +1,7 @@
 Execute (initialize):
   call fzf#install()
 
-Execute (add test):
+Execute (fuzzymenu#Add and #AddAll):
   call fuzzymenu#Add('my entry', {'exec': 'nada'})
   call fuzzymenu#AddAll({
         \ 'Run': {'exec': 'ThingRun'},

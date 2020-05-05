@@ -127,13 +127,22 @@ if &rtp =~ 'vim-lsp' " <- if this plugin is loaded
   call fuzzymenu#Add('LSP: rename', {'exec': 'LspRename'})
 endif
 ```
-
 The first parameter is a unique key. The second parameter is a map of options:
 
 - `exec` is mandatory. This is the command which will be invoked. For example, `'Maps'` above is the same as running `:Maps` from normal mode. Use `call MyFunction()` to run a function. Use `normal!` to run some normal mode commands.
 - `after` is optional. Fuzzymenu runs this command _after_ this command. It is not printed in the fzf entry. For example, if you need fuzzymenu to drop into insert mode after running your command, specify `'after': 'call fuzzymenu#InsertMode()'`. _Insert mode is necessary for fzf features._
 - `help` is for adding an additional explanation.
 - `for` specifies a filetype. 
+
+## Limitations
+
+There will be some things which aren't well supported _yet_. 
+
+ * One example: the menu item's 'exec' is triggered inside an fzf 'sink' function. For many operations, this is fine, but in some cases the context of the invocation might pick up some context from fzf's popup window.
+
+> For example, an 'exec' with `<c-r><c-w>`, such as 'GGrep <c-r><c-w>', will try to find the word under the cursor of the fzf popup window, rather than the originating buffer.
+
+This might be easily solved by some `async` job magic. Watch this space.
 
 ## Configuration
 
