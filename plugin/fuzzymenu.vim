@@ -24,6 +24,7 @@ let g:fuzzymenu_auto_add = get(g:, 'fuzzymenu_auto_add', 1)
 
 if g:fuzzymenu_auto_add
 
+" vim-lsp mappings
 if &rtp =~ 'vim-lsp'
   call fuzzymenu#Add('Go to definition', {'exec': 'LspDefinition', 'tags': ['LSP']})
   call fuzzymenu#Add('Find references', {'exec': 'LspReferences', 'tags': ['LSP']})
@@ -32,6 +33,7 @@ if &rtp =~ 'vim-lsp'
   call fuzzymenu#Add('Go to implementation', {'exec': 'LspImplementation', 'tags': ['LSP']})
 endif
 
+" git mappings
 if &rtp =~ 'vim-fugitive'
   call fuzzymenu#Add('Find commit', {'exec': 'Commits', 'after': 'call fuzzymenu#InsertMode()', 'tags': ['git']})
   call fuzzymenu#Add('Find commit in current buffer', {'exec': 'BCommits', 'after': 'call fuzzymenu#InsertMode()', 'tags': ['git']})
@@ -67,6 +69,20 @@ call fuzzymenu#Add('Help', {'exec': 'Helptags', 'after': 'call fuzzymenu#InsertM
 call fuzzymenu#Add('Find in open buffers (files)', {'exec': 'Lines', 'after': 'call fuzzymenu#InsertMode()', 'tags': ['fzf']})
 call fuzzymenu#Add('Find (in current buffer)', {'exec': 'BLines', 'after': 'call fuzzymenu#InsertMode()', 'tags': ['fzf']})
 call fuzzymenu#Add('Open file', {'exec': 'Files', 'after': 'call fuzzymenu#InsertMode()', 'tags': ['fzf']})
+
+" vim-go. (see also gothx.vim) 
+if &rtp =~ 'vim-go'
+  call fuzzymenu#AddAll({
+        \ 'Run': {'exec': 'GoRun'},
+        \ 'Test': {'exec': 'GoTest'},
+        \ 'Keyify (specify keys in structs)': {'exec': 'GoKeyify'},
+        \ 'IfErr': {'exec': 'GoIfErr'},
+        \ 'Fill Struct': {'exec': 'GoFillStruct'},
+        \ 'Play (launch in browser)': {'exec': 'GoFillStruct'},
+        \ 'Alternate to/from test file': {'exec': 'GoAlternate'},
+      \ },
+      \ {'for': 'go', 'tags':['go','vim-go']})
+endif
 
 ""
 " @section Mappings, mappings

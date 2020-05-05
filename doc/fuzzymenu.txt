@@ -47,11 +47,16 @@ There is a single command, |:Fzm|, to invoke fuzzymenu.
 ==============================================================================
 FUNCTIONS                                                *fuzzymenu-functions*
 
+fuzzymenu#AddAll({items}, {baseDef})                      *fuzzymenu#AddAll()*
+  Add several menu items to fuzzymenu. {items} is a dict of names and defs.
+  {baseDef} is a dict to combine with each item (see Add()). {baseDef} is a
+  dict with common members
+
 fuzzymenu#Add({name}, {def})                                 *fuzzymenu#Add()*
-  Add a menu item to fuzzymenu. {name} are unique. {def} is a dics with a
+  Add a menu item to fuzzymenu. {name} are unique. {def} is a dict with a
   mandatory member, 'exec'
 
-fuzzymenu#Run({dict})                                        *fuzzymenu#Run()*
+fuzzymenu#Run({params})                                      *fuzzymenu#Run()*
   Invoke fuzzymenu
 
 

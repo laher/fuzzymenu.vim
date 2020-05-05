@@ -8,9 +8,29 @@ let s:menuItemsSink = { }
 
 ""
 " @public
+" @usage {items} {baseDef}
+" Add several menu items to fuzzymenu. {items} is a dict of names and defs.
+" {baseDef} is a dict to combine with each item
+" (see Add()).
+" {baseDef} is a dict with common members
+function! fuzzymenu#AddAll(items, baseDef) abort
+  let kvPairs = items(a:items)
+  for i in kvPairs 
+    let name = i[0]
+    let v = i[1]
+    let def = copy(a:baseDef)
+    for j in items(v)
+      let def[j[0]] = j[1]
+    endfor
+    call fuzzymenu#Add(name, def)
+  endfor
+endfunction
+
+""
+" @public
 " @usage {name} {def}
 " Add a menu item to fuzzymenu. {name} are unique.
-" {def} is a dics with a mandatory member, 'exec'
+" {def} is a dict with a mandatory member, 'exec'
 function! fuzzymenu#Add(name, def) abort
   if !has_key(a:def, 'exec')
     echom "definition not valid"
@@ -18,6 +38,10 @@ function! fuzzymenu#Add(name, def) abort
   endif
   let s:menuItemsSource[s:key(a:name, a:def, 1)] = a:def
   let s:menuItemsSink[s:key(a:name, a:def, 0)] = a:def
+endfunction
+
+function fuzzymenu#Get(name) abort
+  return s:menuItemsSink[a:name]
 endfunction
 
 function s:key(name, def, colored)
@@ -121,12 +145,7 @@ endfunction
 ""
 " @public
 " Invoke fuzzymenu
-function! fuzzymenu#Run(dict) abort range
-  call s:Run(a:dict)
-endfunction
-
-function! s:Run(params) abort
-
+function! fuzzymenu#Run(params) abort range
   let mode = 'n'
   if has_key(a:params, 'visual')
     if a:params['visual'] == 1
