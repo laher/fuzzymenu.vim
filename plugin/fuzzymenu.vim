@@ -35,6 +35,7 @@ if &rtp =~ 'vim-lsp'
       \ {'tags': ['lsp', 'vim-lsp']})
 endif
 
+" fuzzymenu
 " git mappings
 if &rtp =~ 'vim-fugitive'
   call fuzzymenu#AddAll({
@@ -42,6 +43,8 @@ if &rtp =~ 'vim-fugitive'
         \ 'Find commit in current buffer': {'exec': 'BCommits'},
         \ 'Open file': {'exec': 'GFiles'},
         \ 'Find in files': {'exec': 'GGrep'},
+        \ 'Find word under cursor as filename': {'exec': 'call fuzzymenu#GitFileUnderCursor()'},
+        \ 'Find word under cursor in files': {'exec': 'GGrep <c-r><c-w>'},
       \ },
       \ {'after': 'call fuzzymenu#InsertMode()', 'tags': ['git', 'fzf']})
   " this one is also tagged github
@@ -122,3 +125,17 @@ command! -bang -nargs=* GGrep
 \ call fzf#vim#grep(
 \   'git grep --line-number '.shellescape(<q-args>), 0,
 \   fzf#vim#with_preview({ 'dir': systemlist('git rev-parse --show-toplevel')[0] }), <bang>0)
+
+function! s:gitfiles()
+ call fzf#vim#gitfiles('', fzf#wrap({
+      \ 'options': '-q ' . expand("<cword>"),
+      \ }), 0)
+endfunction
+
+command! -bang -nargs=0 GitFilesWith
+  \ call s:gitfiles()
+
+command! -bang -nargs=0 GitFilesWithx
+\ call fzf#vim#gitfiles('', fzf#wrap({
+\ 'options': '-q fuzzymenu',
+\ }), <bang>0)

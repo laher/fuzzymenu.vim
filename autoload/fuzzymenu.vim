@@ -102,7 +102,7 @@ function! s:MenuSource(currentMode) abort
   return ret
 endfunction
 
-function! s:MenuSink(mode, arg) abort
+function! s:MenuSink(mode, wordUnderCursor, arg) abort
   let key = split(a:arg, "\t")[0]
   if !has_key(s:menuItemsSink, key)
     "echo s:color('red', printf("key '%s' not found!", key))
@@ -111,18 +111,25 @@ function! s:MenuSink(mode, arg) abort
   endif
   let def = s:menuItemsSink[key]
   if has_key(def, 'exec')
+    let execu = def['exec']
+    " this substitution is a hack to use wordUnderCursor of the original
+    " buffer (not the fzf minibuffer)
+    if execu =~ '<c-r><c-w>' 
+      let execu = substitute(execu, '<c-r><c-w>', a:wordUnderCursor, '')
+    endif
     if a:mode == 'v'
       " execute on selected range
       " TODO: only support range when it makes sense to? ... or should we just allow it? Someone can always just use normal-mode if it fails
-      execute "'<,'>" . def['exec']
+      execute "'<,'>" . execu 
     else
-      execute def['exec']
+      execute execu
     endif
   else
     echo "invalid key for fuzzymenu: " . key
   endif
   if has_key(def, 'after') 
-   execute def['after']
+   let after = def['after']
+   execute after
   endif
 endfunction
 
@@ -132,6 +139,17 @@ function! fuzzymenu#InsertMode() abort
      else
        startinsert
      endif
+endfunction
+
+function! fuzzymenu#GitfileUnderCursor()
+ let opt = expand("<cword>")
+ let opts = ''
+ if opt != ''
+   let opts = '-q ' . opt
+ endif
+ call fzf#vim#gitfiles('', fzf#wrap({
+      \ 'options': opts,
+      \ }), 0)
 endfunction
 
 ""
@@ -155,9 +173,11 @@ function! fuzzymenu#Run(params) abort range
 " Relative size of menu (default is '33%')
   let g:fuzzymenu_size = get(g:, 'fuzzymenu_size', '33%')
 
+  
+  let wordUnderCursor = expand("<cword>")
   let opts = {
     \ 'source': s:MenuSource(mode),
-    \ 'sink': function('s:MenuSink', [mode]),
+    \ 'sink': function('s:MenuSink', [mode, wordUnderCursor]),
     \ 'options': '--ansi'}
   let opts[g:fuzzymenu_position] = g:fuzzymenu_size
   let fullscreen = 0
