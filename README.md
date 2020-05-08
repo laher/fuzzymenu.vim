@@ -142,7 +142,7 @@ There will be some things which aren't well supported _yet_.
 
 > For example, an 'exec' with `<c-r><c-w>`, such as 'GGrep <c-r><c-w>', will try to find the word under the cursor of the fzf popup window, rather than the originating buffer.
 
-This might be easily solved by some `async` job magic. Watch this space.
+For now the workaround is to wrap the fzf call into a function that uses `expand("<cword>")`. See `fuzzymenu#GitGrepUnderCursor()`, for example.
 
 ## Configuration
 
