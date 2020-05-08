@@ -68,6 +68,8 @@ call fuzzymenu#Add('Yank (copy) all', {'exec': '%y'})
 call fuzzymenu#Add('Yank (copy) selection', {'exec': '%y', 'modes': 'v'})
 call fuzzymenu#Add('Delete all', {'exec': '%d'})
 call fuzzymenu#Add('Find word under cursor', {'exec': 'normal! *'})
+call fuzzymenu#Add('Open file under cursor', {'exec': 'normal! gf'})
+call fuzzymenu#Add('Browse to link under cursor', {'exec': 'call netrw#BrowseX(expand("<cWORD>"),0)', 'exec-hint': 'normal! gx'})
 
 """ fzf tools
 call fuzzymenu#AddAll({
@@ -84,8 +86,9 @@ call fuzzymenu#AddAll({
     \ {'after': 'call fuzzymenu#InsertMode()', 'tags': ['fzf']})
 
 " vim-go. (see also gothx.vim) 
-if &rtp =~ 'vim-go'
-  call fuzzymenu#AddAll({
+" NOTE: vim-go mappings won't load when loading plugins on demand (this is not a 'go'
+" file so vim-go may not be loaded). Considering options ...
+call fuzzymenu#AddAll({
         \ 'Run': {'exec': 'GoRun'},
         \ 'Test': {'exec': 'GoTest'},
         \ 'Keyify (specify keys in structs)': {'exec': 'GoKeyify'},
@@ -94,8 +97,7 @@ if &rtp =~ 'vim-go'
         \ 'Play (launch in browser)': {'exec': 'GoPlay'},
         \ 'Alternate to/from test file': {'exec': 'GoAlternate'},
       \ },
-      \ {'for': 'go', 'tags':['go','vim-go']})
-endif
+      \ {'for': {'ft': 'go', 'rtp': 'vim-go'}, 'tags':['go','vim-go']})
 
 ""
 " @section Mappings, mappings

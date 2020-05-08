@@ -70,9 +70,20 @@ function! s:MenuSource(currentMode) abort
     let k = i[0]
     let def = i[1]
     if has_key(def, 'for') 
-     if extension != def['for'] 
-       continue
-     endif
+      let conditions = def['for']
+      if type(conditions) != type({})
+        let conditions = {'ft': conditions}
+      endif
+      if has_key(conditions, 'ft') 
+        if extension != conditions['ft']
+          continue
+        endif
+      endif
+      if has_key(conditions, 'rtp') 
+        if &rtp !~ conditions['rtp']
+          continue
+        endif
+      endif
     endif
     let help = ''
     if has_key(def, 'help') 
@@ -86,6 +97,9 @@ function! s:MenuSource(currentMode) abort
       endif
     endif
     let execu = def['exec']
+    if has_key(def, 'exec-hint')
+      let execu = def['exec-hint']
+    endif
     if execu =~ '^normal!'
       let execu = substitute(execu, '^normal!', s:color('cyan', ':normal!'), '')
     elseif execu =~ '^call '
