@@ -104,6 +104,7 @@ fuzzymenu comes with a GROWING list of menu items (please submit more via pull r
 | FZF            | (fzf, fzf.vim) | [x]                     |                          |
 | LSP            | [vim-lsp](https://github.com/prabirshrestha/vim-lsp) | [x] |        |
 | Go             | [gothx][https://github.com/laher/gothx.vim)          |     | [x]    |
+| Go             | [vim-go][https://github.com/fatih/vim-go)            | [x] |        |
 | git            | [fugitive][https://github.com/tpope/vim-fugitive     | [x] |        |
 
 More to follow... _For example, I'm keen to support multiple providers for given features ... for LSP, this could include vim-lsp, coc.vim & languageclient-neovim. For Go, gothx.vim and vim-go._

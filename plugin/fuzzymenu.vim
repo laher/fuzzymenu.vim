@@ -91,7 +91,7 @@ if &rtp =~ 'vim-go'
         \ 'Keyify (specify keys in structs)': {'exec': 'GoKeyify'},
         \ 'IfErr': {'exec': 'GoIfErr'},
         \ 'Fill Struct': {'exec': 'GoFillStruct'},
-        \ 'Play (launch in browser)': {'exec': 'GoFillStruct'},
+        \ 'Play (launch in browser)': {'exec': 'GoPlay'},
         \ 'Alternate to/from test file': {'exec': 'GoAlternate'},
       \ },
       \ {'for': 'go', 'tags':['go','vim-go']})
