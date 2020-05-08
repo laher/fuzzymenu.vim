@@ -102,15 +102,7 @@ function! s:MenuSource(currentMode) abort
   return ret
 endfunction
 
-function! s:MenuSinkv(arg) abort
-  call s:MenuSink(a:arg, 'v')
-endfunction
-
-function! s:MenuSinkn(arg) abort
-  call s:MenuSink(a:arg, 'n')
-endfunction
-
-function! s:MenuSink(arg, mode) abort
+function! s:MenuSink(mode, arg) abort
   let key = split(a:arg, "\t")[0]
   if !has_key(s:menuItemsSink, key)
     "echo s:color('red', printf("key '%s' not found!", key))
@@ -165,7 +157,7 @@ function! fuzzymenu#Run(params) abort range
 
   let opts = {
     \ 'source': s:MenuSource(mode),
-    \ 'sink': function('s:MenuSink' . mode),
+    \ 'sink': function('s:MenuSink', [mode]),
     \ 'options': '--ansi'}
   let opts[g:fuzzymenu_position] = g:fuzzymenu_size
   let fullscreen = 0
