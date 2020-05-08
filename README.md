@@ -171,12 +171,27 @@ Alternatively, it might just work to implement a key mapping within the fzf wind
 
 ### Defining an entry from your plugin
 
-A plugin can add some entries to fuzzymenu, but just make sure to add them _only_ when fuzzymenu is installed. Like this (for an imaginary plugin 'teddy', which works on `.ted` files):
+A plugin can add some entries to fuzzymenu, but just make sure to add them _only_ when fuzzymenu is installed. Like this (for an imaginary plugin `teddyplugin`, which works on `.ted` files):
 
 ```vim
 if &rtp =~ 'fuzzymenu.vim'
-call fuzzymenu#Add('teddy bingo', {'exec': 'TddyBingo', 'for': 'ted'})
+call fuzzymenu#Add('teddy bingo', {'exec': 'TddyBingo', 'for': {'ft': 'ted'}})
 endif
 ```
 
 From within your plugin, please use a central `plugin/*.vim` file to define filetype-specific mappings (rather than `ftplugin/`). fuzzymenu will look after which entries to show based on the `for` parameter and the filetype. It's just how fuzzymenu's registration mechanism works.
+
+# Status, Plans & TODOs
+
+This is still very early. 
+
+**Some signatures and data structures may change, and documentation is incomplete.**
+
+Some planned features:
+
+ * Menu Items:
+  * A 2-step set of normal mode commands (yank,delete,change,...) + motions/objects
+  * More LSP clients (coc, languageclient-neovim, ...)
+  * Some more 'vim fundamentals' 
+ * UX
+  * Per-menu-item help with `<c-h>` or something (maybe even a preview window?)
