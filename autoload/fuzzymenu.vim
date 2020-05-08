@@ -72,6 +72,7 @@ function! s:MenuSource(currentMode) abort
     if has_key(def, 'for') 
       let conditions = def['for']
       if type(conditions) != type({})
+        " support for original 'for' as a filetype string. Deprecated.
         let conditions = {'ft': conditions}
       endif
       if has_key(conditions, 'ft') 
@@ -79,7 +80,9 @@ function! s:MenuSource(currentMode) abort
           continue
         endif
       endif
-      if has_key(conditions, 'rtp') 
+      " comparing at runtime should allow us to handle conditional plugin
+      " loading
+      if has_key(conditions, 'rtp')
         if &rtp !~ conditions['rtp']
           continue
         endif
