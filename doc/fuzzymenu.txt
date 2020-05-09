@@ -59,5 +59,12 @@ fuzzymenu#Add({name}, {def})                                 *fuzzymenu#Add()*
 fuzzymenu#Run({params})                                      *fuzzymenu#Run()*
   Invoke fuzzymenu
 
+fuzzymenu#normal#TextObjects({command})       *fuzzymenu#normal#TextObjects()*
+  Fuzzy-select a text object (for yank,change,delete,etc)
+
+fuzzymenu#normal#AddTextObject({obj}, {description})
+                                            *fuzzymenu#normal#AddTextObject()*
+  Add a text object (for yank,change,delete,etc)
+
 
 vim:tw=78:ts=8:ft=help:norl:

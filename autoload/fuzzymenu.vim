@@ -154,6 +154,8 @@ function! fuzzymenu#InsertMode() abort
      endif
 endfunction
 
+" TODO find a simpler way to extract word during fzf-sink
+" (I don't wanna create a wrapper func each time)
 function! fuzzymenu#GitFileUnderCursor()
  let query = expand("<cword>")
  let opts = ''
@@ -171,6 +173,7 @@ function! fuzzymenu#GitGrepUnderCursor()
 \   'git grep --line-number '.shellescape(opt), 0,
 \   fzf#vim#with_preview({ 'dir': systemlist('git rev-parse --show-toplevel')[0] }), 0)
 endfunction
+
 ""
 " @public
 " Invoke fuzzymenu

@@ -61,6 +61,11 @@ call fuzzymenu#Add('Hide whitespace characters', {'exec': 'set nolist'})
 call fuzzymenu#Add('Show whitespace characters', {'exec': 'set list'})
 call fuzzymenu#Add('Undo', {'exec': 'normal! u'})
 call fuzzymenu#Add('Redo', {'exec': 'normal! <c-r>'})
+call fuzzymenu#Add('Quit (exit) all', {'exec': 'qa'})
+call fuzzymenu#Add('Quit (exit) all without saving', {'exec': 'qa!'})
+call fuzzymenu#Add('Write (save) and quit (exit) all', {'exec': 'wqa'})
+call fuzzymenu#Add('Write (save) current buffer', {'exec': 'w'})
+call fuzzymenu#Add('Write (save) all', {'exec': 'wa'})
 
 " common editor features
 call fuzzymenu#Add('Select all', {'exec': 'normal! ggVG'})
@@ -73,9 +78,9 @@ call fuzzymenu#Add('Browse to link under cursor', {'exec': 'call netrw#BrowseX(e
 
 " normal mode commands and motions
 call fuzzymenu#AddAll({
-      \ 'Yank (copy) a text object': {'exec': 'call fuzzymenu#normal#Motions("y")'},
-      \ 'Delete (cut) a text object': {'exec': 'call fuzzymenu#normal#Motions("d")'},
-      \ 'Change (cut a text object and switch to insert)': {'exec': 'call fuzzymenu#normal#Motions("c")'},
+      \ 'Yank (copy) a text object': {'exec': 'call fuzzymenu#normal#TextObjects("y")'},
+      \ 'Delete (cut) a text object': {'exec': 'call fuzzymenu#normal#TextObjects("d")'},
+      \ 'Change (cut a text object and switch to insert)': {'exec': 'call fuzzymenu#normal#TextObjects("c")'},
     \ },
     \ {'after': 'call fuzzymenu#InsertMode()', 'tags': ['normal','fzf']})
 

@@ -1,56 +1,69 @@
 let s:cpo_save = &cpo
 set cpo&vim
 
-function! fuzzymenu#normal#Motions(command) abort
+""
+" @public
+" Fuzzy-select a text object (for yank,change,delete,etc)
+function! fuzzymenu#normal#TextObjects(command) abort
   let opts = {
-    \ 'source': s:MotionsSource(a:command),
-    \ 'sink': function('s:MotionsSink', [a:command]),
+    \ 'source': s:TextObjectsSource(a:command),
+    \ 'sink': function('s:TextObjectsSink', [a:command]),
     \ 'options': '--ansi',
     \ g:fuzzymenu_position: g:fuzzymenu_size,
   \ }
-  call fzf#run(fzf#wrap('fuzzymenu#normal#Motions', opts, 0))
+  call fzf#run(fzf#wrap('fzm#TextObjects', opts, 0))
 endfunction
 
-let s:motions = {
+""
+" @public
+" Add a text object (for yank,change,delete,etc)
+function! fuzzymenu#normal#AddTextObject(obj, description) abort
+  let s:textObjects[a:description] = a:obj
+endfunction
+
+" TODO: many more textObjects ...
+" ranges,visual,hjkl,custom text objects (e.g. vim-textobj-user)
+let s:textObjects = {
       \ 'Inside word' : 'iw', 
       \ 'Around word' : 'aw', 
       \ 'To end of line' : '$', 
       \ 'Line' : '', 
-      \ 'Entire buffer' : '%', 
+      \ 'Entire buffer' : ':%', 
       \}
 
-function! s:MotionsSource(command) abort
-  let motions = []
-  for i in items(s:motions)
+function! s:TextObjectsSource(command) abort
+  let textObjects = []
+  for i in items(s:textObjects)
     let key = i[0]
     let val = i[1]
     if key == 'Line'
       " support for yy, dd, cc
       let val = a:command
     endif
-    let motion = printf("%s\t%s%s", key, a:command, val)
+    let textObject = printf("%s\t%s%s", key, a:command, val)
     if key == 'Entire buffer'
-      let motion = printf("%s\t%%%s", key, a:command)
+      " TODO is there a way to do this in normal mode?
+      let textObject = printf("%s\t:%%%s", key, a:command)
     endif
-    call add(motions, motion)
+    call add(textObjects, textObject)
   endfor
-  return motions
+  return textObjects
 endfunction
 
-function! s:MotionsSink(command, arg) abort
+function! s:TextObjectsSink(command, arg) abort
   let key = split(a:arg, "\t")[0]
-  if !has_key(s:motions, key)
+  if !has_key(s:textObjects, key)
     echo printf("key '%s' not found!", key)
     "return
   endif
-  let motion = s:motions[key]
+  let textObject = s:textObjects[key]
   if key == 'Line'
     " support for yy, dd, cc
-    let motion = a:command
+    let textObject = a:command
   endif
-  let ex = printf('normal! %s%s', a:command, motion)
+  let ex = printf('normal! %s%s', a:command, textObject)
   if key == 'Entire buffer'
-    let ex = printf("normal! %%%s", a:command)
+    let ex = printf(":%%%s", a:command)
   endif
   execute ex
 endfunction
