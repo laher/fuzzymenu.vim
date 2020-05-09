@@ -32,7 +32,7 @@ endfunction
 " Add a menu item to fuzzymenu. {name} are unique.
 " {def} is a dict with a mandatory member, 'exec'
 function! fuzzymenu#Add(name, def) abort
-  if !has_key(a:def, 'exec')
+  if !has_key(a:def, 'exec') && !has_key(a:def, 'feedkeys')
     echom "definition not valid"
     return
   endif
@@ -99,7 +99,14 @@ function! s:MenuSource(currentMode) abort
         continue
       endif
     endif
-    let execu = def['exec']
+
+    if has_key(def, 'exec')
+      let execu = def['exec']
+    elseif has_key(def, 'feedkeys')
+      let execu = def['feedkeys']
+    else
+      return []
+    endif
     if has_key(def, 'exec-hint')
       let execu = def['exec-hint']
     endif
@@ -137,6 +144,8 @@ function! s:MenuSink(mode, arg) abort
     else
       execute execu
     endif
+  elseif has_key(def, 'feedkeys')
+    call feedkeys('<esc>'.def['feedkeys'])
   else
     echo "invalid key for fuzzymenu: " . key
   endif

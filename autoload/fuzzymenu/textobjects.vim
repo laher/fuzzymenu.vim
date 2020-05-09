@@ -4,7 +4,7 @@ set cpo&vim
 ""
 " @public
 " Fuzzy-select a text object (for yank,change,delete,etc)
-function! fuzzymenu#normal#TextObjects(command) abort
+function! fuzzymenu#textobjects#Run(command) abort
   let opts = {
     \ 'source': s:TextObjectsSource(a:command),
     \ 'sink': function('s:TextObjectsSink', [a:command]),
@@ -17,21 +17,23 @@ endfunction
 ""
 " @public
 " Add a text object (for yank,change,delete,etc)
-function! fuzzymenu#normal#AddTextObject(obj, description) abort
+function! fuzzymenu#textobjects#Add(obj, description) abort
   let s:textObjects[a:description] = a:obj
 endfunction
 
+" A dict of text objects 
+" e.g. 'Line' and 'Entire buffer' (which is currently a workaround)
 " TODO: many more textObjects ...
 " ranges,visual,hjkl,custom text objects (e.g. vim-textobj-user)
-" IMO, no need to supply an exhaustive list. People can use these examples to learn to DIY.
+" IMO, no need to supply an exhaustive list: people can use these examples to learn to DIY.
+" NOTE: Line and Entire Buffer are implemented differently from the rest 
+"  (and this is why the descriptions are the keys)
 let s:textObjects = {
       \ 'Inside word' : 'iw',
       \ 'Around word' : 'aw',
       \ 'Around sentence' : 'as',
       \ 'Around paragraph' : 'ap',
       \ 'To end of line' : '$',
-      \ 'Line' : '',
-      \ 'Entire buffer' : ':%',
       \ 'Inside round brackets (parentheses)' : 'i)',
       \ 'Inside curly braces' : 'i}',
       \ 'Inside square brackets' : 'i]',
@@ -41,6 +43,8 @@ let s:textObjects = {
       \ 'Inside single-quotes' : 'i''',
       \ 'Inside double-quotes' : 'i"',
       \ 'Inside backticks' : 'i`',
+      \ 'Line' : null,
+      \ 'Entire buffer' : null,
       \}
 
 function! s:TextObjectsSource(command) abort

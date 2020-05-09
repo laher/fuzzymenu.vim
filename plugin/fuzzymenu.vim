@@ -77,12 +77,13 @@ call fuzzymenu#Add('Select all', {'exec': 'normal! ggVG'})
 call fuzzymenu#Add('Find word under cursor', {'exec': 'normal! *'})
 call fuzzymenu#Add('Open file under cursor', {'exec': 'normal! gf'})
 call fuzzymenu#Add('Browse to link under cursor', {'exec': 'call netrw#BrowseX(expand("<cWORD>"),0)', 'exec-hint': 'normal! gx'})
+"call fuzzymenu#Add('Replace next occurrence', {'feedkeys': 's///'})
 
 " normal mode commands and motions
 call fuzzymenu#AddAll({
-      \ 'Yank (copy) a text object': {'exec': 'call fuzzymenu#normal#TextObjects("y")'},
-      \ 'Delete (cut) a text object': {'exec': 'call fuzzymenu#normal#TextObjects("d")'},
-      \ 'Change (cut a text object and switch to insert)': {'exec': 'call fuzzymenu#normal#TextObjects("c")'},
+      \ 'Yank (copy) a text object': {'exec': 'call fuzzymenu#textobjects#Run("y")'},
+      \ 'Delete (cut) a text object': {'exec': 'call fuzzymenu#textobjects#Run("d")'},
+      \ 'Change (cut a text object and switch to insert)': {'exec': 'call fuzzymenu#textobjects#Run("c")'},
     \ },
     \ {'after': 'call fuzzymenu#InsertMode()', 'tags': ['normal','fzf']})
 call fuzzymenu#Add('Put (paste)', {'exec': 'normal! p', 'tags': ['normal']})
