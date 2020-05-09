@@ -43,7 +43,7 @@ if &rtp =~ 'vim-fugitive'
         \ 'Find commit in current buffer': {'exec': 'BCommits'},
         \ 'Open file': {'exec': 'GFiles'},
         \ 'Find in files': {'exec': 'GGrep'},
-        \ 'Find word under cursor as filename': {'exec': 'call fuzzymenu#GitFileUnderCursor()'}, 
+        \ 'Find word under cursor as filename': {'exec': 'call fuzzymenu#GitFileUnderCursor()'},
         \ 'Find word under cursor in files': {'exec': 'call fuzzymenu#GitGrepUnderCursor()'},
       \ },
       \ {'after': 'call fuzzymenu#InsertMode()', 'tags': ['git', 'fzf']})
@@ -59,8 +59,8 @@ call fuzzymenu#Add('Hide line numbers', {'exec': 'set nonumber'})
 call fuzzymenu#Add('Show line numbers', {'exec': 'set number'})
 call fuzzymenu#Add('Hide whitespace characters', {'exec': 'set nolist'})
 call fuzzymenu#Add('Show whitespace characters', {'exec': 'set list'})
-call fuzzymenu#Add('Undo', {'exec': 'normal! u'})
-call fuzzymenu#Add('Redo', {'exec': 'normal! <c-r>'})
+call fuzzymenu#Add('Undo', {'normal': 'u'})
+call fuzzymenu#Add('Redo', {'normal': '<c-r>'})
 call fuzzymenu#Add('Quit (exit) all', {'exec': 'qa'})
 call fuzzymenu#Add('Quit (exit) all without saving', {'exec': 'qa!'})
 call fuzzymenu#Add('Write (save) and quit (exit) all', {'exec': 'wqa'})
@@ -73,10 +73,10 @@ call fuzzymenu#Add('Delete buffer (close file)', {'exec': 'bd'})
 call fuzzymenu#Add('Delete buffer (close file) WITHOUT saving', {'exec': 'bd!'})
 call fuzzymenu#Add('Vertical split', {'exec': 'vs'})
 call fuzzymenu#Add('Horizontal split', {'exec': 'sp'})
-call fuzzymenu#Add('Select all', {'exec': 'normal! ggVG'})
-call fuzzymenu#Add('Find word under cursor', {'exec': 'normal! *'})
-call fuzzymenu#Add('Open file under cursor', {'exec': 'normal! gf'})
-call fuzzymenu#Add('Browse to link under cursor', {'exec': 'call netrw#BrowseX(expand("<cWORD>"),0)', 'exec-hint': 'normal! gx'})
+call fuzzymenu#Add('Select all', {'normal': 'ggVG'})
+call fuzzymenu#Add('Find word under cursor', {'normal': '*'})
+call fuzzymenu#Add('Open file under cursor', {'normal': 'gf'})
+call fuzzymenu#Add('Browse to link under cursor', {'normal': 'gx'})
 "call fuzzymenu#Add('Replace next occurrence', {'feedkeys': 's///'})
 
 " normal mode commands and motions
@@ -86,7 +86,7 @@ call fuzzymenu#AddAll({
       \ 'Change (cut a text object and switch to insert)': {'exec': 'call fuzzymenu#textobjects#Run("c")'},
     \ },
     \ {'after': 'call fuzzymenu#InsertMode()', 'tags': ['normal','fzf']})
-call fuzzymenu#Add('Put (paste)', {'exec': 'normal! p', 'tags': ['normal']})
+call fuzzymenu#Add('Put (paste)', {'normal': 'p', 'tags': ['normal']})
 
 
 """ fzf tools
@@ -103,7 +103,7 @@ call fuzzymenu#AddAll({
     \ },
     \ {'after': 'call fuzzymenu#InsertMode()', 'tags': ['fzf']})
 
-" vim-go. (see also gothx.vim) 
+" vim-go. (see also gothx.vim)
 " NOTE: vim-go mappings won't load when loading plugins on demand (this is not a 'go'
 " file so vim-go may not be loaded). Considering options ...
 call fuzzymenu#AddAll({
@@ -135,7 +135,7 @@ endif
 " There is a single command, @command(Fzm), to invoke fuzzymenu.
 
 ""
-" Fzm invokes fuzzymenu 
+" Fzm invokes fuzzymenu
 command -bang -nargs=0 -buffer Fzm call fuzzymenu#Run({'fullscreen': <bang>0})
 
 ""

@@ -15,7 +15,7 @@ let s:menuItemsSink = { }
 " {baseDef} is a dict with common members
 function! fuzzymenu#AddAll(items, baseDef) abort
   let kvPairs = items(a:items)
-  for i in kvPairs 
+  for i in kvPairs
     let name = i[0]
     let v = i[1]
     let def = copy(a:baseDef)
@@ -32,7 +32,7 @@ endfunction
 " Add a menu item to fuzzymenu. {name} are unique.
 " {def} is a dict with a mandatory member, 'exec'
 function! fuzzymenu#Add(name, def) abort
-  if !has_key(a:def, 'exec') && !has_key(a:def, 'feedkeys')
+  if !has_key(a:def, 'exec') && !has_key(a:def, 'normal')
     echom "definition not valid"
     return
   endif
@@ -66,16 +66,16 @@ function! s:MenuSource(currentMode) abort
   let ret = []
   let pairs = items(s:menuItemsSource)
   call sort(pairs, 's:compare')
-  for i in pairs 
+  for i in pairs
     let k = i[0]
     let def = i[1]
-    if has_key(def, 'for') 
+    if has_key(def, 'for')
       let conditions = def['for']
       if type(conditions) != type({})
         " support for original 'for' as a filetype string. Deprecated.
         let conditions = {'ft': conditions}
       endif
-      if has_key(conditions, 'ft') 
+      if has_key(conditions, 'ft')
         if extension != conditions['ft']
           continue
         endif
@@ -89,7 +89,7 @@ function! s:MenuSource(currentMode) abort
       endif
     endif
     let help = ''
-    if has_key(def, 'help') 
+    if has_key(def, 'help')
       let help = def['help']
     endif
     if has_key(def, 'modes')
@@ -101,25 +101,22 @@ function! s:MenuSource(currentMode) abort
     endif
 
     if has_key(def, 'exec')
-      let execu = def['exec']
-    elseif has_key(def, 'feedkeys')
-      let execu = def['feedkeys']
+      let cmd = has_key(def, 'hint') ? def['hint'] : def['exec']
+      if cmd =~ '^call '
+        let cmd = substitute(cmd, '^call ', s:color('cyan', ':call '), '')
+      else
+        let cmd = s:color('cyan', ':') . cmd
+      endif
+    elseif has_key(def, 'normal')
+      let cmd = has_key(def, 'hint') ? def['hint'] : def['normal']
+      let cmd = s:color('cyan', 'normal: ') . cmd
     else
+      " TODO: print error
       return []
-    endif
-    if has_key(def, 'exec-hint')
-      let execu = def['exec-hint']
-    endif
-    if execu =~ '^normal!'
-      let execu = substitute(execu, '^normal!', s:color('cyan', ':normal!'), '')
-    elseif execu =~ '^call '
-      let execu = substitute(execu, '^call ', s:color('cyan', ':call '), '')
-    else
-      let execu = s:color('cyan', ':') . execu
     endif
     let row= printf("%s\t\t%s\t%s",
             \ k,
-            \ execu,
+            \ cmd,
             \ s:color('cyan', help))
     call add(ret, row)
   endfor
@@ -136,20 +133,20 @@ function! s:MenuSink(mode, arg) abort
   endif
   let def = s:menuItemsSink[key]
   if has_key(def, 'exec')
-    let execu = def['exec']
     if a:mode == 'v'
       " execute on selected range
       " TODO: only support range when it makes sense to? ... or should we just allow it? Someone can always just use normal-mode if it fails
-      execute "'<,'>" . execu 
+      execute "'<,'>" . def['exec']
     else
-      execute execu
+      execute def['exec']
     endif
-  elseif has_key(def, 'feedkeys')
-    call feedkeys('<esc>'.def['feedkeys'])
+  elseif has_key(def, 'normal')
+    " TODO: check mode?
+    call feedkeys(def['normal'])
   else
     echo "invalid key for fuzzymenu: " . key
   endif
-  if has_key(def, 'after') 
+  if has_key(def, 'after')
    let after = def['after']
    execute after
   endif
@@ -246,7 +243,7 @@ function! s:ansi(str, group, default, ...) abort
         \ (empty(bg) ? '' : ';'.s:csi(bg, 0))
   return printf("\x1b[%s%sm%s\x1b[m", color, a:0 ? ';1' : '', a:str)
 endfunction
-  
+
 function! s:color(color_name, str, ...) abort
   return s:ansi(a:str, get(a:, 1, ''), a:color_name)
 endfunc
