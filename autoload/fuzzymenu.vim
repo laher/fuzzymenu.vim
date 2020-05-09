@@ -45,16 +45,15 @@ function fuzzymenu#Get(name) abort
 endfunction
 
 function s:key(name, def, colored)
-  let k = ''
-  let kc = ''
+  let t = ''
   if has_key(a:def, 'tags')
-    let k = '[' . join(a:def['tags'], ',') . ']'
-    let kc = s:color('cyan', k)
+    let t = '[' . join(a:def['tags'], ',') . ']'
+    if a:colored
+      let t = s:color('cyan', t)
+    endif
+    let t = ' ' . t
   endif
-  if a:colored
-    return kc.a:name "s:color('green', a:name)
-  endif
-  return k.a:name
+  return printf('%s%s', a:name, t)
 endfunction
 
 func! s:compare(i1, i2)
