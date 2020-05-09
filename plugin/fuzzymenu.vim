@@ -64,12 +64,21 @@ call fuzzymenu#Add('Redo', {'exec': 'normal! <c-r>'})
 
 " common editor features
 call fuzzymenu#Add('Select all', {'exec': 'normal! ggVG'})
-call fuzzymenu#Add('Yank (copy) all', {'exec': '%y'})
-call fuzzymenu#Add('Yank (copy) selection', {'exec': '%y', 'modes': 'v'})
-call fuzzymenu#Add('Delete all', {'exec': '%d'})
+"call fuzzymenu#Add('Yank (copy) all', {'exec': '%y'})
+"call fuzzymenu#Add('Yank (copy) selection', {'exec': '%y', 'modes': 'v'})
+"call fuzzymenu#Add('Delete all', {'exec': '%d'})
 call fuzzymenu#Add('Find word under cursor', {'exec': 'normal! *'})
 call fuzzymenu#Add('Open file under cursor', {'exec': 'normal! gf'})
 call fuzzymenu#Add('Browse to link under cursor', {'exec': 'call netrw#BrowseX(expand("<cWORD>"),0)', 'exec-hint': 'normal! gx'})
+
+" normal mode commands and motions
+call fuzzymenu#AddAll({
+      \ 'Yank (copy) a text object': {'exec': 'call fuzzymenu#normal#Motions("y")'},
+      \ 'Delete (cut) a text object': {'exec': 'call fuzzymenu#normal#Motions("d")'},
+      \ 'Change (cut a text object and switch to insert)': {'exec': 'call fuzzymenu#normal#Motions("c")'},
+    \ },
+    \ {'after': 'call fuzzymenu#InsertMode()', 'tags': ['normal','fzf']})
+
 
 """ fzf tools
 call fuzzymenu#AddAll({

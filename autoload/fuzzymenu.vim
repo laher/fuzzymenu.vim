@@ -125,6 +125,7 @@ function! s:MenuSink(mode, arg) abort
     "echo s:color('red', printf("key '%s' not found!", key))
     echo printf("key '%s' not found!", key)
     "return
+    "TODO: error how?
   endif
   let def = s:menuItemsSink[key]
   if has_key(def, 'exec')
