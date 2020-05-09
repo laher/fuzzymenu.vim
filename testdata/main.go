@@ -9,12 +9,12 @@ type i interface {
 	Do()
 }
 
-type helpThing struct {
+type anotherThing struct {
 	a string
 	b string
 }
 
-func (_ helpThing) Do() {
+func (_ anotherThing) Do() {
 	// nothing
 }
 
@@ -22,7 +22,7 @@ func xfunc() error {
 	var err error
 	_ = err
 
-	_ = helpThing{}
+	_ = anotherThing{}
 	return nil
 }
 

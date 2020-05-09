@@ -31,6 +31,7 @@ if &rtp =~ 'vim-lsp'
         \ 'Rename': {'exec': 'LspRename'},
         \ 'Organize imports': {'exec': 'LspCodeActionSync source.organizeImports'},
         \ 'Go to implementation': {'exec': 'LspImplementation'},
+        \ 'Next error': {'exec': 'LspNextError'},
       \ },
       \ {'tags': ['lsp', 'vim-lsp']})
 endif
@@ -75,6 +76,10 @@ call fuzzymenu#Add('Vertical split', {'exec': 'vs'})
 call fuzzymenu#Add('Horizontal split', {'exec': 'sp'})
 call fuzzymenu#Add('Select all', {'normal': 'ggVG'})
 call fuzzymenu#Add('Find word under cursor', {'normal': '*'})
+call fuzzymenu#Add('Next match', {'normal': 'n'})
+call fuzzymenu#Add('Previous match', {'normal': 'n'})
+call fuzzymenu#Add('Repeat (normal mode)', {'normal': '.'})
+call fuzzymenu#Add('Repeat (command mode)', {'normal': '@:'})
 call fuzzymenu#Add('Open file under cursor', {'normal': 'gf'})
 call fuzzymenu#Add('Browse to link under cursor', {'normal': 'gx'})
 "call fuzzymenu#Add('Replace next occurrence', {'feedkeys': 's///'})
@@ -91,7 +96,8 @@ call fuzzymenu#Add('Put (paste)', {'normal': 'p', 'tags': ['normal']})
 
 """ fzf tools
 call fuzzymenu#AddAll({
-      \ 'Key mappings': {'exec': 'Maps', 'help': 'vim key mappings'},
+      \ 'Key mappings': {'exec': 'Maps'},
+      \ 'Buffers (open files)': {'exec': 'Buffers'},
       \ 'Vim commands': {'exec': 'Commands'},
       \ 'Open recent file': {'exec': 'History'},
       \ 'Recent commands': {'exec': 'History:'},
