@@ -26,7 +26,7 @@ endfunction
 " TODO: many more textObjects ...
 " ranges,visual,hjkl,custom text objects (e.g. vim-textobj-user)
 " IMO, no need to supply an exhaustive list: people can use these examples to learn to DIY.
-" NOTE: Line and Entire Buffer are implemented differently from the rest 
+" NOTE: 'Line' and 'Entire buffer' are empty strings, because they're special cases - implemented differently from the rest 
 "  (and this is why the descriptions are the keys)
 let s:textObjects = {
       \ 'Inside word' : 'iw',
@@ -43,8 +43,8 @@ let s:textObjects = {
       \ 'Inside single-quotes' : 'i''',
       \ 'Inside double-quotes' : 'i"',
       \ 'Inside backticks' : 'i`',
-      \ 'Line' : null,
-      \ 'Entire buffer' : null,
+      \ 'Line' : '',
+      \ 'Entire buffer' : '',
       \}
 
 function! s:TextObjectsSource(command) abort
@@ -72,16 +72,17 @@ function! s:TextObjectsSink(command, arg) abort
     echo printf("key '%s' not found!", key)
     "return
   endif
+  if key == 'Entire buffer'
+    let ex = printf(":%%%s", a:command)
+    execute ex
+    return
+  endif
   let textObject = s:textObjects[key]
   if key == 'Line'
     " support for yy, dd, cc
     let textObject = a:command
   endif
-  let ex = printf('normal! %s%s', a:command, textObject)
-  if key == 'Entire buffer'
-    let ex = printf(":%%%s", a:command)
-  endif
-  execute ex
+  call feedkeys(a:command . textObject)
 endfunction
 
 let &cpo = s:cpo_save

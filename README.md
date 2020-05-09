@@ -1,24 +1,28 @@
 # fuzzymenu.vim ![build-status](https://travis-ci.org/laher/fuzzymenu.vim.svg?branch=master)
 
-fuzzymenu is an _experimental_ menu for vim or neovim, built on top of [fzf](https://github.com/junegunn/fzf). 
+fuzzymenu is a _[preview release]_ menu plugin for vim or neovim, built on top of [fzf](https://github.com/junegunn/fzf). 
 
-Learn `vim` more easily, but still learn vim: 
+Use `vim` more easily, but still learn vim - you won't _need_ to memorise so many commands and mappings, BUT fuzzymenu will help by reminding you how to use those features directly, as you select a menu item. You just need one mapping (`<leader><leader>`, by default).
 
- * Discover some features quickly and easily.
- * You don't _need_ to know so many commands and mappings, BUT fuzzymenu reminds you how to use them directly, as you choose the entry.
- * Search for items using vim terminology OR non-vim terminology (e.g. 'search buffers' vs 'Find in open files').
+ * A single starting point for oodles of discoverable functionality (for me it's `<space><space>`).
+ * A fuzzy-search menu is faster and easier to use than heirarchical menus.
+ * Use vim better, faster:
+   * Use vim in the usual way, _AND_ like an IDE (e.g. LSP integration for semantic code navigation; also, menu items contain 'IDE lingo' keywords _alongside_ the vim terminology).
+   * Learn to use vim features (e.g. text objects and motions) with searchable prompts. 
+   * Extend the functionality by adding more items, and telling fuzzymenu about custom text objects.
+
+> This is still a preview version - I think it’s very useful already - please try it out.
 
 ## Background 
 
  * The goal of this plugin is to make particular vim features more discoverable, and more easily available. 
  * The project was inspired by a combination of fzf (fuzzy finders) and spacemacs/(spacevim) - providing an easily discoverable feature set, where you only need to remember a single key mapping.
  * The advantage of a fuzzy menu is the _immediacy_ of a large, filterable, top-level menu.
- * At this point the feature set is limited to commands and function calls. I don't have plans to add support for motions, text objects and such (partly because it's kinda endless).
- * See also [help docs](./doc/fuzzymenu.txt).
+ * See also [help docs](./doc/fuzzymenu.txt) - especially for signatures.
 
 ## Install
 
-Install fuzzymenu and dependencies using a plugin manager.
+Install fuzzymenu and dependencies using your preferred plugin manager.
 
 For example, using vim-plug:
 
@@ -43,7 +47,7 @@ You can invoke fuzzymenu with a command `:Fzm` (fullscreen with `:Fzm!`)
 For convenience, you can create a key mapping. 
 
  * I like using space as a 'leader' key, and to hit space twice to bring up fuzzymenu.
- * By default, the leader key is mapped to `\\`. (I map leader to ' ': `mapleader=' '`)
+ * By default, the leader key is mapped to `\`. (I map leader to ' ': `mapleader=' '`)
 
 e.g. this can be specified in your .vimrc (or init.vim, for neovim users):
 
