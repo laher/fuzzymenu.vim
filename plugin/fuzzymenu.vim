@@ -68,6 +68,11 @@ call fuzzymenu#Add('Write (save) current buffer', {'exec': 'w'})
 call fuzzymenu#Add('Write (save) all', {'exec': 'wa'})
 
 " common editor features
+call fuzzymenu#Add('New buffer', {'exec': 'new'})
+call fuzzymenu#Add('Delete buffer (close file)', {'exec': 'bd'})
+call fuzzymenu#Add('Delete buffer (close file) WITHOUT saving', {'exec': 'bd!'})
+call fuzzymenu#Add('Vertical split', {'exec': 'vs'})
+call fuzzymenu#Add('Horizontal split', {'exec': 'sp'})
 call fuzzymenu#Add('Select all', {'exec': 'normal! ggVG'})
 call fuzzymenu#Add('Find word under cursor', {'exec': 'normal! *'})
 call fuzzymenu#Add('Open file under cursor', {'exec': 'normal! gf'})

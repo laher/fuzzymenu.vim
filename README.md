@@ -62,7 +62,7 @@ fuzzymenu uses the `fzf` user interface.
  * fzf will match entries containing the letters you type, BUT they don't need to appear consecutively in the target menu entry. 
   * e.g. Typing `cnsctv` would match an entry named `consecutive`. 
   * e.g.2. `vto` would not match - those letters do exist in the word `consecutive`, but in a different order. 
- * fzf uses case-insensitive 
+ * fzf uses case-insensitive fuzzy search.
  * Use Up/Down arrows (or k/j), to select the item you want. 
  * Press Enter to select the item, which _may_ be another fzf entry, in some cases.
  * To cancel, `Esc`/`Ctrl-C`/`:q` to cancel.
@@ -82,30 +82,32 @@ Fuzzymenu isn't a general purpose vim helper. Try `vimtutor` and many other reso
 However, fuzzymenu does make a small effort to teach you how to use its content directly...
 
 * Please see the 'definition' on the right of each menu item - the definition is also searchable.
-* Menu items use one of three types of invocation:
+* Menu items use one of four types of invocation:
   * Commands. From normal mode, type `:`, e.g. `:Helptags`
   * Function calls. From normal mode, type `:call `, e.g. `:call func#name()`
   * Normal mode input sequence. From normal mode, just type the sequence, e.g. `ggVG`
-* Use `:Fzm` -> `help` (another fzf menu for help tags) to navigate vim's help system more easily.
+  * Interactive (multi-step) features (typically using fzf or a basic prompt). Where appropriate the normal-mode sequence will be shown (e.g. try 'yank')
+* Use `:Fzm` -> `help` (another fzf menu, `:Helptags`) to navigate vim's help system more easily.
 
 ## Bundled menu items
 
 fuzzymenu comes with a GROWING list of menu items (please submit more via pull requests).
 
+ * Some interactive helpers for normal-mode commands & text-objects (yank, delete, change some text).
  * Various commands from fzm.vim.
- * A few fundamentals: setting case-[in]sensitive searches, show/hiding line numbers and whitespace characters.
  * Various LSP features (requires [vim-lsp](https://github.com/prabirshrestha/vim-lsp): go to definition/implementation/references. rename, format, organize imports).
  * Various git features (requires [fugitive](https://github.com/tpope/vim-fugitive) ).
  * Various go tools (requires [gothx.vim](https://github.com/laher/gothx.vim) ).
+ * A few fundamentals: setting case-[in]sensitive searches, show/hiding line numbers and whitespace characters.
 
 | Area           | Dependencies   | Registered by fuzzymenu | Registered by dependency |
 |----------------|----------------|-------------------------|--------------------------|
-| fundamentals   | n/a            | <ul><li>- [x]</li></ul>                     |                          |
+| fundamentals   | n/a            | [x]                     |                          |
 | FZF            | (fzf, fzf.vim) | [x]                     |                          |
 | LSP            | [vim-lsp](https://github.com/prabirshrestha/vim-lsp) | [x] |        |
 | Go             | [gothx](https://github.com/laher/gothx.vim)          |     | [x]    |
 | Go             | [vim-go](https://github.com/fatih/vim-go)            | [x] |        |
-| git            | [fugitive](https://github.com/tpope/vim-fugitive)     | [x] |        |
+| git            | [fugitive](https://github.com/tpope/vim-fugitive)    | [x] |        |
 
 More to follow... _For example, I'm keen to support multiple providers for given features ... for LSP, this could include vim-lsp, coc.vim & languageclient-neovim. For Go, gothx.vim and vim-go._
 
@@ -190,8 +192,14 @@ This is still very early.
 Some planned features:
 
  * Menu Items:
-  * A 2-step set of normal mode commands (yank,delete,change,...) + motions/objects
-  * More LSP clients (coc, languageclient-neovim, ...)
-  * Some more 'vim fundamentals' 
+  - [x] Interactive (2-step) normal mode commands (yank,delete,change,...) + motions/objects
+  - [ ] Interactive search/replace for regions/files/next/...
+  - [ ] Macro support
+  - [ ] Registers? (or maybe vim-peekaboo integration if it's too hard)
+  - [ ] More LSP clients (coc, languageclient-neovim, ...)
+  - [ ] Some more 'vim fundamentals' 
  * UX
-  * Per-menu-item help with `<c-h>` or something (maybe even a preview window?)
+  * [ ] Per-menu-item help with `<c-h>` or something (maybe even a preview window?)
+  * [ ] Probably redesign the layout of a line
+  * [ ] hook into vim gui menus with a single item
+  * [ ] Fancy prompt for ranges, etc?
