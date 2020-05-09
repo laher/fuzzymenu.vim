@@ -23,12 +23,24 @@ endfunction
 
 " TODO: many more textObjects ...
 " ranges,visual,hjkl,custom text objects (e.g. vim-textobj-user)
+" IMO, no need to supply an exhaustive list. People can use these examples to learn to DIY.
 let s:textObjects = {
-      \ 'Inside word' : 'iw', 
-      \ 'Around word' : 'aw', 
-      \ 'To end of line' : '$', 
-      \ 'Line' : '', 
-      \ 'Entire buffer' : ':%', 
+      \ 'Inside word' : 'iw',
+      \ 'Around word' : 'aw',
+      \ 'Around sentence' : 'as',
+      \ 'Around paragraph' : 'ap',
+      \ 'To end of line' : '$',
+      \ 'Line' : '',
+      \ 'Entire buffer' : ':%',
+      \ 'Inside round brackets (parentheses)' : 'i)',
+      \ 'Inside curly braces' : 'i}',
+      \ 'Inside square brackets' : 'i]',
+      \ 'Inside angle brackets' : 'i>',
+      \ 'Inside html/xml tag' : 'it',
+      \ 'Around html/xml tag' : 'at',
+      \ 'Inside single-quotes' : 'i''',
+      \ 'Inside double-quotes' : 'i"',
+      \ 'Inside backticks' : 'i`',
       \}
 
 function! s:TextObjectsSource(command) abort

@@ -69,9 +69,6 @@ call fuzzymenu#Add('Write (save) all', {'exec': 'wa'})
 
 " common editor features
 call fuzzymenu#Add('Select all', {'exec': 'normal! ggVG'})
-"call fuzzymenu#Add('Yank (copy) all', {'exec': '%y'})
-"call fuzzymenu#Add('Yank (copy) selection', {'exec': '%y', 'modes': 'v'})
-"call fuzzymenu#Add('Delete all', {'exec': '%d'})
 call fuzzymenu#Add('Find word under cursor', {'exec': 'normal! *'})
 call fuzzymenu#Add('Open file under cursor', {'exec': 'normal! gf'})
 call fuzzymenu#Add('Browse to link under cursor', {'exec': 'call netrw#BrowseX(expand("<cWORD>"),0)', 'exec-hint': 'normal! gx'})
@@ -83,6 +80,7 @@ call fuzzymenu#AddAll({
       \ 'Change (cut a text object and switch to insert)': {'exec': 'call fuzzymenu#normal#TextObjects("c")'},
     \ },
     \ {'after': 'call fuzzymenu#InsertMode()', 'tags': ['normal','fzf']})
+call fuzzymenu#Add('Put (paste)', {'exec': 'normal! p', 'tags': ['normal']})
 
 
 """ fzf tools
