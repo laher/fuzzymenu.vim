@@ -13,14 +13,11 @@ Use `vim` more easily, but still learn vim - you won't _need_ to memorise so man
 
 > This is still a preview version - I think it’s very useful already - please try it out.
 
+# Intro video
+
+Here's an intro to an early version of fuzzymenu (watch on youtube.com):
+
 [![Intro to fuzzymenu](http://img.youtube.com/vi/UGtehP21teY/0.jpg)](http://www.youtube.com/watch?v=UGtehP21teY "Intro to fuzzymenu")
-
-## Background 
-
- * The goal of this plugin is to make particular vim features more discoverable, and more easily available. 
- * The project was inspired by a combination of fzf (fuzzy finders) and spacemacs/(spacevim) - providing an easily discoverable feature set, where you only need to remember a single key mapping.
- * The advantage of a fuzzy menu is the _immediacy_ of a large, filterable, top-level menu.
- * See also [help docs](./doc/fuzzymenu.txt) - especially for signatures.
 
 ## Install
 
@@ -37,6 +34,8 @@ Plug 'laher/fuzzymenu.vim'
  * The fzf plugin itself depends on a binary file `fzf`. If you don't have it already, `:call fzf#install()` (or see fzf docs).
 
 ## Usage
+
+See also [help docs](./doc/fuzzymenu.txt) - especially for function signatures.
 
 ### 1. Invoke fuzzymenu
 
@@ -188,6 +187,13 @@ endif
 ```
 
 From within your plugin, please use a central `plugin/*.vim` file to define filetype-specific mappings (rather than `ftplugin/`). fuzzymenu will look after which entries to show based on the `for` parameter and the filetype. It's just how fuzzymenu's registration mechanism works.
+
+
+## Background 
+
+ * I've always felt that vim could be made more intuitive - this is my first attempt.
+ * The project was inspired by a combination of fzf (fuzzy finders) and spacemacs/(spacevim), and Intellij's 'shift-shift' omni finder - providing an easily discoverable feature set, where you only need to remember a single key mapping.
+ * The advantage of a fuzzy menu is the _immediacy_ of a large, filterable, top-level menu.
 
 # Status, Plans & TODOs
 
