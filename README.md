@@ -15,15 +15,17 @@ Use `vim` more easily, but still learn vim - you won't _need_ to memorise so man
 
 # Intro video
 
-Here's an intro to an early version of fuzzymenu (watch on youtube.com):
+Here's an intro to an early version of fuzzymenu (watch on youtube.com).
 
 [![Intro to fuzzymenu](http://img.youtube.com/vi/UGtehP21teY/0.jpg)](http://www.youtube.com/watch?v=UGtehP21teY "Intro to fuzzymenu")
+
+It's 10 minutes - wow I spoke a lot. If that sounds like too much, just install, below, and hit `<leader><leader>` to start playing.
 
 ## Install
 
 Install fuzzymenu and dependencies using your preferred plugin manager.
 
-For example, using vim-plug:
+For example, using [vim-plug](https://github.com/junegunn/vim-plug):
 
 ```vim
 Plug 'junegunn/fzf'
@@ -31,7 +33,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'laher/fuzzymenu.vim'
 ```
 
- * The fzf plugin itself depends on a binary file `fzf`. If you don't have it already, `:call fzf#install()` (or see fzf docs).
+ _The fzf plugin itself depends on a binary file `fzf`. If you don't have it already, `:call fzf#install()` (or see fzf docs)._
 
 ## Usage
 
