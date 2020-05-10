@@ -13,6 +13,8 @@ Use `vim` more easily, but still learn vim - you won't _need_ to memorise so man
 
 > This is still a preview version - I think it’s very useful already - please try it out.
 
+[![Intro to fuzzymenu](http://img.youtube.com/vi/UGtehP21teY/0.jpg)](http://www.youtube.com/watch?v=UGtehP21teY "Intro to fuzzymenu")
+
 ## Background 
 
  * The goal of this plugin is to make particular vim features more discoverable, and more easily available. 
