@@ -8,7 +8,7 @@ Execute (fuzzymenu#Add and #AddAll):
         \ 'Test': {'exec': 'ThingTest'},
       \ },
       \ {'for': 'thing', 'tags':['thing']})
-  let entry = fuzzymenu#Get('[thing]Run')
+  let entry = fuzzymenu#Get('Run [THING]')
   call vader#assert#equal('{''for'': ''thing'', ''exec'': ''ThingRun'', ''tags'': [''thing'']}', string(entry))
 
   let entry = fuzzymenu#Get('my entry')
