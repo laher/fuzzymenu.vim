@@ -22,7 +22,8 @@ func xfunc() error {
 	var err error
 	_ = err
 
-	_ = anotherThing{}
+	a := anotherThing{}
+	a.Do()
 	return nil
 }
 

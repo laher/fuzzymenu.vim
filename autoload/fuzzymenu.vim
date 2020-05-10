@@ -47,7 +47,7 @@ endfunction
 function s:key(name, def, colored)
   let t = ''
   if has_key(a:def, 'tags')
-    let t = '[' . join(a:def['tags'], ',') . ']'
+    let t = toupper('[' . join(a:def['tags'], ',') . ']')
     if a:colored
       let t = s:color('cyan', t)
     endif
