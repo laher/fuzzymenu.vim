@@ -52,12 +52,14 @@ For convenience, you can create a key mapping.
  * I like using space as a 'leader' key, and to hit space twice to bring up fuzzymenu.
  * By default, the leader key is mapped to `\`. (I map leader to ' ': `mapleader=' '`)
 
-e.g. this can be specified in your .vimrc (or init.vim, for neovim users):
+e.g. specify your preferred mapping in your .vimrc (or init.vim, for neovim users):
 
 ```vim
   let mapleader=" "
-  nmap <Leader><Leader> <Plug>Fzm
+  nmap <Leader>m <Plug>Fzm
 ```
+
+The above would REPLACE the default mapping with `<Leader>m` - fuzzymenu won't map its default mapping in this case, so it won't interfere with your existing setup.
 
 ### 2. Using the menu
 
