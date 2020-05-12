@@ -4,7 +4,6 @@ set cpo&vim
 
 """ internal state
 let s:menuItemsSource = { }
-let s:menuItemsSink = { }
 
 ""
 " @public
@@ -36,24 +35,28 @@ function! fuzzymenu#Add(name, def) abort
     echom "definition not valid"
     return
   endif
-  let s:menuItemsSource[s:key(a:name, a:def, 1)] = a:def
-  let s:menuItemsSink[s:key(a:name, a:def, 0)] = a:def
+  let s:menuItemsSource[s:key(a:name, a:def)] = a:def
 endfunction
 
 function fuzzymenu#Get(name) abort
-  return s:menuItemsSink[a:name]
+  return s:menuItemsSource[a:name]
 endfunction
 
-function s:key(name, def, colored)
+function s:key(name, def)
   let t = ''
   if has_key(a:def, 'tags')
     let t = toupper('[' . join(a:def['tags'], ',') . ']')
-    if a:colored
-      let t = s:color('cyan', t)
-    endif
     let t = ' ' . t
   endif
   return printf('%s%s', a:name, t)
+endfunction
+
+function s:colorizeTags(key)
+    let parts = split(a:key, "[")
+    if len(parts)>1
+      let parts[1] = s:color('cyan', parts[1])
+    endif
+    return join(parts, "[")
 endfunction
 
 func! s:compare(i1, i2)
@@ -63,8 +66,10 @@ endfunc
 function! s:MenuSource(currentMode) abort
   let extension = expand("%:e")
   let ret = []
+  let rows = []
   let pairs = items(s:menuItemsSource)
   call sort(pairs, 's:compare')
+  let width= winwidth(0) - (max([len(line('$')), &numberwidth-1]) + 1)
   for i in pairs
     let k = i[0]
     let def = i[1]
@@ -113,24 +118,33 @@ function! s:MenuSource(currentMode) abort
       " TODO: print error
       return []
     endif
-    let row= printf("%s\t\t%s\t%s",
-            \ k,
-            \ cmd,
-            \ s:color('cyan', help))
-    call add(ret, row)
+
+    let mx = 0
+    let row = [k, cmd]
+    call add(rows, row)
+  endfor
+  for i in rows
+    let gap=width-len(i[0])-25
+    if gap<6
+      let gap=6
+    endif
+    let l = repeat(' ', gap-5)
+    if l == ''
+      let l = ' '
+    endif
+    let line = printf("%s".l."\t%s", s:colorizeTags(i[0]), i[1])
+    call add(ret, line)
   endfor
   return ret
 endfunction
 
 function! s:MenuSink(mode, arg) abort
-  let key = split(a:arg, "\t")[0]
-  if !has_key(s:menuItemsSink, key)
-    "echo s:color('red', printf("key '%s' not found!", key))
+  let key = trim(split(a:arg, "\t")[0])
+  if !has_key(s:menuItemsSource, key)
     echo printf("key '%s' not found!", key)
-    "return
     "TODO: error how?
   endif
-  let def = s:menuItemsSink[key]
+  let def = s:menuItemsSource[key]
   if has_key(def, 'exec')
     if a:mode == 'v'
       " execute on selected range
