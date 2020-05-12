@@ -21,6 +21,8 @@ xnoremap <silent> <Plug>FzmVisual :call fuzzymenu#Run({'visual':1})<cr>
 " several categories
 let g:fuzzymenu_auto_add = get(g:, 'fuzzymenu_auto_add', 1)
 
+let fzfPrefix = get(g:, 'fzf_command_prefix', '')
+
 if g:fuzzymenu_auto_add
 
 " vim-lsp mappings
@@ -40,16 +42,16 @@ endif
 " git mappings
 if &rtp =~ 'vim-fugitive'
   call fuzzymenu#AddAll({
-        \ 'Find commit': {'exec': 'Commits'},
-        \ 'Find commit in current buffer': {'exec': 'BCommits'},
-        \ 'Open file': {'exec': 'GFiles'},
+        \ 'Find commit': {'exec': fzfPrefix.'Commits'},
+        \ 'Find commit in current buffer': {'exec': fzfPrefix.'BCommits'},
+        \ 'Open file': {'exec': fzfPrefix.'GFiles'},
         \ 'Find in files': {'exec': 'GGrep'},
         \ 'Find word under cursor as filename': {'exec': 'call fuzzymenu#GitFileUnderCursor()'},
         \ 'Find word under cursor in files': {'exec': 'call fuzzymenu#GitGrepUnderCursor()'},
       \ },
       \ {'after': 'call fuzzymenu#InsertMode()', 'tags': ['git', 'fzf']})
   " this one is also tagged github
-  call fuzzymenu#Add('Browse to file/selection', {'exec': 'GBrowse', 'after': 'call fuzzymenu#InsertMode()', 'tags': ['git', 'github', 'fzf']})
+  call fuzzymenu#Add('Browse to file/selection', {'exec': 'GBrowse', 'after': 'call fuzzymenu#InsertMode()', 'tags': ['git', 'github']})
 
 endif
 
@@ -96,16 +98,16 @@ call fuzzymenu#Add('Put (paste)', {'normal': 'p', 'tags': ['normal']})
 
 """ fzf tools
 call fuzzymenu#AddAll({
-      \ 'Key mappings': {'exec': 'Maps'},
-      \ 'Buffers (open files)': {'exec': 'Buffers'},
-      \ 'Vim commands': {'exec': 'Commands'},
-      \ 'Open recent file': {'exec': 'History'},
-      \ 'Recent commands': {'exec': 'History:'},
-      \ 'Recent searches': {'exec': 'History/'},
-      \ 'Help': {'exec': 'Helptags'},
-      \ 'Find in open buffers (files)': {'exec': 'Lines'},
-      \ 'Find (in current buffer)': {'exec': 'BLines'},
-      \ 'Open file': {'exec': 'Files'},
+      \ 'Key mappings': {'exec': fzfPrefix.'Maps'},
+      \ 'Buffers (open files)': {'exec': fzfPrefix.'Buffers'},
+      \ 'Vim commands': {'exec': fzfPrefix.'Commands'},
+      \ 'Open recent file': {'exec': fzfPrefix.'History'},
+      \ 'Recent commands': {'exec': fzfPrefix.'History:'},
+      \ 'Recent searches': {'exec': fzfPrefix.'History/'},
+      \ 'Help': {'exec': fzfPrefix.'Helptags'},
+      \ 'Find in open buffers (files)': {'exec': fzfPrefix.'Lines'},
+      \ 'Find (in current buffer)': {'exec': fzfPrefix.'BLines'},
+      \ 'Open file': {'exec': fzfPrefix.'Files'},
     \ },
     \ {'after': 'call fuzzymenu#InsertMode()', 'tags': ['fzf']})
 
