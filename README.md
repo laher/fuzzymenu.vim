@@ -1,10 +1,11 @@
 # fuzzymenu.vim ![build-status](https://travis-ci.org/laher/fuzzymenu.vim.svg?branch=master)
 
-fuzzymenu is a _[preview release]_ menu plugin for vim or neovim, built on top of [fzf](https://github.com/junegunn/fzf). 
+fuzzymenu is a _[preview release]_ menu plugin for vim or neovim, built on top of [fzf](https://github.com/junegunn/fzf), with a curated list of menu items.
 
-Use `vim` more easily, but still learn vim - you won't _need_ to memorise so many commands and mappings, BUT fuzzymenu will help by reminding you how to use those features directly, as you select a menu item. You just need one mapping (`<leader><leader>`, by default).
+Use `vim` more easily, but still learn vim - you won't _need_ to memorise so many commands and mappings, BUT fuzzymenu will help by reminding you how to use those features directly, as you select a menu item. Fuzzymenu provides:
 
  * A single starting point for oodles of discoverable functionality (for me it's `<space><space>`).
+ * A _curated_ set of features - 'finding things', 'learning vim things', and 'IDE things'.
  * A fuzzy-search menu is faster and easier to use than heirarchical menus.
  * Use vim better, faster:
    * Use vim in the usual way, _AND_ like an IDE (e.g. LSP integration for semantic code navigation; also, menu items contain 'IDE lingo' keywords _alongside_ the vim terminology).
@@ -33,7 +34,15 @@ Plug 'junegunn/fzf.vim'
 Plug 'laher/fuzzymenu.vim'
 ```
 
- _The fzf plugin itself depends on a binary file `fzf`. If you don't have it already, `:call fzf#install()` (or see fzf docs)._
+Then, for convenience, a mapping such as `<Leader><Leader>`, `<Leader>m`, or `<c-p>`:
+
+```vim
+  nmap <Leader><Leader> <Plug>Fzm
+  vmap <Leader><Leader> <Plug>FzmVisual
+```
+
+ * By default, the leader key is mapped to `\`. (I map leader to ' ': `mapleader=' '`)
+ * _The fzf plugin itself depends on a binary file `fzf`. If you don't have it already, `:call fzf#install()` (or see fzf docs)._
 
 ## Usage
 
@@ -41,25 +50,7 @@ See also [help docs](./doc/fuzzymenu.txt) - especially for function signatures.
 
 ### 1. Invoke fuzzymenu
 
-#### 1a. `:Fzm` or `:Fzm!`
-
-You can invoke fuzzymenu with a command `:Fzm` (fullscreen with `:Fzm!`)
-
-#### 1b. Create key mapping(s)
-
-For convenience, you can create a key mapping. 
-
- * I like using space as a 'leader' key, and to hit space twice to bring up fuzzymenu.
- * By default, the leader key is mapped to `\`. (I map leader to ' ': `mapleader=' '`)
-
-e.g. specify your preferred mapping in your .vimrc (or init.vim, for neovim users):
-
-```vim
-  let mapleader=" "
-  nmap <Leader>m <Plug>Fzm
-```
-
-The above would REPLACE the default mapping with `<Leader>m` - fuzzymenu won't map its default mapping in this case, so it won't interfere with your existing setup.
+You can invoke fuzzymenu with the above mapping if set, or a command `:Fzm` (fullscreen with `:Fzm!`).
 
 ### 2. Using the menu
 
@@ -125,7 +116,7 @@ More to follow... _For example, I'm keen to support multiple providers for given
 There are a few ways you can introduce your own entries...
 
 0. Create entries in your own .vimrc (or init.vim) file
-1. Submit a PR with additional mappings for this project. If it seems useful I will probably approve it.
+1. Submit a PR with additional menu items for this project. If it seems useful I will probably approve it.
 2. Define mappings in your own plugin, which can be loaded whenever fuzzymenu.vim is installed.
 
 ## Defining entries

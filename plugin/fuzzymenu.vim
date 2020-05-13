@@ -125,18 +125,23 @@ call fuzzymenu#AddAll({
       \ },
       \ {'for': {'ft': 'go', 'rtp': 'vim-go'}, 'tags':['go','vim-go']})
 
-""
+endif
+
+" TODO: make these optional?
+" let g:fuzzymenu_map_keys = get(g:, 'fuzzymenu_map_keys', 0)
+" if g:fuzzymenu_map_keys
+"
 " @section Mappings, mappings
 " There are one normal-mode mapping, "<Leader><Leader>" to invoke fuzzymenu
-if !hasmapto('<Plug>Fzm', 'n')
-   nmap <Leader><Leader> <Plug>Fzm
-endif
+" if !hasmapto('<Plug>Fzm', 'n')
+"    nmap <Leader><Leader> <Plug>Fzm
+" endif
 
-if !hasmapto('<Plug>Fzm', 'v')
-   xmap <Leader><Leader> <Plug>FzmVisual
-endif
+" if !hasmapto('<Plug>Fzm', 'v')
+"    xmap <Leader><Leader> <Plug>FzmVisual
+" endif
 
-endif
+" endif
 
 ""
 " @section Commands, commands
