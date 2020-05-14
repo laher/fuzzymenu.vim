@@ -9,7 +9,7 @@ function! fuzzymenu#textobjects#Run(command) abort
     \ 'source': s:TextObjectsSource(a:command),
     \ 'sink': function('s:TextObjectsSink', [a:command]),
     \ 'options': '--ansi',
-    \ g:fuzzymenu_position: g:fuzzymenu_size,
+    \ g:fuzzymenu_position : g:fuzzymenu_size,
   \ }
   call fzf#run(fzf#wrap('fzm#TextObjects', opts, 0))
 endfunction
@@ -45,6 +45,7 @@ let s:textObjects = {
       \ 'Inside backticks' : 'i`',
       \ 'Line' : '',
       \ 'Entire buffer' : '',
+      \ 'To end of match': '//e',
       \}
 
 function! s:TextObjectsSource(command) abort

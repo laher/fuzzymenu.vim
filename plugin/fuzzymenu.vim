@@ -49,9 +49,9 @@ if &rtp =~ 'vim-fugitive'
         \ 'Find word under cursor as filename': {'exec': 'call fuzzymenu#GitFileUnderCursor()'},
         \ 'Find word under cursor in files': {'exec': 'call fuzzymenu#GitGrepUnderCursor()'},
       \ },
-      \ {'after': 'call fuzzymenu#InsertMode()', 'tags': ['git', 'fzf']})
+      \ {'after': 'call fuzzymenu#InsertModeIfNvim()', 'tags': ['git', 'fzf']})
   " this one is also tagged github
-  call fuzzymenu#Add('Browse to file/selection', {'exec': 'GBrowse', 'after': 'call fuzzymenu#InsertMode()', 'tags': ['git', 'github']})
+  call fuzzymenu#Add('Browse to file/selection', {'exec': 'GBrowse', 'after': 'call fuzzymenu#InsertModeIfNvim()', 'tags': ['git', 'github']})
 
 endif
 
@@ -84,7 +84,11 @@ call fuzzymenu#Add('Repeat (normal mode)', {'normal': '.'})
 call fuzzymenu#Add('Repeat (command mode)', {'normal': '@:'})
 call fuzzymenu#Add('Open file under cursor', {'normal': 'gf'})
 call fuzzymenu#Add('Browse to link under cursor', {'normal': 'gx'})
-"call fuzzymenu#Add('Replace next occurrence', {'feedkeys': 's///'})
+
+" normal mode for incomplete functions
+call fuzzymenu#Add('Replace next match', {'normal': ':s//'})
+call fuzzymenu#Add('Replace in file', {'normal': ':%s//'})
+call fuzzymenu#Add('Replace next match (open buffers)', {'normal': ':bufdo :%s//'})
 
 " normal mode commands and motions
 call fuzzymenu#AddAll({
@@ -92,7 +96,7 @@ call fuzzymenu#AddAll({
       \ 'Delete (cut) a text object': {'exec': 'call fuzzymenu#textobjects#Run("d")'},
       \ 'Change (cut a text object and switch to insert)': {'exec': 'call fuzzymenu#textobjects#Run("c")'},
     \ },
-    \ {'after': 'call fuzzymenu#InsertMode()', 'tags': ['normal','fzf']})
+    \ {'after': 'call fuzzymenu#InsertModeIfNvim()', 'tags': ['normal','fzf']})
 call fuzzymenu#Add('Put (paste)', {'normal': 'p', 'tags': ['normal']})
 
 
@@ -109,7 +113,7 @@ call fuzzymenu#AddAll({
       \ 'Find (in current buffer)': {'exec': fzfPrefix.'BLines'},
       \ 'Open file': {'exec': fzfPrefix.'Files'},
     \ },
-    \ {'after': 'call fuzzymenu#InsertMode()', 'tags': ['fzf']})
+    \ {'after': 'call fuzzymenu#InsertModeIfNvim()', 'tags': ['fzf']})
 
 " vim-go. (see also gothx.vim)
 " NOTE: vim-go mappings won't load when loading plugins on demand (this is not a 'go'
