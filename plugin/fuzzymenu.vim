@@ -86,15 +86,24 @@ call fuzzymenu#Add('Open file under cursor', {'normal': 'gf'})
 call fuzzymenu#Add('Browse to link under cursor', {'normal': 'gx'})
 
 " normal mode for incomplete functions
+call fuzzymenu#Add('Find', {'normal': '/'})
+call fuzzymenu#Add('Next match', {'normal': 'n'})
+call fuzzymenu#Add('Previous match', {'normal': 'N'})
 call fuzzymenu#Add('Replace next match', {'normal': ':s//'})
 call fuzzymenu#Add('Replace in file', {'normal': ':%s//'})
-call fuzzymenu#Add('Replace next match (open buffers)', {'normal': ':bufdo :%s//'})
+call fuzzymenu#Add('Replace in open buffers', {'normal': ':bufdo :%s//'})
 
-" normal mode commands and motions
+" normal mode operators (For text objects) 
 call fuzzymenu#AddAll({
       \ 'Yank (copy) a text object': {'exec': 'call fuzzymenu#textobjects#Run("y")'},
       \ 'Delete (cut) a text object': {'exec': 'call fuzzymenu#textobjects#Run("d")'},
       \ 'Change (cut a text object and switch to insert)': {'exec': 'call fuzzymenu#textobjects#Run("c")'},
+      \ 'Indent': {'exec': 'call fuzzymenu#textobjects#Run(">")'},
+      \ 'Unindent': {'exec': 'call fuzzymenu#textobjects#Run("<")'},
+      \ 'Uppercase': {'exec': 'call fuzzymenu#textobjects#Run("gU")'},
+      \ 'Lowercase': {'exec': 'call fuzzymenu#textobjects#Run("gu")'},
+      \ 'Formatting': {'exec': 'call fuzzymenu#textobjects#Run("gw")'},
+      \ 'Define fold': {'exec': 'call fuzzymenu#textobjects#Run("zf")'},
     \ },
     \ {'after': 'call fuzzymenu#InsertModeIfNvim()', 'tags': ['normal','fzf']})
 call fuzzymenu#Add('Put (paste)', {'normal': 'p', 'tags': ['normal']})
