@@ -162,7 +162,7 @@ endif
 
 ""
 " Fzm invokes fuzzymenu
-command -bang -nargs=0 -buffer Fzm call fuzzymenu#Run({'fullscreen': <bang>0})
+command -bang -nargs=0 Fzm call fuzzymenu#Run({'fullscreen': <bang>0})
 
 ""
 " GGrep finds a file using git as a base dir
