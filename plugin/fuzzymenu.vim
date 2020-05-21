@@ -94,8 +94,8 @@ call fuzzymenu#Add('Replace in file', {'normal': ':%s//'})
 call fuzzymenu#Add('Replace in open buffers', {'normal': ':bufdo :%s//'})
 
 " normal mode operators (For text objects) 
-call fuzzymenu#textobjects#AddOperations()
-call fuzzymenu#textobjects#AddRoot()
+call fuzzymenu#operators#AddOperations()
+call fuzzymenu#operators#AddRoot()
 call fuzzymenu#Add('Put (paste)', {'normal': 'p', 'tags': ['normal']})
 
 
