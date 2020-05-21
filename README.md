@@ -46,7 +46,7 @@ Then, for convenience, a mapping such as `<Leader><Leader>`, `<Leader>m`, or `<c
 
 ## Usage
 
-See also [help docs](./doc/fuzzymenu.txt) - especially for function signatures.
+_See also [help docs](./doc/fuzzymenu.txt) - especially for function signatures._
 
 ### 1. Invoke fuzzymenu
 
