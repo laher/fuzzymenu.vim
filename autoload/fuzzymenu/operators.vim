@@ -55,7 +55,7 @@ function! s:OperatorsSink(arg) abort
     echo printf("key '%s' not found!", key)
     return
   endif
-  call fuzzymenu#textobjects#Run(key)
+  call fuzzymenu#textobjectcategories#Run(key)
   call fuzzymenu#InsertModeIfNvim()
 endfunction
 
@@ -65,7 +65,7 @@ function! fuzzymenu#operators#AddOperations() abort
   for i in kvPairs
     let name = i[1]
     let op = i[0]
-    let ops[name] = { 'exec': 'call fuzzymenu#textobjects#Run("'.op.'")' }
+    let ops[name] = { 'exec': 'call fuzzymenu#textobjects#Curated("'.op.'")' }
   endfor
   call fuzzymenu#AddAll(ops,
     \ {'after': 'call fuzzymenu#InsertModeIfNvim()', 'tags': ['normal','fzf']})
