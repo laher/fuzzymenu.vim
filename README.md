@@ -46,7 +46,7 @@ Then, for convenience, a mapping such as `<Leader><Leader>`, `<Leader>m`, or `<c
 
 ## Usage
 
-_See also [help docs](./doc/fuzzymenu.txt) - especially for function signatures._
+_See also [help docs](./doc/fuzzymenu.vim.txt) - especially for function signatures._
 
 ### 1. Invoke fuzzymenu
 
@@ -147,7 +147,7 @@ For now the workaround is to wrap the fzf call into a function that uses `expand
 
 ## Configuration
 
-See [./doc/fuzzymenu.txt](./doc/fuzzymenu.txt) for configuration options ...
+See [./doc/fuzzymenu.vim.txt](./doc/fuzzymenu.vim.txt) for configuration options ...
 
 
 ## For contributors
