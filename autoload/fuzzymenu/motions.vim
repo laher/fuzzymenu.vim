@@ -3,6 +3,7 @@ set cpo&vim
 
 " TODO: / and ? with input
 " TODO: f and t with input
+" TODO: \ 'Entire': 'Entire buffer', ?
 let s:motions = {
       \ 'w': 'word',
       \ 'W': 'WORD',
@@ -27,6 +28,7 @@ let s:motions = {
       \ '%': 'to matching brace',
       \ 'G': 'to end of file',
       \ 'gg': 'to start of file',
+      \ '//e': 'To end of match',
       \ 'Line': 'Line',
       \ }
 
