@@ -54,7 +54,7 @@ function! fuzzymenu#operators#AddOperations() abort
   for i in kvPairs
     let name = i[1]
     let op = i[0]
-    let ops[name] = { 'exec': 'call fuzzymenu#textobjects#Curated("'.op.'")' }
+    let ops[name] = { 'exec': 'call fuzzymenu#operatorpending#Run("'.op.'")' }
   endfor
   call fuzzymenu#AddAll(ops,
     \ {'after': 'call fuzzymenu#InsertModeIfNvim()', 'tags': ['normal','fzf']})

@@ -26,7 +26,8 @@ function! fuzzymenu#operatorpending#Run(operator) abort
   let opts = {
         \ 'source': s:categories(),
     \ 'sink': function('s:OperatorPendingSink', [a:operator]),
-    \ 'options': '--ansi',
+    \ 'options': ['--ansi',
+    \   '--header', ':: choose a text object, motion, or multiplier'],
     \ g:fuzzymenu_position : g:fuzzymenu_size,
   \ }
   call fzf#run(fzf#wrap('fzm#OperatorPending', opts, 0))
@@ -39,11 +40,11 @@ function! s:OperatorPendingSink(operator, arg) abort
     return
   endif
   if key == 'n...'
-    let key = input('Enter multiplier (or leave blank for a single motion):')
+    let key = input('Enter multiplier (or leave blank for a single item):')
   endif
   if key == '...'
     let key = ''
   endif
-  call fuzzymenu#textobjects#Full(a:operator, key)
+  call fuzzymenu#textobjects#Run(a:operator, key)
   call fuzzymenu#InsertModeIfNvim()
 endfunction

@@ -4,30 +4,22 @@ set cpo&vim
 ""
 " @public
 " Fuzzy-select a text object (for yank,change,delete,etc)
-function! fuzzymenu#textobjects#Full(operator, category) abort
-  let src = []
-  " if a:category == 'a' || a:category == 'i'
-  "   let src = s:TextObjectsFullSource(a:operator, a:category)
-  " else
-  "   let src = s:MotionsSource()
-  " endif
-  let src = s:TextObjectsFullSource(a:operator, a:category)
+function! fuzzymenu#textobjects#Run(operator, category) abort
   let opts = {
-    \ 'source': src,
-    \ 'sink': function('s:TextObjectsSinkFull'),
-    \ 'options': '--ansi',
+    \ 'source': s:TextObjectsSource(a:operator, a:category),
+    \ 'sink': function('s:TextObjectsSink'),
+    \ 'options': ['--ansi',
+    \   '--header', ':: choose a text object'],
     \ g:fuzzymenu_position : g:fuzzymenu_size,
   \ }
   call fzf#run(fzf#wrap('fzm#TextObjects', opts, 0))
 endfunction
 
-""
-" @public
-" Fuzzy-select a text object (for yank,change,delete,etc)
+" deprecated
 function! fuzzymenu#textobjects#Curated(operator) abort
   let opts = {
     \ 'source': s:TextObjectsCuratedSource(a:operator),
-    \ 'sink': function('s:TextObjectsSink', [a:operator]),
+    \ 'sink': function('s:TextObjectsSinkCurated', [a:operator]),
     \ 'options': '--ansi',
     \ g:fuzzymenu_position : g:fuzzymenu_size,
   \ }
@@ -55,7 +47,7 @@ let s:textObjects = {
  \ ']': 'Block',
  \ } 
 
-function! s:TextObjectsFullSource(operator, category) abort
+function! s:TextObjectsSource(operator, category) abort
   let textObjects = []
   for i in items(s:textObjects)
     let key = i[0]
@@ -123,7 +115,7 @@ function! s:TextObjectsCuratedSource(operator) abort
   return textObjects
 endfunction
 
-function! s:TextObjectsSink(operator, arg) abort
+function! s:TextObjectsSinkCurated(operator, arg) abort
   let key = split(a:arg, "\t")[0]
   if !has_key(s:textObjects, key)
     echo printf("key '%s' not found!", key)
@@ -142,7 +134,7 @@ function! s:TextObjectsSink(operator, arg) abort
   call feedkeys(a:operator . textObject)
 endfunction
 
-function! s:TextObjectsSinkFull(arg) abort
+function! s:TextObjectsSink(arg) abort
   let key = split(a:arg, "\t")[0]
   call feedkeys(key)
 endfunction

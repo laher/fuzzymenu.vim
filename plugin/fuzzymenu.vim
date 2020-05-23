@@ -34,35 +34,34 @@ let fzfPrefix = get(g:, 'fzf_command_prefix', '')
 if g:fuzzymenu_auto_add
 
 " vim-lsp mappings
-if exists('g:lsp_loaded') 
-  "|| !exists('*json_encode') || !has('timers') || !has('lambda')
-  call fuzzymenu#AddAll({
-        \ 'Go to definition': {'exec': 'LspDefinition'},
-        \ 'Find references': {'exec': 'LspReferences'},
-        \ 'Rename': {'exec': 'LspRename'},
-        \ 'Organize imports': {'exec': 'LspCodeActionSync source.organizeImports'},
-        \ 'Go to implementation': {'exec': 'LspImplementation'},
-        \ 'Next error': {'exec': 'LspNextError'},
-      \ },
-      \ {'tags': ['lsp', 'vim-lsp']})
-endif
+call fuzzymenu#AddAll({
+      \ 'Go to definition': {'exec': 'LspDefinition'},
+      \ 'Find references': {'exec': 'LspReferences'},
+      \ 'Rename': {'exec': 'LspRename'},
+      \ 'Organize imports': {'exec': 'LspCodeActionSync source.organizeImports'},
+      \ 'Go to implementation': {'exec': 'LspImplementation'},
+      \ 'Next error': {'exec': 'LspNextError'},
+    \ },
+    \ {'tags': ['lsp', 'vim-lsp'],
+    \ 'for': {'exists': 'g:lsp_loaded'}})
 
 " fuzzymenu
 " git mappings
-if exists('g:loaded_fugitive')
-  call fuzzymenu#AddAll({
-        \ 'Find commit': {'exec': fzfPrefix.'Commits'},
-        \ 'Find commit in current buffer': {'exec': fzfPrefix.'BCommits'},
-        \ 'Open file': {'exec': fzfPrefix.'GFiles'},
-        \ 'Find in files': {'exec': 'GGrep'},
-        \ 'Find word under cursor as filename': {'exec': 'call fuzzymenu#GitFileUnderCursor()'},
-        \ 'Find word under cursor in files': {'exec': 'call fuzzymenu#GitGrepUnderCursor()'},
-      \ },
-      \ {'after': 'call fuzzymenu#InsertModeIfNvim()', 'tags': ['git', 'fzf']})
-  " this one is also tagged github
-  call fuzzymenu#Add('Browse to file/selection', {'exec': 'GBrowse', 'after': 'call fuzzymenu#InsertModeIfNvim()', 'tags': ['git', 'github']})
+call fuzzymenu#AddAll({
+      \ 'Find commit': {'exec': fzfPrefix.'Commits'},
+      \ 'Find commit in current buffer': {'exec': fzfPrefix.'BCommits'},
+      \ 'Open file': {'exec': fzfPrefix.'GFiles'},
+      \ 'Find in files': {'exec': 'GGrep'},
+      \ 'Find word under cursor as filename': {'exec': 'call fuzzymenu#GitFileUnderCursor()'},
+      \ 'Find word under cursor in files': {'exec': 'call fuzzymenu#GitGrepUnderCursor()'},
+    \ },
+    \ {'after': 'call fuzzymenu#InsertModeIfNvim()', 'tags': ['git', 'fzf'],
+    \ 'for': {'exists': 'g:loaded_fugitive'}})
+" this one is also tagged github
+call fuzzymenu#Add('Browse to file/selection', {'exec': 'GBrowse', 
+    \ 'after': 'call fuzzymenu#InsertModeIfNvim()', 'tags': ['git', 'github'],
+    \ 'for': {'exists': 'g:loaded_fugitive'}})
 
-endif
 
 " basic options
 call fuzzymenu#Add('Set case-sensitive searches', {'exec': 'set noignorecase'})

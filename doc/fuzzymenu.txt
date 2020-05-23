@@ -37,7 +37,7 @@ COMMANDS                                                  *fuzzymenu-commands*
 
 There is a single command, |:Fzm|, to invoke fuzzymenu.
 
-:[N]Fzm[!]                                                              *:Fzm*
+:Fzm[!]                                                                 *:Fzm*
   Fzm invokes fuzzymenu
 
 :GGrep[!]                                                             *:GGrep*
@@ -59,7 +59,15 @@ fuzzymenu#Add({name}, {def})                                 *fuzzymenu#Add()*
 fuzzymenu#Run({params})                                      *fuzzymenu#Run()*
   Invoke fuzzymenu
 
-fuzzymenu#textobjects#Run({command})             *fuzzymenu#textobjects#Run()*
+fuzzymenu#operatorpending#Run({operator})    *fuzzymenu#operatorpending#Run()*
+  Fuzzy-select a text object (for yank,change,delete,etc)
+
+fuzzymenu#operators#OperatorCommands()
+                                      *fuzzymenu#operators#OperatorCommands()*
+  Fuzzy-select an operator (yank,change,delete,etc)
+
+fuzzymenu#textobjects#Run({operator}, {category})
+                                                 *fuzzymenu#textobjects#Run()*
   Fuzzy-select a text object (for yank,change,delete,etc)
 
 fuzzymenu#textobjects#Add({obj}, {description})  *fuzzymenu#textobjects#Add()*
