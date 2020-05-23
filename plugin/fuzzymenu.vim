@@ -17,8 +17,23 @@ set cpo&vim
 " See also, |fzf|
 
 ""
+" @setting fuzzymenu_position
+" Position of the fuzzymenu (using fzf positions down/up/left/right)
+let g:fuzzymenu_position = get(g:, 'fuzzymenu_position', 'down')
+
+""
+" @setting fuzzymenu_size
+" Relative size of menu (default is '33%')
+let g:fuzzymenu_size = get(g:, 'fuzzymenu_size', '33%')
+
+""
 " Open fuzzymenu in normal mode.
 nnoremap <silent> <Plug>Fzm :call fuzzymenu#Run({})<cr>
+
+""
+" Open fuzzymenu's guided operators menu.
+nnoremap <silent> <Plug>FzmOps :call fuzzymenu#operators#OperatorCommands()<cr>
+
 ""
 " Open fuzzymenu in normal mode.
 xnoremap <silent> <Plug>FzmVisual :call fuzzymenu#Run({'visual':1})<cr>

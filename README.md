@@ -52,6 +52,8 @@ _See also [help docs](./doc/fuzzymenu.vim.txt) - especially for function signatu
 
 You can invoke fuzzymenu with the above mapping if set, or a command `:Fzm` (fullscreen with `:Fzm!`).
 
+ * Also try `:FzmOps` for guided normal-mode operations on text objects.
+
 ### 2. Using the menu
 
 #### 2a. using fzf
