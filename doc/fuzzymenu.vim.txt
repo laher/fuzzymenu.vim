@@ -40,6 +40,13 @@ There is a single command, |:Fzm|, to invoke fuzzymenu.
 :Fzm[!]                                                                 *:Fzm*
   Fzm invokes fuzzymenu
 
+:FzmOps[!]                                                           *:FzmOps*
+  FzmOps launches a multi-step fzm sequence of operators and
+  text-objects/motions
+
+:FzmOp[!] {operator}                                                  *:FzmOp*
+  FzmOp {operator} launches a multi-step fzm sequence of text-objects/motions
+
 :GGrep[!]                                                             *:GGrep*
   GGrep finds a file using git as a base dir GGrep runs fzf#vim#grep with
   git-grep. This is recommended in fzf docs
@@ -58,6 +65,9 @@ fuzzymenu#Add({name}, {def})                                 *fuzzymenu#Add()*
 
 fuzzymenu#Run({params})                                      *fuzzymenu#Run()*
   Invoke fuzzymenu
+
+fuzzymenu#motions#Run({operator}, {multiplier})      *fuzzymenu#motions#Run()*
+  Fuzzy-select a motion (for yank,change,delete,etc)
 
 fuzzymenu#operatorpending#Run({operator})    *fuzzymenu#operatorpending#Run()*
   Fuzzy-select a text object (for yank,change,delete,etc)

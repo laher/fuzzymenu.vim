@@ -107,12 +107,12 @@ let ops = {}
 for i in items(fuzzymenu#operators#Get())
     let name = i[1]
     let op = i[0]
-    let ops[name] = { 'exec': 'FzmOpPending '.op }
+    let ops[name] = { 'exec': 'FzmOp '.op }
 endfor
 call fuzzymenu#AddAll(ops,
     \ {'after': 'call fuzzymenu#InsertModeIfNvim()', 'tags': ['normal','fzf']})
-call fuzzymenu#Add('Operators', {
-      \ 'exec': 'FzmOperator',
+call fuzzymenu#Add('Operators (text objects and motions)', {
+      \ 'exec': 'FzmOps',
       \ 'after': 'call fuzzymenu#InsertModeIfNvim()', 
       \ 'tags': ['normal','fzf']
       \})
@@ -173,8 +173,14 @@ endif
 ""
 " Fzm invokes fuzzymenu
 command! -bang -nargs=0 Fzm call fuzzymenu#Run({'fullscreen': <bang>0})
-command! -bang -nargs=0 FzmOperator call fuzzymenu#operators#OperatorCommands()
-command! -bang -nargs=1 FzmOpPending call fuzzymenu#operatorpending#Run(<q-args>)
+
+""
+" FzmOps launches a multi-step fzm sequence of operators and text-objects/motions
+command! -bang -nargs=0 FzmOps call fuzzymenu#operators#OperatorCommands()
+
+""
+" FzmOp {operator} launches a multi-step fzm sequence of text-objects/motions
+command! -bang -nargs=1 FzmOp call fuzzymenu#operatorpending#Run(<q-args>)
 
 ""
 " GGrep finds a file using git as a base dir
