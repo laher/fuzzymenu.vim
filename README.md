@@ -46,11 +46,13 @@ Then, for convenience, a mapping such as `<Leader><Leader>`, `<Leader>m`, or `<c
 
 ## Usage
 
-See also [help docs](./doc/fuzzymenu.txt) - especially for function signatures.
+_See also [help docs](./doc/fuzzymenu.vim.txt) - especially for function signatures._
 
 ### 1. Invoke fuzzymenu
 
 You can invoke fuzzymenu with the above mapping if set, or a command `:Fzm` (fullscreen with `:Fzm!`).
+
+ * Also try `:FzmOps` for guided normal-mode operations on text objects.
 
 ### 2. Using the menu
 
@@ -126,9 +128,7 @@ Adding an entry to your vimrc, looks like one of these 3 examples:
 ```vim
 call fuzzymenu#Add('FZF: Key mappings', {'exec': 'Maps', 'after': 'call fuzzymenu#InsertMode()', 'help': 'vim key mappings'})
 call fuzzymenu#Add('Select all', {'exec': 'normal! ggVG'})
-if &rtp =~ 'vim-lsp' " <- if this plugin is loaded
-  call fuzzymenu#Add('LSP: rename', {'exec': 'LspRename'})
-endif
+call fuzzymenu#Add('LSP: rename', {'exec': 'LspRename', 'for': { 'exists': 'g:lsp_loaded' }})
 ```
 The first parameter is a unique key. The second parameter is a map of options:
 
@@ -149,7 +149,7 @@ For now the workaround is to wrap the fzf call into a function that uses `expand
 
 ## Configuration
 
-See [./doc/fuzzymenu.txt](./doc/fuzzymenu.txt) for configuration options ...
+See [./doc/fuzzymenu.vim.txt](./doc/fuzzymenu.vim.txt) for configuration options ...
 
 
 ## For contributors
@@ -176,8 +176,8 @@ Alternatively, it might just work to implement a key mapping within the fzf wind
 A plugin can add some entries to fuzzymenu, but just make sure to add them _only_ when fuzzymenu is installed. Like this (for an imaginary plugin `teddyplugin`, which works on `.ted` files):
 
 ```vim
-if &rtp =~ 'fuzzymenu.vim'
-call fuzzymenu#Add('teddy bingo', {'exec': 'TddyBingo', 'for': {'ft': 'ted'}})
+if exists('g:fuzzymenu_loaded')
+  call fuzzymenu#Add('teddy bingo', {'exec': 'TddyBingo', 'for': {'ft': 'ted'}})
 endif
 ```
 

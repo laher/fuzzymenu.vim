@@ -1,15 +1,15 @@
-*fuzzymenu.txt*	a fuzzy-finder menu for vim
-Am Laher                                                           *fuzzymenu*
+*fuzzymenu.vim.txt*	a fuzzy-finder menu for vim
+Am Laher                                                       *fuzzymenu.vim*
 
 ==============================================================================
-CONTENTS                                                  *fuzzymenu-contents*
-  1. Introduction............................................|fuzzymenu-intro|
-  2. Configuration..........................................|fuzzymenu-config|
-  3. Commands.............................................|fuzzymenu-commands|
-  4. Functions...........................................|fuzzymenu-functions|
+CONTENTS                                              *fuzzymenu.vim-contents*
+  1. Introduction........................................|fuzzymenu.vim-intro|
+  2. Configuration......................................|fuzzymenu.vim-config|
+  3. Commands.........................................|fuzzymenu.vim-commands|
+  4. Functions.......................................|fuzzymenu.vim-functions|
 
 ==============================================================================
-INTRODUCTION                                                 *fuzzymenu-intro*
+INTRODUCTION                                             *fuzzymenu.vim-intro*
 
 {fuzzymenu}{1} is a fuzzy-finder menu for vim, built on top of {fzf}{2}.
 Discover vim features easily, just invoke fuzzymenu and start typing. See the
@@ -20,7 +20,7 @@ fuzzymenu.vim README for more background.
 See also, |fzf|
 
 ==============================================================================
-CONFIGURATION                                               *fuzzymenu-config*
+CONFIGURATION                                           *fuzzymenu.vim-config*
 
                                                         *g:fuzzymenu_position*
 Position of the fuzzymenu (using fzf positions down/up/left/right)
@@ -33,19 +33,26 @@ Automatically add menu items. Note: I'll break these up in future into several
 categories
 
 ==============================================================================
-COMMANDS                                                  *fuzzymenu-commands*
+COMMANDS                                              *fuzzymenu.vim-commands*
 
 There is a single command, |:Fzm|, to invoke fuzzymenu.
 
-:[N]Fzm[!]                                                              *:Fzm*
+:Fzm[!]                                                                 *:Fzm*
   Fzm invokes fuzzymenu
+
+:FzmOps[!]                                                           *:FzmOps*
+  FzmOps launches a multi-step fzm sequence of operators and
+  text-objects/motions
+
+:FzmOp[!] {operator}                                                  *:FzmOp*
+  FzmOp {operator} launches a multi-step fzm sequence of text-objects/motions
 
 :GGrep[!]                                                             *:GGrep*
   GGrep finds a file using git as a base dir GGrep runs fzf#vim#grep with
   git-grep. This is recommended in fzf docs
 
 ==============================================================================
-FUNCTIONS                                                *fuzzymenu-functions*
+FUNCTIONS                                            *fuzzymenu.vim-functions*
 
 fuzzymenu#AddAll({items}, {baseDef})                      *fuzzymenu#AddAll()*
   Add several menu items to fuzzymenu. {items} is a dict of names and defs.
@@ -59,7 +66,18 @@ fuzzymenu#Add({name}, {def})                                 *fuzzymenu#Add()*
 fuzzymenu#Run({params})                                      *fuzzymenu#Run()*
   Invoke fuzzymenu
 
-fuzzymenu#textobjects#Run({command})             *fuzzymenu#textobjects#Run()*
+fuzzymenu#motions#Run({operator}, {multiplier})      *fuzzymenu#motions#Run()*
+  Fuzzy-select a motion (for yank,change,delete,etc)
+
+fuzzymenu#operatorpending#Run({operator})    *fuzzymenu#operatorpending#Run()*
+  Fuzzy-select a text object (for yank,change,delete,etc)
+
+fuzzymenu#operators#OperatorCommands()
+                                      *fuzzymenu#operators#OperatorCommands()*
+  Fuzzy-select an operator (yank,change,delete,etc)
+
+fuzzymenu#textobjects#Run({operator}, {category})
+                                                 *fuzzymenu#textobjects#Run()*
   Fuzzy-select a text object (for yank,change,delete,etc)
 
 fuzzymenu#textobjects#Add({obj}, {description})  *fuzzymenu#textobjects#Add()*

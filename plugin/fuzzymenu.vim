@@ -1,3 +1,11 @@
+if exists('g:fuzzymenu_loaded')
+    finish
+endif
+let g:fuzzymenu_loaded = 1
+
+" don't spam the user when Vim is started in Vi compatibility mode
+let s:cpo_save = &cpo
+set cpo&vim
 
 ""
 " @section Introduction, intro
@@ -9,8 +17,23 @@
 " See also, |fzf|
 
 ""
+" @setting fuzzymenu_position
+" Position of the fuzzymenu (using fzf positions down/up/left/right)
+let g:fuzzymenu_position = get(g:, 'fuzzymenu_position', 'down')
+
+""
+" @setting fuzzymenu_size
+" Relative size of menu (default is '33%')
+let g:fuzzymenu_size = get(g:, 'fuzzymenu_size', '33%')
+
+""
 " Open fuzzymenu in normal mode.
 nnoremap <silent> <Plug>Fzm :call fuzzymenu#Run({})<cr>
+
+""
+" Open fuzzymenu's guided operators menu.
+nnoremap <silent> <Plug>FzmOps :call fuzzymenu#operators#OperatorCommands()<cr>
+
 ""
 " Open fuzzymenu in normal mode.
 xnoremap <silent> <Plug>FzmVisual :call fuzzymenu#Run({'visual':1})<cr>
@@ -26,34 +49,34 @@ let fzfPrefix = get(g:, 'fzf_command_prefix', '')
 if g:fuzzymenu_auto_add
 
 " vim-lsp mappings
-if &rtp =~ 'vim-lsp'
-  call fuzzymenu#AddAll({
-        \ 'Go to definition': {'exec': 'LspDefinition'},
-        \ 'Find references': {'exec': 'LspReferences'},
-        \ 'Rename': {'exec': 'LspRename'},
-        \ 'Organize imports': {'exec': 'LspCodeActionSync source.organizeImports'},
-        \ 'Go to implementation': {'exec': 'LspImplementation'},
-        \ 'Next error': {'exec': 'LspNextError'},
-      \ },
-      \ {'tags': ['lsp', 'vim-lsp']})
-endif
+call fuzzymenu#AddAll({
+      \ 'Go to definition': {'exec': 'LspDefinition'},
+      \ 'Find references': {'exec': 'LspReferences'},
+      \ 'Rename': {'exec': 'LspRename'},
+      \ 'Organize imports': {'exec': 'LspCodeActionSync source.organizeImports'},
+      \ 'Go to implementation': {'exec': 'LspImplementation'},
+      \ 'Next error': {'exec': 'LspNextError'},
+    \ },
+    \ {'tags': ['lsp', 'vim-lsp'],
+    \ 'for': {'exists': 'g:lsp_loaded'}})
 
 " fuzzymenu
 " git mappings
-if &rtp =~ 'vim-fugitive'
-  call fuzzymenu#AddAll({
-        \ 'Find commit': {'exec': fzfPrefix.'Commits'},
-        \ 'Find commit in current buffer': {'exec': fzfPrefix.'BCommits'},
-        \ 'Open file': {'exec': fzfPrefix.'GFiles'},
-        \ 'Find in files': {'exec': 'GGrep'},
-        \ 'Find word under cursor as filename': {'exec': 'call fuzzymenu#GitFileUnderCursor()'},
-        \ 'Find word under cursor in files': {'exec': 'call fuzzymenu#GitGrepUnderCursor()'},
-      \ },
-      \ {'after': 'call fuzzymenu#InsertModeIfNvim()', 'tags': ['git', 'fzf']})
-  " this one is also tagged github
-  call fuzzymenu#Add('Browse to file/selection', {'exec': 'GBrowse', 'after': 'call fuzzymenu#InsertModeIfNvim()', 'tags': ['git', 'github']})
+call fuzzymenu#AddAll({
+      \ 'Find commit': {'exec': fzfPrefix.'Commits'},
+      \ 'Find commit in current buffer': {'exec': fzfPrefix.'BCommits'},
+      \ 'Open file': {'exec': fzfPrefix.'GFiles'},
+      \ 'Find in files': {'exec': 'GGrep'},
+      \ 'Find word under cursor as filename': {'exec': 'call fuzzymenu#GitFileUnderCursor()'},
+      \ 'Find word under cursor in files': {'exec': 'call fuzzymenu#GitGrepUnderCursor()'},
+    \ },
+    \ {'after': 'call fuzzymenu#InsertModeIfNvim()', 'tags': ['git', 'fzf'],
+    \ 'for': {'exists': 'g:loaded_fugitive'}})
+" this one is also tagged github
+call fuzzymenu#Add('Browse to file/selection', {'exec': 'GBrowse', 
+    \ 'after': 'call fuzzymenu#InsertModeIfNvim()', 'tags': ['git', 'github'],
+    \ 'for': {'exists': 'g:loaded_fugitive'}})
 
-endif
 
 " basic options
 call fuzzymenu#Add('Set case-sensitive searches', {'exec': 'set noignorecase'})
@@ -79,9 +102,9 @@ call fuzzymenu#Add('Horizontal split', {'exec': 'sp'})
 call fuzzymenu#Add('Select all', {'normal': 'ggVG'})
 call fuzzymenu#Add('Find word under cursor', {'normal': '*'})
 call fuzzymenu#Add('Next match', {'normal': 'n'})
-call fuzzymenu#Add('Previous match', {'normal': 'n'})
-call fuzzymenu#Add('Repeat (normal mode)', {'normal': '.'})
-call fuzzymenu#Add('Repeat (command mode)', {'normal': '@:'})
+call fuzzymenu#Add('Previous match', {'normal': 'N'})
+call fuzzymenu#Add('Repeat (last normal mode operation)', {'normal': '.'})
+call fuzzymenu#Add('Repeat (last :command)', {'normal': '@:'})
 call fuzzymenu#Add('Open file under cursor', {'normal': 'gf'})
 call fuzzymenu#Add('Browse to link under cursor', {'normal': 'gx'})
 
@@ -94,20 +117,22 @@ call fuzzymenu#Add('Replace in file', {'normal': ':%s//'})
 call fuzzymenu#Add('Replace in open buffers', {'normal': ':bufdo :%s//'})
 
 " normal mode operators (For text objects) 
-call fuzzymenu#AddAll({
-      \ 'Yank (copy) a text object': {'exec': 'call fuzzymenu#textobjects#Run("y")'},
-      \ 'Delete (cut) a text object': {'exec': 'call fuzzymenu#textobjects#Run("d")'},
-      \ 'Change (cut a text object and switch to insert)': {'exec': 'call fuzzymenu#textobjects#Run("c")'},
-      \ 'Indent': {'exec': 'call fuzzymenu#textobjects#Run(">")'},
-      \ 'Unindent': {'exec': 'call fuzzymenu#textobjects#Run("<")'},
-      \ 'Uppercase': {'exec': 'call fuzzymenu#textobjects#Run("gU")'},
-      \ 'Lowercase': {'exec': 'call fuzzymenu#textobjects#Run("gu")'},
-      \ 'Formatting': {'exec': 'call fuzzymenu#textobjects#Run("gw")'},
-      \ 'Define fold': {'exec': 'call fuzzymenu#textobjects#Run("zf")'},
-    \ },
-    \ {'after': 'call fuzzymenu#InsertModeIfNvim()', 'tags': ['normal','fzf']})
-call fuzzymenu#Add('Put (paste)', {'normal': 'p', 'tags': ['normal']})
 
+let ops = {}
+for i in items(fuzzymenu#operators#Get())
+    let name = i[1]
+    let op = i[0]
+    let ops[name] = { 'exec': 'FzmOp '.op }
+endfor
+call fuzzymenu#AddAll(ops,
+    \ {'after': 'call fuzzymenu#InsertModeIfNvim()', 'tags': ['normal','fzf']})
+call fuzzymenu#Add('Operators (text objects and motions)', {
+      \ 'exec': 'FzmOps',
+      \ 'after': 'call fuzzymenu#InsertModeIfNvim()', 
+      \ 'tags': ['normal','fzf']
+      \})
+
+call fuzzymenu#Add('Put (paste)', {'normal': 'p', 'tags': ['normal']})
 
 """ fzf tools
 call fuzzymenu#AddAll({
@@ -136,7 +161,7 @@ call fuzzymenu#AddAll({
         \ 'Play (launch in browser)': {'exec': 'GoPlay'},
         \ 'Alternate to/from test file': {'exec': 'GoAlternate'},
       \ },
-      \ {'for': {'ft': 'go', 'rtp': 'vim-go'}, 'tags':['go','vim-go']})
+      \ {'for': {'ft': 'go', 'exists': 'g:go_loaded_install'}, 'tags':['go','vim-go']})
 
 endif
 
@@ -165,6 +190,14 @@ endif
 command! -bang -nargs=0 Fzm call fuzzymenu#Run({'fullscreen': <bang>0})
 
 ""
+" FzmOps launches a multi-step fzm sequence of operators and text-objects/motions
+command! -bang -nargs=0 FzmOps call fuzzymenu#operators#OperatorCommands()
+
+""
+" FzmOp {operator} launches a multi-step fzm sequence of text-objects/motions
+command! -bang -nargs=1 FzmOp call fuzzymenu#operatorpending#Run(<q-args>)
+
+""
 " GGrep finds a file using git as a base dir
 " GGrep runs fzf#vim#grep with git-grep. This is recommended in fzf docs
 command! -bang -nargs=* GGrep
@@ -172,3 +205,7 @@ command! -bang -nargs=* GGrep
 \   'git grep --line-number '.shellescape(<q-args>), 0,
 \   fzf#vim#with_preview({ 'dir': systemlist('git rev-parse --show-toplevel')[0] }), <bang>0)
 
+
+" restore Vi compatibility settings
+let &cpo = s:cpo_save
+unlet s:cpo_save

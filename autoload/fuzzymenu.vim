@@ -86,8 +86,8 @@ function! s:MenuSource(currentMode) abort
       endif
       " comparing at runtime should allow us to handle conditional plugin
       " loading
-      if has_key(conditions, 'rtp')
-        if &rtp !~ conditions['rtp']
+      if has_key(conditions, 'exists')
+        if !exists(conditions['exists'])
           continue
         endif
       endif
@@ -210,20 +210,10 @@ function! fuzzymenu#Run(params) abort range
     endif
   endif
 
-""
-" @setting fuzzymenu_position
-" Position of the fuzzymenu (using fzf positions down/up/left/right)
-  let g:fuzzymenu_position = get(g:, 'fuzzymenu_position', 'down')
-
-""
-" @setting fuzzymenu_size
-" Relative size of menu (default is '33%')
-  let g:fuzzymenu_size = get(g:, 'fuzzymenu_size', '33%')
-
   let opts = {
     \ 'source': s:MenuSource(mode),
     \ 'sink': function('s:MenuSink', [mode]),
-    \ 'options': '--ansi'}
+    \ 'options': ['--ansi', '--header', ':: Fuzzymenu - fuzzy select an item. _Try "Operator"_']}
   let opts[g:fuzzymenu_position] = g:fuzzymenu_size
   let fullscreen = 0
   if has_key(a:params, 'fullscreen')
