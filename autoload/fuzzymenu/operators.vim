@@ -17,25 +17,14 @@ let s:operators = {
 ""
 " @public
 " Fuzzy-select an operator (yank,change,delete,etc)
-function! fuzzymenu#operators#AddRoot() abort
-  call fuzzymenu#Add('Operators', {
-        \ 'exec': 'call fuzzymenu#operators#OperatorsRoot()',
-        \ 'after': 'call fuzzymenu#InsertModeIfNvim()', 
-        \ 'tags': ['normal','fzf']
-        \})
-endfunction
-
-""
-" @public
-" Fuzzy-select an operator (yank,change,delete,etc)
-function! fuzzymenu#operators#OperatorsRoot() abort
+function! fuzzymenu#operators#OperatorCommands() abort
  let opts = {
     \ 'source': s:OperatorsSource(),
     \ 'sink': function('s:OperatorsSink'),
     \ 'options': '--ansi',
     \ g:fuzzymenu_position : g:fuzzymenu_size,
   \ }
-  call fzf#run(fzf#wrap('fzm#operators#OperatorsRoot', opts, 0))
+  call fzf#run(fzf#wrap('fzm#operators#OperatorCommands', opts, 0))
 endfunction
 
 function! s:OperatorsSource() abort

@@ -1,3 +1,11 @@
+if exists('g:fuzzymenu_loaded')
+    finish
+endif
+let g:fuzzymenu_loaded = 1
+
+" don't spam the user when Vim is started in Vi compatibility mode
+let s:cpo_save = &cpo
+set cpo&vim
 
 ""
 " @section Introduction, intro
@@ -26,7 +34,8 @@ let fzfPrefix = get(g:, 'fzf_command_prefix', '')
 if g:fuzzymenu_auto_add
 
 " vim-lsp mappings
-if &rtp =~ 'vim-lsp'
+if exists('g:lsp_loaded') 
+  "|| !exists('*json_encode') || !has('timers') || !has('lambda')
   call fuzzymenu#AddAll({
         \ 'Go to definition': {'exec': 'LspDefinition'},
         \ 'Find references': {'exec': 'LspReferences'},
@@ -40,7 +49,7 @@ endif
 
 " fuzzymenu
 " git mappings
-if &rtp =~ 'vim-fugitive'
+if exists('g:loaded_fugitive')
   call fuzzymenu#AddAll({
         \ 'Find commit': {'exec': fzfPrefix.'Commits'},
         \ 'Find commit in current buffer': {'exec': fzfPrefix.'BCommits'},
@@ -95,7 +104,11 @@ call fuzzymenu#Add('Replace in open buffers', {'normal': ':bufdo :%s//'})
 
 " normal mode operators (For text objects) 
 call fuzzymenu#operators#AddOperations()
-call fuzzymenu#operators#AddRoot()
+call fuzzymenu#Add('Operators', {
+      \ 'exec': 'call fuzzymenu#operators#OperatorCommands()',
+      \ 'after': 'call fuzzymenu#InsertModeIfNvim()', 
+      \ 'tags': ['normal','fzf']
+      \})
 call fuzzymenu#Add('Put (paste)', {'normal': 'p', 'tags': ['normal']})
 
 
@@ -126,7 +139,7 @@ call fuzzymenu#AddAll({
         \ 'Play (launch in browser)': {'exec': 'GoPlay'},
         \ 'Alternate to/from test file': {'exec': 'GoAlternate'},
       \ },
-      \ {'for': {'ft': 'go', 'rtp': 'vim-go'}, 'tags':['go','vim-go']})
+      \ {'for': {'ft': 'go', 'exists': 'g:go_loaded_install'}, 'tags':['go','vim-go']})
 
 endif
 
@@ -153,6 +166,7 @@ endif
 ""
 " Fzm invokes fuzzymenu
 command! -bang -nargs=0 Fzm call fuzzymenu#Run({'fullscreen': <bang>0})
+command! -bang -nargs=0 FzmOperator call fuzzymenu#operators#OperatorCommands()
 
 ""
 " GGrep finds a file using git as a base dir
@@ -162,3 +176,7 @@ command! -bang -nargs=* GGrep
 \   'git grep --line-number '.shellescape(<q-args>), 0,
 \   fzf#vim#with_preview({ 'dir': systemlist('git rev-parse --show-toplevel')[0] }), <bang>0)
 
+
+" restore Vi compatibility settings
+let &cpo = s:cpo_save
+unlet s:cpo_save

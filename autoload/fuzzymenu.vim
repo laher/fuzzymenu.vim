@@ -86,8 +86,8 @@ function! s:MenuSource(currentMode) abort
       endif
       " comparing at runtime should allow us to handle conditional plugin
       " loading
-      if has_key(conditions, 'rtp')
-        if &rtp !~ conditions['rtp']
+      if has_key(conditions, 'exists')
+        if !exists(conditions['exists'])
           continue
         endif
       endif

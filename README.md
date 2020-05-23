@@ -126,9 +126,7 @@ Adding an entry to your vimrc, looks like one of these 3 examples:
 ```vim
 call fuzzymenu#Add('FZF: Key mappings', {'exec': 'Maps', 'after': 'call fuzzymenu#InsertMode()', 'help': 'vim key mappings'})
 call fuzzymenu#Add('Select all', {'exec': 'normal! ggVG'})
-if &rtp =~ 'vim-lsp' " <- if this plugin is loaded
-  call fuzzymenu#Add('LSP: rename', {'exec': 'LspRename'})
-endif
+call fuzzymenu#Add('LSP: rename', {'exec': 'LspRename', 'for': { 'exists': 'g:lsp_loaded' }})
 ```
 The first parameter is a unique key. The second parameter is a map of options:
 
@@ -176,8 +174,8 @@ Alternatively, it might just work to implement a key mapping within the fzf wind
 A plugin can add some entries to fuzzymenu, but just make sure to add them _only_ when fuzzymenu is installed. Like this (for an imaginary plugin `teddyplugin`, which works on `.ted` files):
 
 ```vim
-if &rtp =~ 'fuzzymenu.vim'
-call fuzzymenu#Add('teddy bingo', {'exec': 'TddyBingo', 'for': {'ft': 'ted'}})
+if exists('g:fuzzymenu_loaded')
+  call fuzzymenu#Add('teddy bingo', {'exec': 'TddyBingo', 'for': {'ft': 'ted'}})
 endif
 ```
 
