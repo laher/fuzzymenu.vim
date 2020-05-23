@@ -48,14 +48,7 @@ function! s:OperatorsSink(arg) abort
   call fuzzymenu#InsertModeIfNvim()
 endfunction
 
-function! fuzzymenu#operators#AddOperations() abort
-  let ops = {}
-  let kvPairs = items(s:operators)
-  for i in kvPairs
-    let name = i[1]
-    let op = i[0]
-    let ops[name] = { 'exec': 'call fuzzymenu#operatorpending#Run("'.op.'")' }
-  endfor
-  call fuzzymenu#AddAll(ops,
-    \ {'after': 'call fuzzymenu#InsertModeIfNvim()', 'tags': ['normal','fzf']})
+function! fuzzymenu#operators#Get() abort
+  return s:operators
 endfunction
+

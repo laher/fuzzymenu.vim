@@ -39,12 +39,14 @@ function! s:OperatorPendingSink(operator, arg) abort
     echo printf("key '%s' not found!", key)
     return
   endif
-  if key == 'n...'
-    let key = input('Enter multiplier (or leave blank for a single item):')
+  if key == 'n...' || key == '...'
+    let multiplier = ''
+    if key == 'n...'
+      let multiplier = input('Enter multiplier (or leave blank for a single item):')
+    endif
+    call fuzzymenu#motions#Run(a:operator, multiplier)
+  else
+    call fuzzymenu#textobjects#Run(a:operator, key)
   endif
-  if key == '...'
-    let key = ''
-  endif
-  call fuzzymenu#textobjects#Run(a:operator, key)
   call fuzzymenu#InsertModeIfNvim()
 endfunction

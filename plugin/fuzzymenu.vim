@@ -102,14 +102,22 @@ call fuzzymenu#Add('Replace in file', {'normal': ':%s//'})
 call fuzzymenu#Add('Replace in open buffers', {'normal': ':bufdo :%s//'})
 
 " normal mode operators (For text objects) 
-call fuzzymenu#operators#AddOperations()
+
+let ops = {}
+for i in items(fuzzymenu#operators#Get())
+    let name = i[1]
+    let op = i[0]
+    let ops[name] = { 'exec': 'FzmOpPending '.op }
+endfor
+call fuzzymenu#AddAll(ops,
+    \ {'after': 'call fuzzymenu#InsertModeIfNvim()', 'tags': ['normal','fzf']})
 call fuzzymenu#Add('Operators', {
-      \ 'exec': 'call fuzzymenu#operators#OperatorCommands()',
+      \ 'exec': 'FzmOperator',
       \ 'after': 'call fuzzymenu#InsertModeIfNvim()', 
       \ 'tags': ['normal','fzf']
       \})
-call fuzzymenu#Add('Put (paste)', {'normal': 'p', 'tags': ['normal']})
 
+call fuzzymenu#Add('Put (paste)', {'normal': 'p', 'tags': ['normal']})
 
 """ fzf tools
 call fuzzymenu#AddAll({
@@ -166,6 +174,7 @@ endif
 " Fzm invokes fuzzymenu
 command! -bang -nargs=0 Fzm call fuzzymenu#Run({'fullscreen': <bang>0})
 command! -bang -nargs=0 FzmOperator call fuzzymenu#operators#OperatorCommands()
+command! -bang -nargs=1 FzmOpPending call fuzzymenu#operatorpending#Run(<q-args>)
 
 ""
 " GGrep finds a file using git as a base dir
