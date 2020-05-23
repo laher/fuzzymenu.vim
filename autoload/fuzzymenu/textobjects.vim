@@ -6,11 +6,12 @@ set cpo&vim
 " Fuzzy-select a text object (for yank,change,delete,etc)
 function! fuzzymenu#textobjects#Full(operator, category) abort
   let src = []
-  if a:category == 'a' || a:category == 'i'
-    let src = s:TextObjectsFullSource(a:operator, a:category)
-  else
-    let src = s:MotionsSource()
-  endif
+  " if a:category == 'a' || a:category == 'i'
+  "   let src = s:TextObjectsFullSource(a:operator, a:category)
+  " else
+  "   let src = s:MotionsSource()
+  " endif
+  let src = s:TextObjectsFullSource(a:operator, a:category)
   let opts = {
     \ 'source': src,
     \ 'sink': function('s:TextObjectsSinkFull'),
@@ -42,7 +43,17 @@ endfunction
 
 let s:textObjects = {
  \ 'w': 'Word',
- \ }
+ \ 's': 'Sentence',
+ \ 'p': 'Paragraph',
+ \ ')': 'Round brackets (parentheses)',
+ \ '}': 'Curly braces',
+ \ '>': 'Angle brackets',
+ \ 't': 'html/xml tags',
+ \ "'": 'Single quotes',
+ \ '"': 'Double quotes',
+ \ '`': 'Backticks',
+ \ ']': 'Block',
+ \ } 
 
 function! s:TextObjectsFullSource(operator, category) abort
   let textObjects = []

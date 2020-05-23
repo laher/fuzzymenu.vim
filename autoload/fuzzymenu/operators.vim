@@ -55,7 +55,7 @@ function! s:OperatorsSink(arg) abort
     echo printf("key '%s' not found!", key)
     return
   endif
-  call fuzzymenu#textobjectcategories#Run(key)
+  call fuzzymenu#operatorpending#Run(key)
   call fuzzymenu#InsertModeIfNvim()
 endfunction
 
