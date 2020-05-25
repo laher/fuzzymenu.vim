@@ -2,8 +2,10 @@
 let s:cpo_save = &cpo
 set cpo&vim
 
-""" internal state
-let s:menuItemsSource = { }
+""" Internal state
+" structure: []
+" each item should be {'items': [{'key':'x', 'exec':'y'}], 'metadata': {}}
+let s:menuItems = []
 
 ""
 " @public
@@ -12,17 +14,59 @@ let s:menuItemsSource = { }
 " {baseDef} is a dict to combine with each item
 " (see Add()).
 " {baseDef} is a dict with common members
-function! fuzzymenu#AddAll(items, baseDef) abort
-  let kvPairs = items(a:items)
-  for i in kvPairs
-    let name = i[0]
-    let v = i[1]
-    let def = copy(a:baseDef)
-    for j in items(v)
-      let def[j[0]] = j[1]
-    endfor
-    call fuzzymenu#Add(name, def)
+function! fuzzymenu#AddAll(items, metadata) abort
+  for i in items(a:items)
+    if !s:validate(i[0], i[1])
+      echom printf("definition %s not valid", i[0])
+      return
+    endif
   endfor
+  if !s:valMetadata(a:metadata)
+    echom "definition metadata not valid"
+    return
+  endif
+  call add(s:menuItems, {'items': a:items, 'metadata': a:metadata})
+  " let kvPairs = items(a:items)
+  " for i in kvPairs
+  "   let name = i[0]
+  "   let v = i[1]
+  "   let def = copy(a:baseDef)
+  "   for j in items(v)
+  "     let def[j[0]] = j[1]
+  "   endfor
+  "   call fuzzymenu#Add(name, def)
+  " endfor
+endfunction
+
+let s:allowedDefKeys = ['exec', 'normal', 'hint']
+let s:requiredDefKeys = ['exec', 'normal']
+function! s:validate(name, def) abort
+  let ks = keys(a:def)
+  let found = 0
+  for i in s:requiredDefKeys
+    if index(ks, i) >= 0
+      let found += 1
+    endif
+  endfor
+  if found != 1
+    return 0
+  endif
+  for i in items(a:def)
+    if (index(s:allowedDefKeys, i[0]) < 0)
+     return 0 
+    endif
+  endfor
+  return 1
+endfunction
+
+let s:allowedMetadataKeys = ['modes', 'after', 'tags', 'for', 'help']
+function! s:valMetadata(def) abort
+  for i in items(a:def)
+    if (index(s:allowedMetadataKeys, i[0]) < 0)
+     return 0 
+    endif
+  endfor
+  return 1
 endfunction
 
 ""
@@ -30,16 +74,35 @@ endfunction
 " @usage {name} {def}
 " Add a menu item to fuzzymenu. {name} are unique.
 " {def} is a dict with a mandatory member, 'exec'
-function! fuzzymenu#Add(name, def) abort
-  if !has_key(a:def, 'exec') && !has_key(a:def, 'normal')
-    echom "definition not valid"
+function! fuzzymenu#Add(name, def, ...) abort
+  let metadata = {}
+  if a:0
+    let metadata = a:1
+  endif
+  if !s:validate(a:name, a:def) 
+    echom printf("definition %s not valid", a:name)
     return
   endif
-  let s:menuItemsSource[s:key(a:name, a:def)] = a:def
+  if !s:valMetadata(metadata)
+    echom printf("definition %s metadata not valid", a:name)
+    return
+  endif
+  call add(s:menuItems, {'items':{a:name : a:def}, 'metadata': metadata})
+  "let s:menuItemsSource[s:key(a:name, a:def)] = a:def
 endfunction
 
 function fuzzymenu#Get(name) abort
-  return s:menuItemsSource[a:name]
+  for g in s:menuItems
+    let gMetadata = g['metadata']
+    let gItems = items(g['items'])
+    for i in gItems
+      let k = i[0]
+      let def = i[1]
+      if key == s:key(k, d)
+        return def
+      endif
+    endfor
+  endfor
 endfunction
 
 function s:key(name, def)
@@ -63,66 +126,80 @@ func! s:compare(i1, i2)
   return a:i1[0] == a:i2[0] ? 0 : a:i1[0] > a:i2[0] ? 1 : -1
 endfunc
 
-function! s:MenuSource(currentMode) abort
-  let extension = expand("%:e")
-  let ret = []
-  let rows = []
-  let pairs = items(s:menuItemsSource)
-  call sort(pairs, 's:compare')
-  let width= winwidth(0) - (max([len(line('$')), &numberwidth-1]) + 1)
-  for i in pairs
-    let k = i[0]
-    let def = i[1]
-    if has_key(def, 'for')
-      let conditions = def['for']
+function! s:ShouldSkip(def, extension) abort
+    if has_key(a:def, 'for')
+      let conditions = a:def['for']
       if type(conditions) != type({})
         " support for original 'for' as a filetype string. Deprecated.
         let conditions = {'ft': conditions}
       endif
       if has_key(conditions, 'ft')
-        if extension != conditions['ft']
-          continue
+        if a:extension != conditions['ft']
+          return 1
         endif
       endif
       " comparing at runtime should allow us to handle conditional plugin
       " loading
       if has_key(conditions, 'exists')
         if !exists(conditions['exists'])
-          continue
+          return 1
         endif
       endif
     endif
-    let help = ''
-    if has_key(def, 'help')
-      let help = def['help']
-    endif
-    if has_key(def, 'modes')
-      let modes = def['modes']
-      if  modes !~ a:currentMode
-        " doesn't apply
-        continue
-      endif
-    endif
+    return 0
+endfunction
 
-    if has_key(def, 'exec')
-      let cmd = has_key(def, 'hint') ? def['hint'] : def['exec']
-      if cmd =~ '^call '
-        let cmd = substitute(cmd, '^call ', s:color('cyan', ':call '), '')
+function! s:MenuSource(currentMode) abort
+  let extension = expand("%:e")
+  let ret = []
+  let rows = []
+  " let pairs = items(s:menuItemsSource)
+  " call sort(pairs, 's:compare')
+  let width= winwidth(0) - (max([len(line('$')), &numberwidth-1]) + 1)
+  " for i in pairs
+  for g in s:menuItems
+    let gMetadata = g['metadata']
+    let gItems = items(g['items'])
+    if s:ShouldSkip(gMetadata, extension)
+      continue
+    endif
+    for i in gItems
+      let k = i[0]
+      let def = i[1]
+      let help = ''
+      if has_key(def, 'help')
+        let help = def['help']
+      endif
+      if has_key(def, 'modes')
+        let modes = def['modes']
+        if  modes !~ a:currentMode
+          " doesn't apply
+          continue
+        endif
+      endif
+
+      if has_key(def, 'exec')
+        let cmd = has_key(def, 'hint') ? def['hint'] : def['exec']
+        if cmd =~ '^call '
+          let cmd = substitute(cmd, '^call ', s:color('cyan', ':call '), '')
+        else
+          let cmd = s:color('cyan', ':') . cmd
+        endif
+      elseif has_key(def, 'normal')
+        let cmd = has_key(def, 'hint') ? def['hint'] : def['normal']
+        let cmd = s:color('cyan', 'normal: ') . cmd
       else
-        let cmd = s:color('cyan', ':') . cmd
+        " TODO: print error
+        return []
       endif
-    elseif has_key(def, 'normal')
-      let cmd = has_key(def, 'hint') ? def['hint'] : def['normal']
-      let cmd = s:color('cyan', 'normal: ') . cmd
-    else
-      " TODO: print error
-      return []
-    endif
 
-    let mx = 0
-    let row = [k, cmd]
-    call add(rows, row)
+      let mx = 0
+      let row = [k, cmd]
+      call add(rows, row)
+    endfor
   endfor
+
+  "" handle whitespace indentation
   for i in rows
     let gap=width-len(i[0])-25
     if gap<6
@@ -140,11 +217,31 @@ endfunction
 
 function! s:MenuSink(mode, arg) abort
   let key = trim(split(a:arg, "\t")[0])
-  if !has_key(s:menuItemsSource, key)
+  let found = 0
+  let def = {}
+  let gMeta = {}
+  for g in s:menuItems
+    let gItems = g['items']
+    for i in items(gItems)
+      let k = i[0]
+      let d = i[1]
+      if key == s:key(k, d)
+        let found = 1
+        let def = d
+        let gMeta = g['metadata']
+        break
+      endif
+    endfor
+    if found == 1
+      break
+    endif
+  endfor
+  if !found
+  "if !has_key(s:menuItemsSource, key)
     echo printf("key '%s' not found!", key)
     "TODO: error how?
   endif
-  let def = s:menuItemsSource[key]
+  "let def = s:menuItemsSource[key]
   if has_key(def, 'exec')
     if a:mode == 'v'
       " execute on selected range
@@ -161,6 +258,10 @@ function! s:MenuSink(mode, arg) abort
   endif
   if has_key(def, 'after')
    let after = def['after']
+   execute after
+  endif
+  if has_key(gMeta, 'after')
+   let after = gMeta['after']
    execute after
   endif
 endfunction

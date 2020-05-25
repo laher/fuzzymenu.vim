@@ -73,7 +73,7 @@ call fuzzymenu#AddAll({
     \ {'after': 'call fuzzymenu#InsertModeIfNvim()', 'tags': ['git', 'fzf'],
     \ 'for': {'exists': 'g:loaded_fugitive'}})
 " this one is also tagged github
-call fuzzymenu#Add('Browse to file/selection', {'exec': 'GBrowse', 
+call fuzzymenu#Add('Browse to file/selection', {'exec': 'GBrowse'}, { 
     \ 'after': 'call fuzzymenu#InsertModeIfNvim()', 'tags': ['git', 'github'],
     \ 'for': {'exists': 'g:loaded_fugitive'}})
 
@@ -127,12 +127,12 @@ endfor
 call fuzzymenu#AddAll(ops,
     \ {'after': 'call fuzzymenu#InsertModeIfNvim()', 'tags': ['normal','fzf']})
 call fuzzymenu#Add('Operators (text objects and motions)', {
-      \ 'exec': 'FzmOps',
+      \ 'exec': 'FzmOps'}, {
       \ 'after': 'call fuzzymenu#InsertModeIfNvim()', 
       \ 'tags': ['normal','fzf']
       \})
 
-call fuzzymenu#Add('Put (paste)', {'normal': 'p', 'tags': ['normal']})
+call fuzzymenu#Add('Put (paste)', {'normal': 'p'}, {'tags': ['normal']})
 
 """ fzf tools
 call fuzzymenu#AddAll({
