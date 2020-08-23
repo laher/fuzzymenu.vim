@@ -92,17 +92,22 @@ function! fuzzymenu#Add(name, def, ...) abort
 endfunction
 
 function fuzzymenu#Get(name) abort
+  let key = trim(split(a:name, "\t")[0])
   for g in s:menuItems
     let gMetadata = g['metadata']
     let gItems = items(g['items'])
     for i in gItems
       let k = i[0]
-      let def = i[1]
+      let d = i[1]
+      "let k2 = s:key(k, def)
+      "echom printf("found %s", k2)
       if key == s:key(k, d)
-        return def
+        return d
       endif
     endfor
   endfor
+  echom printf("definition %s not found", a:name)
+  "" error here?
 endfunction
 
 function s:key(name, def)
