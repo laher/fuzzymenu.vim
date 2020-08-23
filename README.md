@@ -9,7 +9,7 @@ Use `vim` more easily, but still learn vim - you won't _need_ to memorise so man
  * A fuzzy-search menu is faster and easier to use than heirarchical menus.
  * Use vim better, faster:
    * Use vim in the usual way, _AND_ like an IDE (e.g. LSP integration for semantic code navigation; also, menu items contain 'IDE lingo' keywords _alongside_ the vim terminology).
-   * Learn to use vim features (e.g. text objects and motions) with searchable prompts. 
+   * Learn to use vim features (e.g. text objects and motions) with searchable prompts.
    * Extend the functionality by adding more items, and telling fuzzymenu about custom text objects.
 
 > This is still a preview version - I think it’s very useful already - please try it out.
@@ -37,8 +37,8 @@ Plug 'laher/fuzzymenu.vim'
 Then, for convenience, a mapping such as `<Leader><Leader>`, `<Leader>m`, or `<c-p>`:
 
 ```vim
-  nmap <Leader><Leader> <Plug>Fzm
-  vmap <Leader><Leader> <Plug>FzmVisual
+  nmap <Leader><Leader> :call fuzzymenu#Run({})<cr>
+  vmap <Leader><Leader> :call fuzzymenu#RunVisual({})<cr>
 ```
 
  * By default, the leader key is mapped to `\`. (I map leader to ' ': `mapleader=' '`)
@@ -60,22 +60,22 @@ You can invoke fuzzymenu with the above mapping if set, or a command `:Fzm` (ful
 
 fuzzymenu uses the `fzf` user interface.
 
- * Type some letters to filter the menu contents. 
- * fzf will match entries containing the letters you type, BUT they don't need to appear consecutively in the target menu entry. 
-  * e.g. Typing `cnsctv` would match an entry named `consecutive`. 
-  * e.g.2. `vto` would not match - those letters do exist in the word `consecutive`, but in a different order. 
+ * Type some letters to filter the menu contents.
+ * fzf will match entries containing the letters you type, BUT they don't need to appear consecutively in the target menu entry.
+  * e.g. Typing `cnsctv` would match an entry named `consecutive`.
+  * e.g.2. `vto` would not match - those letters do exist in the word `consecutive`, but in a different order.
  * fzf uses case-insensitive fuzzy search.
- * Use Up/Down arrows (or k/j), to select the item you want. 
+ * Use Up/Down arrows (or k/j), to select the item you want.
  * Press Enter to select the item, which _may_ be another fzf entry, in some cases.
  * To cancel, `Esc`/`Ctrl-C`/`:q` to cancel.
 
-#### 2b. Fuzzymenu specifics: 
+#### 2b. Fuzzymenu specifics:
 
 Fuzzymenu entries are intended to be easy to search for:
 
 * You can search using the name of the item (which may be specified by 'general IDE terminology' AND 'vim terminology'. e.g. 'search buffers' vs 'Find in open files').
 * search using part of the command name which will be executed.
-* Search by entry [tags]. 
+* Search by entry [tags].
 * If you want to search for a combination of these, then order is important - `[tag]name :command`.
 
 ### 3. Learning vim through fuzzymenu
@@ -135,11 +135,11 @@ The first parameter is a unique key. The second parameter is a map of options:
 - `exec` is mandatory. This is the command which will be invoked. For example, `'Maps'` above is the same as running `:Maps` from normal mode. Use `call MyFunction()` to run a function. Use `normal!` to run some normal mode commands.
 - `after` is optional. Fuzzymenu runs this command _after_ this command. It is not printed in the fzf entry. For example, if you need fuzzymenu to drop into insert mode after running your command, specify `'after': 'call fuzzymenu#InsertMode()'`. _Insert mode is necessary for fzf features._
 - `help` is for adding an additional explanation.
-- `for` specifies a filetype. 
+- `for` specifies a filetype.
 
 ## Limitations
 
-There will be some things which aren't well supported _yet_. 
+There will be some things which aren't well supported _yet_.
 
  * One example: the menu item's 'exec' is triggered inside an fzf 'sink' function. For many operations, this is fine, but in some cases the context of the invocation might pick up some context from fzf's popup window.
 
@@ -184,7 +184,7 @@ endif
 From within your plugin, please use a central `plugin/*.vim` file to define filetype-specific mappings (rather than `ftplugin/`). fuzzymenu will look after which entries to show based on the `for` parameter and the filetype. It's just how fuzzymenu's registration mechanism works.
 
 
-## Background 
+## Background
 
  * I've always felt that vim could be made more intuitive - this is my first attempt.
  * The project was inspired by a combination of fzf (fuzzy finders) and spacemacs/(spacevim), and Intellij's 'shift-shift' omni finder - providing an easily discoverable feature set, where you only need to remember a single key mapping.
@@ -192,7 +192,7 @@ From within your plugin, please use a central `plugin/*.vim` file to define file
 
 # Status, Plans & TODOs
 
-This is still very early. 
+This is still very early.
 
 **Some signatures and data structures may change, and documentation is incomplete.**
 
@@ -204,7 +204,7 @@ Some planned features:
   - [ ] Macro support
   - [ ] Registers? (or maybe vim-peekaboo integration if it's too hard)
   - [ ] More LSP clients (coc, languageclient-neovim, ...)
-  - [ ] Some more 'vim fundamentals' 
+  - [ ] Some more 'vim fundamentals'
  * UX
   * [ ] Per-menu-item help with `<c-h>` or something (maybe even a preview window?)
   * [ ] Probably redesign the layout of a line
