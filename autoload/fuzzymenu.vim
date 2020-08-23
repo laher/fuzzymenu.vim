@@ -88,21 +88,24 @@ function! fuzzymenu#Add(name, def, ...) abort
     return
   endif
   call add(s:menuItems, {'items':{a:name : a:def}, 'metadata': metadata})
-  "let s:menuItemsSource[s:key(a:name, a:def)] = a:def
 endfunction
 
 function fuzzymenu#Get(name) abort
   let key = trim(split(a:name, "\t")[0])
   for g in s:menuItems
-    let gMetadata = g['metadata']
+    let gMetadata = items(g['metadata'])
     let gItems = items(g['items'])
     for i in gItems
       let k = i[0]
       let d = i[1]
-      "let k2 = s:key(k, def)
-      "echom printf("found %s", k2)
       if key == s:key(k, d)
-        return d
+        let def = d
+        for j in gMetadata
+          let gmk = j[0]
+          let gmd = j[1]
+          let def[gmk] = gmd
+        endfor
+        return def
       endif
     endfor
   endfor
@@ -158,10 +161,7 @@ function! s:MenuSource(currentMode) abort
   let extension = expand("%:e")
   let ret = []
   let rows = []
-  " let pairs = items(s:menuItemsSource)
-  " call sort(pairs, 's:compare')
   let width= winwidth(0) - (max([len(line('$')), &numberwidth-1]) + 1)
-  " for i in pairs
   for g in s:menuItems
     let gMetadata = g['metadata']
     let gItems = items(g['items'])
@@ -242,11 +242,9 @@ function! s:MenuSink(mode, arg) abort
     endif
   endfor
   if !found
-  "if !has_key(s:menuItemsSource, key)
     echo printf("key '%s' not found!", key)
     "TODO: error how?
   endif
-  "let def = s:menuItemsSource[key]
   if has_key(def, 'exec')
     if a:mode == 'v'
       " execute on selected range
