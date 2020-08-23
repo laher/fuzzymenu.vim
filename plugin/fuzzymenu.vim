@@ -28,14 +28,17 @@ let g:fuzzymenu_size = get(g:, 'fuzzymenu_size', '33%')
 
 ""
 " Open fuzzymenu in normal mode.
+" TODO: this is super slow when mapped... why?!
 nnoremap <silent> <Plug>Fzm :call fuzzymenu#Run({})<cr>
 
 ""
 " Open fuzzymenu's guided operators menu.
+" TODO: this is super slow when mapped... why?!
 nnoremap <silent> <Plug>FzmOps :call fuzzymenu#operators#OperatorCommands()<cr>
 
 ""
 " Open fuzzymenu in normal mode.
+" TODO: this is super slow when mapped... why?!
 xnoremap <silent> <Plug>FzmVisual :call fuzzymenu#Run({'visual':1})<cr>
 
 ""
@@ -51,6 +54,7 @@ if g:fuzzymenu_auto_add
 " vim-lsp mappings
 call fuzzymenu#AddAll({
       \ 'Go to definition': {'exec': 'LspDefinition'},
+      \ 'Install LSP server for this language': {'exec': 'LspInstallServer'},
       \ 'Find references': {'exec': 'LspReferences'},
       \ 'Rename': {'exec': 'LspRename'},
       \ 'Organize imports': {'exec': 'LspCodeActionSync source.organizeImports'},
