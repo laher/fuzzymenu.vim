@@ -226,6 +226,7 @@ function! s:MenuSource(currentMode) abort
     let line = printf("%s".l."\t%s", s:colorizeTags(i[0]), i[1])
     call add(ret, line)
   endfor
+  call sort(ret)
   return ret
 endfunction
 
