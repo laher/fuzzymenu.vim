@@ -118,7 +118,7 @@ endfunction
 function! s:TextObjectsSinkCurated(operator, arg) abort
   let key = split(a:arg, "\t")[0]
   if !has_key(s:textObjects, key)
-    echo printf("key '%s' not found!", key)
+    echo printf("textobject key '%s' not found!", key)
     "return
   endif
   if key == 'Entire buffer'

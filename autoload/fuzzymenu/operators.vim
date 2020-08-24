@@ -41,7 +41,7 @@ endfunction
 function! s:OperatorsSink(arg) abort
   let key = split(a:arg, "\t")[0]
   if !has_key(s:operators, key)
-    echo printf("key '%s' not found!", key)
+    echo printf("operator key '%s' not found!", key)
     return
   endif
   call fuzzymenu#operatorpending#Run(key)

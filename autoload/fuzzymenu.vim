@@ -231,10 +231,9 @@ function! s:MenuSink(mode, arg) abort
     for i in items(gItems)
       let k = i[0]
       let d = i[1]
-      if key == s:key(k, d)
+      let def = s:merge(g['metadata'], d)
+      if key == s:key(k, def)
         let found = 1
-        let def = d
-        let mDef = s:merge(g['metadata'], d)
         break
       endif
     endfor
@@ -243,8 +242,9 @@ function! s:MenuSink(mode, arg) abort
     endif
   endfor
   if !found
-    echo printf("key '%s' not found!", key)
+    echom printf("key '%s' not found!", key)
     "TODO: error how?
+    return
   endif
   if has_key(def, 'exec')
     if a:mode == 'v'
@@ -254,13 +254,13 @@ function! s:MenuSink(mode, arg) abort
     else
       execute def['exec']
     endif
-  elseif has_key(mDef, 'normal')
+  elseif has_key(def, 'normal')
     " TODO: check mode?
-    call feedkeys(mDef['normal'])
+    call feedkeys(def['normal'])
   else
     echo "invalid key for fuzzymenu: " . key
   endif
-  if has_key(mDef, 'after')
+  if has_key(def, 'after')
    let after = def['after']
    execute after
   endif
