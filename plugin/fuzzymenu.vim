@@ -54,7 +54,7 @@ if g:fuzzymenu_auto_add
 " vim-lsp mappings
 call fuzzymenu#AddAll({
       \ 'Go to definition': {'exec': 'LspDefinition'},
-      \ 'Install LSP server for this language': {'exec': 'LspInstallServer'},
+      \ 'Install language server': {'exec': 'LspInstallServer'},
       \ 'Find references': {'exec': 'LspReferences'},
       \ 'Rename': {'exec': 'LspRename'},
       \ 'Organize imports': {'exec': 'LspCodeActionSync source.organizeImports'},

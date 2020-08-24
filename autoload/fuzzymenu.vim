@@ -90,6 +90,10 @@ function! fuzzymenu#Add(name, def, ...) abort
   call add(s:menuItems, {'items':{a:name : a:def}, 'metadata': metadata})
 endfunction
 
+function! s:merge(defaults, override) abort
+  return extend(copy(a:defaults), a:override)
+endfunction
+
 function fuzzymenu#Get(name) abort
   let key = trim(split(a:name, "\t")[0])
   for g in s:menuItems
@@ -98,13 +102,8 @@ function fuzzymenu#Get(name) abort
     for i in gItems
       let k = i[0]
       let d = i[1]
-      if key == s:key(k, d)
-        let def = d
-        for j in gMetadata
-          let gmk = j[0]
-          let gmd = j[1]
-          let def[gmk] = gmd
-        endfor
+      let def = s:merge(g['metadata'], d)
+      if key == s:key(k, def)
         return def
       endif
     endfor
@@ -170,7 +169,8 @@ function! s:MenuSource(currentMode) abort
     endif
     for i in gItems
       let k = i[0]
-      let def = i[1]
+      let d = i[1]
+      let def = s:merge(gMetadata, d)
       let help = ''
       if has_key(def, 'help')
         let help = def['help']
@@ -182,6 +182,7 @@ function! s:MenuSource(currentMode) abort
           continue
         endif
       endif
+      let key = s:key(k, def)
 
       if has_key(def, 'exec')
         let cmd = has_key(def, 'hint') ? def['hint'] : def['exec']
@@ -199,7 +200,7 @@ function! s:MenuSource(currentMode) abort
       endif
 
       let mx = 0
-      let row = [k, cmd]
+      let row = [key, cmd]
       call add(rows, row)
     endfor
   endfor
@@ -233,7 +234,7 @@ function! s:MenuSink(mode, arg) abort
       if key == s:key(k, d)
         let found = 1
         let def = d
-        let gMeta = g['metadata']
+        let mDef = s:merge(g['metadata'], d)
         break
       endif
     endfor
@@ -253,18 +254,14 @@ function! s:MenuSink(mode, arg) abort
     else
       execute def['exec']
     endif
-  elseif has_key(def, 'normal')
+  elseif has_key(mDef, 'normal')
     " TODO: check mode?
-    call feedkeys(def['normal'])
+    call feedkeys(mDef['normal'])
   else
     echo "invalid key for fuzzymenu: " . key
   endif
-  if has_key(def, 'after')
+  if has_key(mDef, 'after')
    let after = def['after']
-   execute after
-  endif
-  if has_key(gMeta, 'after')
-   let after = gMeta['after']
    execute after
   endif
 endfunction

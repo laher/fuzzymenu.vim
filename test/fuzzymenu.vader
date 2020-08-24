@@ -14,7 +14,7 @@ Execute (fuzzymenu#Add and #AddAll):
   let entry = fuzzymenu#Get('my entry')
   call vader#assert#equal('{''exec'': ''nada''}', string(entry))
 
-  let entry = fuzzymenu#Get('Run Thing')
+  let entry = fuzzymenu#Get('Run Thing [THING]')
   echom printf("entry %s", entry)
   call vader#assert#equal('{''for'': ''thing'', ''exec'': ''ThingRun'', ''tags'': [''thing'']}', string(entry))
 
