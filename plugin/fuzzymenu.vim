@@ -28,14 +28,17 @@ let g:fuzzymenu_size = get(g:, 'fuzzymenu_size', '33%')
 
 ""
 " Open fuzzymenu in normal mode.
+" TODO: this is super slow when mapped... why?!
 nnoremap <silent> <Plug>Fzm :call fuzzymenu#Run({})<cr>
 
 ""
 " Open fuzzymenu's guided operators menu.
+" TODO: this is super slow when mapped... why?!
 nnoremap <silent> <Plug>FzmOps :call fuzzymenu#operators#OperatorCommands()<cr>
 
 ""
 " Open fuzzymenu in normal mode.
+" TODO: this is super slow when mapped... why?!
 xnoremap <silent> <Plug>FzmVisual :call fuzzymenu#Run({'visual':1})<cr>
 
 ""
@@ -51,6 +54,7 @@ if g:fuzzymenu_auto_add
 " vim-lsp mappings
 call fuzzymenu#AddAll({
       \ 'Go to definition': {'exec': 'LspDefinition'},
+      \ 'Install language server': {'exec': 'LspInstallServer'},
       \ 'Find references': {'exec': 'LspReferences'},
       \ 'Rename': {'exec': 'LspRename'},
       \ 'Organize imports': {'exec': 'LspCodeActionSync source.organizeImports'},
@@ -73,7 +77,7 @@ call fuzzymenu#AddAll({
     \ {'after': 'call fuzzymenu#InsertModeIfNvim()', 'tags': ['git', 'fzf'],
     \ 'for': {'exists': 'g:loaded_fugitive'}})
 " this one is also tagged github
-call fuzzymenu#Add('Browse to file/selection', {'exec': 'GBrowse', 
+call fuzzymenu#Add('Browse to file/selection', {'exec': 'GBrowse'}, { 
     \ 'after': 'call fuzzymenu#InsertModeIfNvim()', 'tags': ['git', 'github'],
     \ 'for': {'exists': 'g:loaded_fugitive'}})
 
@@ -127,12 +131,12 @@ endfor
 call fuzzymenu#AddAll(ops,
     \ {'after': 'call fuzzymenu#InsertModeIfNvim()', 'tags': ['normal','fzf']})
 call fuzzymenu#Add('Operators (text objects and motions)', {
-      \ 'exec': 'FzmOps',
+      \ 'exec': 'FzmOps'}, {
       \ 'after': 'call fuzzymenu#InsertModeIfNvim()', 
       \ 'tags': ['normal','fzf']
       \})
 
-call fuzzymenu#Add('Put (paste)', {'normal': 'p', 'tags': ['normal']})
+call fuzzymenu#Add('Put (paste)', {'normal': 'p'}, {'tags': ['normal']})
 
 """ fzf tools
 call fuzzymenu#AddAll({

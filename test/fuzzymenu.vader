@@ -4,12 +4,17 @@ Execute (initialize):
 Execute (fuzzymenu#Add and #AddAll):
   call fuzzymenu#Add('my entry', {'exec': 'nada'})
   call fuzzymenu#AddAll({
-        \ 'Run': {'exec': 'ThingRun'},
-        \ 'Test': {'exec': 'ThingTest'},
+        \ 'Run Thing': {'exec': 'ThingRun'},
+        \ 'Test Thing': {'exec': 'ThingTest'},
       \ },
       \ {'for': 'thing', 'tags':['thing']})
-  let entry = fuzzymenu#Get('Run [THING]')
-  call vader#assert#equal('{''for'': ''thing'', ''exec'': ''ThingRun'', ''tags'': [''thing'']}', string(entry))
+  let entry = fuzzymenu#Get('Run [NOTHING]')
+  call vader#assert#equal('0', string(entry))
 
   let entry = fuzzymenu#Get('my entry')
   call vader#assert#equal('{''exec'': ''nada''}', string(entry))
+
+  let entry = fuzzymenu#Get('Run Thing [THING]')
+  echom printf("entry %s", entry)
+  call vader#assert#equal('{''for'': ''thing'', ''exec'': ''ThingRun'', ''tags'': [''thing'']}', string(entry))
+

@@ -38,7 +38,6 @@ Then, for convenience, a mapping such as `<Leader><Leader>`, `<Leader>m`, or `<c
 
 ```vim
   nmap <Leader><Leader> :call fuzzymenu#Run({})<cr>
-  vmap <C-Space> :call fuzzymenu#Run({'visual': 1})<cr>
 ```
 
  * By default, the leader key is mapped to `\`. (I map leader to ' ': `mapleader=' '`)
