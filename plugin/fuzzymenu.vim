@@ -26,6 +26,17 @@ let g:fuzzymenu_position = get(g:, 'fuzzymenu_position', 'down')
 " Relative size of menu (default is '33%')
 let g:fuzzymenu_size = get(g:, 'fuzzymenu_size', '33%')
 
+let fvc = '~/.vimrc'
+if has('nvim')
+    let fvc = '~/.init.vim' 
+endif 
+
+""
+" @setting fuzzymenu_vim_config
+" config file used for dynamically updating vim settings 
+" Recommend using a secondary file, then including it from .vimrc
+let g:fuzzymenu_vim_config = get(g:, 'fuzzymenu_vim_config', fvc)
+
 ""
 " Open fuzzymenu in normal mode.
 " TODO: this is super slow when mapped... why?!
@@ -130,13 +141,17 @@ for i in items(fuzzymenu#operators#Get())
 endfor
 call fuzzymenu#AddAll(ops,
     \ {'after': 'call fuzzymenu#InsertModeIfNvim()', 'tags': ['normal','fzf']})
+
 call fuzzymenu#Add('Operators (text objects and motions)', {
       \ 'exec': 'FzmOps'}, {
       \ 'after': 'call fuzzymenu#InsertModeIfNvim()', 
-      \ 'tags': ['normal','fzf']
+      \ 'tags': ['normal','fzm']
       \})
 
 call fuzzymenu#Add('Put (paste)', {'normal': 'p'}, {'tags': ['normal']})
+
+"" FZM awesomesauce
+call fuzzymenu#Add('Create a key mapping', {'exec': 'FzmMapKey'}, {'tags':['normal','fzm'], 'after': 'call fuzzymenu#InsertModeIfNvim()'})
 
 """ fzf tools
 call fuzzymenu#AddAll({
@@ -202,12 +217,16 @@ command! -bang -nargs=0 FzmOps call fuzzymenu#operators#OperatorCommands()
 command! -bang -nargs=1 FzmOp call fuzzymenu#operatorpending#Run(<q-args>)
 
 ""
+" FzmMapKey launches a multi-step fzm sequence to map a key into your vim config
+command! -bang -nargs=0 FzmMapKey call fuzzymenu#MapKey({})
+
+""
 " GGrep finds a file using git as a base dir
 " GGrep runs fzf#vim#grep with git-grep. This is recommended in fzf docs
 command! -bang -nargs=* GGrep
-\ call fzf#vim#grep(
-\   'git grep --line-number '.shellescape(<q-args>), 0,
-\   fzf#vim#with_preview({ 'dir': systemlist('git rev-parse --show-toplevel')[0] }), <bang>0)
+  \ call fzf#vim#grep(
+  \   'git grep --line-number -- '.shellescape(<q-args>), 0,
+  \   fzf#vim#with_preview({ 'dir': systemlist('git rev-parse --show-toplevel')[0] }), <bang>0)
 
 
 " restore Vi compatibility settings

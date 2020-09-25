@@ -230,6 +230,69 @@ function! s:MenuSource(currentMode) abort
   return ret
 endfunction
 
+function! s:MapKeySink(mode, arg) abort
+  let key = s:trim(split(a:arg, "\t")[0])
+  echom key
+  let found = 0
+  let def = {}
+  let gMeta = {}
+  for g in s:menuItems
+    let gItems = g['items']
+    for i in items(gItems)
+      let k = i[0]
+      let d = i[1]
+      let def = s:merge(g['metadata'], d)
+      if key == s:key(k, def)
+        let found = 1
+        break
+      endif
+    endfor
+    if found == 1
+      break
+    endif
+  endfor
+  if !found
+    echom printf("key '%s' not found!", key)
+    "TODO: error how?
+    return
+  endif
+
+  call inputsave()
+  let keys = input('Key mapping (e.g. '<leader>x'): ', '<leader>')
+  call inputrestore()
+
+  "" TODO vimrc file setting
+  let file = g:fuzzymenu_vim_config
+  execute 'e ' . file
+  execute 'normal! G$'
+
+  let mapping = ''
+  if has_key(def, 'exec')
+    if a:mode == 'v'
+      " execute on selected range
+      " TODO: only support range when it makes sense to? ... or should we just allow it? Someone can always just use normal-mode if it fails
+      let mapping = "vmap ".keys." :" . def['exec'] . "<CR>"
+    else
+      let mapping = "nmap ".keys." :" . def['exec'] . "<CR>"
+    endif
+  elseif has_key(def, 'normal')
+    " TODO: check mode?
+      echom "nmap XXX to " . def['normal']
+      let mapping = "nmap ".keys." " . def['normal']
+  else
+    echom "invalid key for fuzzymenu: " . key
+  endif
+  if has_key(def, 'after')
+   let after = def['after']
+   """ TODO ...  I think we can leave this out (only needed during an Fzm invocation)
+  endif
+  if mapping != ''
+    echo mapping
+    call append(line('$'), mapping) 
+    """ don't save. suggest
+  endif
+endfunction
+
 function! s:MenuSink(mode, arg) abort
   let key = s:trim(split(a:arg, "\t")[0])
   let found = 0
@@ -260,6 +323,7 @@ function! s:MenuSink(mode, arg) abort
       " execute on selected range
       " TODO: only support range when it makes sense to? ... or should we just allow it? Someone can always just use normal-mode if it fails
       execute "'<,'>" . def['exec']
+
     else
       execute def['exec']
     endif
@@ -274,6 +338,7 @@ function! s:MenuSink(mode, arg) abort
    execute after
   endif
 endfunction
+
 
 function! fuzzymenu#InsertModeIfNvim() abort
      if has("nvim")
@@ -324,6 +389,24 @@ function! fuzzymenu#Run(params) abort range
     \ 'source': s:MenuSource(mode),
     \ 'sink': function('s:MenuSink', [mode]),
     \ 'options': ['--ansi', '--header', ':: Fuzzymenu - fuzzy select an item. _Try "Operator"_']}
+  let opts[g:fuzzymenu_position] = g:fuzzymenu_size
+  let fullscreen = 0
+  if has_key(a:params, 'fullscreen')
+    let fullscreen = a:params['fullscreen']
+  endif
+  call fzf#run(fzf#wrap('fuzzymenu', opts, fullscreen))
+endfunction
+
+
+""
+" @public
+" Invoke fuzzymenu
+function! fuzzymenu#MapKey(params) abort range
+  let mode = 'n'
+  let opts = {
+    \ 'source': s:MenuSource(mode),
+    \ 'sink': function('s:MapKeySink', [mode]),
+    \ 'options': ['--ansi', '--header', ':: Fuzzymenu - fuzzy select an item in order to create a mapping']}
   let opts[g:fuzzymenu_position] = g:fuzzymenu_size
   let fullscreen = 0
   if has_key(a:params, 'fullscreen')
