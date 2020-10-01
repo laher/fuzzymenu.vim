@@ -1,4 +1,4 @@
-if exists('g:fuzzymenu_loaded')
+﻿if exists('g:fuzzymenu_loaded')
     finish
 endif
 let g:fuzzymenu_loaded = 1
@@ -144,6 +144,12 @@ call fuzzymenu#AddAll(ops,
 
 call fuzzymenu#Add('Operators (text objects and motions)', {
       \ 'exec': 'FzmOps'}, {
+      \ 'after': 'call fuzzymenu#InsertModeIfNvim()', 
+      \ 'tags': ['normal','fzm']
+      \})
+
+call fuzzymenu#Add('Apply setting', {
+      \ 'exec': 'call fuzzymenu#writingconfig#WriteSetting()'}, {
       \ 'after': 'call fuzzymenu#InsertModeIfNvim()', 
       \ 'tags': ['normal','fzm']
       \})

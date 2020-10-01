@@ -141,7 +141,7 @@ func! s:compare(i1, i2)
   return a:i1[0] == a:i2[0] ? 0 : a:i1[0] > a:i2[0] ? 1 : -1
 endfunc
 
-function! s:ShouldSkip(def, extension) abort
+function! s:ShouldSkip(def, extension, tags) abort
     if has_key(a:def, 'for')
       let conditions = a:def['for']
       if type(conditions) != type({})
@@ -164,15 +164,29 @@ function! s:ShouldSkip(def, extension) abort
     return 0
 endfunction
 
-function! s:MenuSource(currentMode) abort
-  let extension = expand("%:e")
+""
+" @public
+" Main source of menu items. Combine with a Sink
+function! fuzzymenu#MainSource(options) abort
+  let currentMode = 'n'
+  if has_key(a:options, 'mode')
+    let currentMode = a:options['mode']
+  endif
+  let extension = ''
+  if has_key(a:options, 'filetype')
+    let extension = a:options['filetype']
+  endif
+  let tags = []
+  if has_key(a:options, 'tags')
+    let tags = a:options['tags']
+  endif
   let ret = []
   let rows = []
   let width= winwidth(0) - (max([len(line('$')), &numberwidth-1]) + 1)
   for g in s:menuItems
     let gMetadata = g['metadata']
     let gItems = items(g['items'])
-    if s:ShouldSkip(gMetadata, extension)
+    if s:ShouldSkip(gMetadata, extension, tags)
       continue
     endif
     for i in gItems
@@ -185,7 +199,7 @@ function! s:MenuSource(currentMode) abort
       endif
       if has_key(def, 'modes')
         let modes = def['modes']
-        if  modes !~ a:currentMode
+        if  modes !~ currentMode
           " doesn't apply
           continue
         endif
@@ -228,69 +242,6 @@ function! s:MenuSource(currentMode) abort
   endfor
   call sort(ret)
   return ret
-endfunction
-
-function! s:MapKeySink(mode, arg) abort
-  let key = s:trim(split(a:arg, "\t")[0])
-  echom key
-  let found = 0
-  let def = {}
-  let gMeta = {}
-  for g in s:menuItems
-    let gItems = g['items']
-    for i in items(gItems)
-      let k = i[0]
-      let d = i[1]
-      let def = s:merge(g['metadata'], d)
-      if key == s:key(k, def)
-        let found = 1
-        break
-      endif
-    endfor
-    if found == 1
-      break
-    endif
-  endfor
-  if !found
-    echom printf("key '%s' not found!", key)
-    "TODO: error how?
-    return
-  endif
-
-  call inputsave()
-  let keys = input('Key mapping (e.g. '<leader>x'): ', '<leader>')
-  call inputrestore()
-
-  "" TODO vimrc file setting
-  let file = g:fuzzymenu_vim_config
-  execute 'e ' . file
-  execute 'normal! G$'
-
-  let mapping = ''
-  if has_key(def, 'exec')
-    if a:mode == 'v'
-      " execute on selected range
-      " TODO: only support range when it makes sense to? ... or should we just allow it? Someone can always just use normal-mode if it fails
-      let mapping = "vmap ".keys." :" . def['exec'] . "<CR>"
-    else
-      let mapping = "nmap ".keys." :" . def['exec'] . "<CR>"
-    endif
-  elseif has_key(def, 'normal')
-    " TODO: check mode?
-      echom "nmap XXX to " . def['normal']
-      let mapping = "nmap ".keys." " . def['normal']
-  else
-    echom "invalid key for fuzzymenu: " . key
-  endif
-  if has_key(def, 'after')
-   let after = def['after']
-   """ TODO ...  I think we can leave this out (only needed during an Fzm invocation)
-  endif
-  if mapping != ''
-    echo mapping
-    call append(line('$'), mapping) 
-    """ don't save. suggest
-  endif
 endfunction
 
 function! s:MenuSink(mode, arg) abort
@@ -384,9 +335,10 @@ function! fuzzymenu#Run(params) abort range
       let mode = 'v'
     endif
   endif
-
+  let filetype = expand("%:e")
+  let sourceOpts = {'mode': mode, 'filetype': filetype}
   let opts = {
-    \ 'source': s:MenuSource(mode),
+    \ 'source': fuzzymenu#MainSource(sourceOpts),
     \ 'sink': function('s:MenuSink', [mode]),
     \ 'options': ['--ansi', '--header', ':: Fuzzymenu - fuzzy select an item. _Try "Operator"_']}
   let opts[g:fuzzymenu_position] = g:fuzzymenu_size
@@ -397,23 +349,6 @@ function! fuzzymenu#Run(params) abort range
   call fzf#run(fzf#wrap('fuzzymenu', opts, fullscreen))
 endfunction
 
-
-""
-" @public
-" Invoke fuzzymenu
-function! fuzzymenu#MapKey(params) abort range
-  let mode = 'n'
-  let opts = {
-    \ 'source': s:MenuSource(mode),
-    \ 'sink': function('s:MapKeySink', [mode]),
-    \ 'options': ['--ansi', '--header', ':: Fuzzymenu - fuzzy select an item in order to create a mapping']}
-  let opts[g:fuzzymenu_position] = g:fuzzymenu_size
-  let fullscreen = 0
-  if has_key(a:params, 'fullscreen')
-    let fullscreen = a:params['fullscreen']
-  endif
-  call fzf#run(fzf#wrap('fuzzymenu', opts, fullscreen))
-endfunction
 
 function! s:get_color(attr, ...) abort
   let gui = has('termguicolors') && &termguicolors
