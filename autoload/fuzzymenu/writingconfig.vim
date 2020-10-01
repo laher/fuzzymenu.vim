@@ -141,10 +141,11 @@ let s:settings = {
 " @public
 " Invoke fuzzymenu to map a key
 function! fuzzymenu#writingconfig#WriteSetting() abort range
-  let mode = 'n'
+  let option_provided = 0
+  let option_val = ''
   let opts = {
     \ 'source': s:SettingsSource(),
-    \ 'sink': function('s:WriteSettingSink', [mode]),
+    \ 'sink': function('s:WriteSettingSink', [option_provided, option_val]),
     \ 'options': ['--ansi', '--header', ':: Fuzzymenu - fuzzy select an item in order to create a mapping']}
   let opts[g:fuzzymenu_position] = g:fuzzymenu_size
   let fullscreen = 0
@@ -177,55 +178,74 @@ function! s:SettingsSource() abort
   return settings
 endfunction
 
-function! s:WriteSettingSink(mode, arg) abort
+function! s:WriteSettingSink(option_provided, option_val, arg) abort
   let setting = split(a:arg, "\t")[0]
   if has_key(s:settings, setting)
     let key = setting
-    let val = s:settings[setting]
+    let def = s:settings[setting]
   elseif setting =~ '^no'
     let key = substitute(setting, '^no', '', '')
     if has_key(s:settings, key)
-      let val = s:settings[key]
+      let def = s:settings[key]
     endif
   endif
-  " TODO - search for
-  if has_key(val, 'no')
-    let search = '^set \(no\)\?' . key
-  else
-    let search = '^set ' . key
+  " search for existing string
+  if setting != ''
+    let ln = 'set ' . setting
+    if a:option_provided == 1
+      " don't present 'options' again
+      if a:option_val != ''
+        let ln = 'let ' . setting . '=' . a:option_val
+      endif
+    elseif has_key(def, 'options') 
+      " present options
+      let opts = {
+        \ 'source': def['options'],
+        \ 'sink': function('s:writeSettingWithOption', [key, 1]),
+        \ 'options': ['--ansi', '--header', ':: Fuzzymenu - fuzzy select an option for this setting']}
+      let opts[g:fuzzymenu_position] = g:fuzzymenu_size
+      let fullscreen = 0
+      call fzf#run(fzf#wrap('fuzzymenu', opts, fullscreen))
+      return
+    else
+    endif
+    call s:addConfig(ln, key, def)
   endif
-  echom search
+endfunction
 
+" switcharoo because of how fzf sinks work (last arg must be the fzf result)
+function s:writeSettingWithOption(key, option_provided, option_val)
+  call s:WriteSettingSink(a:option_provided, a:option_val, a:key)
+endfunction
+
+function s:addConfig(ln, key, def)
   let file = g:fuzzymenu_vim_config
   execute 'e ' . file
-  " TODO matching existing lines
-  
-  if setting != ''
-    let start = line('.')
-    let m = search(search)
-    echom m
-    if m
-      echom 'found'
-      execute 'normal! dd'
-    else
-      echom 'not found'
-      execute 'normal! G$'
-    endif
-
-    let ln = 'set ' . setting
-    if has_key(val, 'options')
-      " TODO present options
-      let ln = printf('let %s=%s', setting, val['options'][0])
-    endif
-    
-    call append(line('$'), ln) 
-    """ don't save. suggest
-    let auto_write = g:fuzzymenu_vim_config_auto_write
-    if auto_write == 1
-      execute 'w'
-      execute 'source '. file
-      echom 'file written'
-    endif
+  " match existing lines
+  if has_key(a:def, 'no')
+    let search = '^\(s\|l\)et \(no\)\?' . a:key
+  else
+    let search = '^\(s\|l\)et ' . a:key
+  endif
+  echom search
+  let start = line('.')
+  let m = search(search)
+  echom m
+  if m
+    echom 'found'
+    execute 'normal! dd'
+  else
+    echom 'not found'
+    execute 'normal! G$'
+  endif
+  call append(line('$'), a:ln) 
+  """ if not auto_write, don't save. suggest
+  let auto_write = g:fuzzymenu_vim_config_auto_write
+  if auto_write == 1
+    execute 'w'
+    let file = g:fuzzymenu_vim_config
+    execute 'source '. file
+    echom 'file written'
   endif
   execute 'normal! G$'
 endfunction
