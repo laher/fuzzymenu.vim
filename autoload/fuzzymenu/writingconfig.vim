@@ -80,23 +80,22 @@ function! s:MapKeySink(mode, arg) abort
 endfunction
 
 let s:settings = {
-      \ 'number': {'d': 'Show line numbers on the sidebar.'},
-      \ 'relativenumber': {'d': 'Show line number on the current line and relative numbers on all other lines.'},
-      \ 'nonumber': {'d': 'Remove line numbers'},
+      \ 'number': {'d': 'Show line numbers on the sidebar.', 'no': ['Show', 'Hide']},
+      \ 'relativenumber': {'d': 'Show line number on the current line and relative numbers on all other lines.', 'no': ['Show', 'Hide']},
       \ 'autoindent': {'d': 'New lines inherit the indentation of previous lines'},
       \ 'expandtab': {'d': 'Convert tabs to spaces.'},
       \ 'smarttab': {'d': 'Insert "tabstop" number of spaces when the “tab” key is pressed.'},
       \ 'hlsearch': {'d': 'Enable search highlighting.'},
-      \ 'ignorecase': {'d': 'Case-insensitive searching.'},
-      \ 'incsearch': {'d': 'Incremental search that shows partial matches.'},
-      \ 'smartcase': {'d': 'Automatically switch search to case-sensitive when search query contains an uppercase letter.'},
-      \ 'wrap': {'d': 'Enable line wrapping'},
-      \ 'ruler': {'d': 'Always show cursor position.'},
-      \ 'wildmenu': {'d': 'Display command line’s tab complete options as a menu.'},
-      \ 'cursorline': {'d': 'Highlight the line currently under cursor.'},
+      \ 'ignorecase': {'d': 'Case-insensitive searching.', 'no': ['insens','sens']},
+      \ 'incsearch': {'d': 'Incremental search (showing partial matches)', 'no': ['^','NOT ']},
+      \ 'smartcase': {'d': 'Automatically switch search to case-sensitive when search query contains an uppercase letter.', 'no': ['^','NOT ']},
+      \ 'wrap': {'d': 'Enable line wrapping', 'no': ['^','NOT ']},
+      \ 'ruler': {'d': 'Always show cursor position.', 'no': ['^','NOT ']},
+      \ 'wildmenu': {'d': 'Display command line’s tab complete options as a menu.', 'no': ['^','NOT ']},
+      \ 'cursorline': {'d': 'Highlight the line currently under cursor.', 'no': ['^', 'NOT ']},
       \ 'noerrorbells': {'d': 'Disable beep on errors.'},
-      \ 'visualbell': {'d': 'Flash the screen instead of beeping on errors.'},
-      \ 'g:fuzzymenu_vim_config_auto_write=1': {'d': 'Automatically write & reload vim config.'},
+      \ 'visualbell': {'d': 'Flash the screen instead of beeping on errors.', 'no': ['^', 'NOT ']},
+      \ 'g:fuzzymenu_vim_config_auto_write': {'d': 'Automatically write & reload vim config.', 'options': ['1', '0']},
       \ }
 " filetype indent on: Enable indentation rules that are file-type specific.
 " shiftround: When shifting lines, round the indentation to the nearest multiple of “shiftwidth.”
@@ -157,27 +156,69 @@ function! s:SettingsSource() abort
   for i in items(s:settings)
     let key = i[0]
     let val = i[1]
+    let note = ''
+    let description = val['d']
+    if has_key(val, 'options')
+      let note = printf(' (options: %s) ', val['options'])
+    endif
     let setter = 'set'
     if key =~ '^g:'
       let setter = 'let'
     endif
-    let setting = printf("%s %s\t %s", setter, key, val['d'])
+    let setting = printf("%s\t%s%s", key, note, description)
     call add(settings, setting)
+
+    if has_key(val, 'no')
+      let description = substitute(description, val['no'][0], val['no'][1], '')
+      let nosetting = printf("no%s\t%s", key, description)
+      call add(settings, nosetting)
+    endif
   endfor
   return settings
 endfunction
 
 function! s:WriteSettingSink(mode, arg) abort
   let setting = split(a:arg, "\t")[0]
+  if has_key(s:settings, setting)
+    let key = setting
+    let val = s:settings[setting]
+  elseif setting =~ '^no'
+    let key = substitute(setting, '^no', '', '')
+    if has_key(s:settings, key)
+      let val = s:settings[key]
+    endif
+  endif
+  " TODO - search for
+  if has_key(val, 'no')
+    let search = '^set \(no\)\?' . key
+  else
+    let search = '^set ' . key
+  endif
+  echom search
 
-  "" TODO vimrc file setting
   let file = g:fuzzymenu_vim_config
   execute 'e ' . file
-  execute 'normal! G$'
-
+  " TODO matching existing lines
+  
   if setting != ''
-    " echo setting
-    call append(line('$'), setting) 
+    let start = line('.')
+    let m = search(search)
+    echom m
+    if m
+      echom 'found'
+      execute 'normal! dd'
+    else
+      echom 'not found'
+      execute 'normal! G$'
+    endif
+
+    let ln = 'set ' . setting
+    if has_key(val, 'options')
+      " TODO present options
+      let ln = printf('let %s=%s', setting, val['options'][0])
+    endif
+    
+    call append(line('$'), ln) 
     """ don't save. suggest
     let auto_write = g:fuzzymenu_vim_config_auto_write
     if auto_write == 1
