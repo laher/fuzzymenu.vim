@@ -37,6 +37,11 @@ endif
 " Recommend using a secondary file, then including it from .vimrc
 let g:fuzzymenu_vim_config = get(g:, 'fuzzymenu_vim_config', fvc)
 
+" @setting fuzzymenu_auto_write
+" auto write config 
+" Recommend using a secondary file, then including it from .vimrc
+let g:fuzzymenu_vim_config_auto_write = get(g:, 'fuzzymenu_vim_config_auto_write', 0)
+
 ""
 " Open fuzzymenu in normal mode.
 " TODO: this is super slow when mapped... why?!
