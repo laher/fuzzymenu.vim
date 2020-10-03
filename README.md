@@ -191,11 +191,11 @@ From within your plugin, please use a central `plugin/*.vim` file to define file
 
 # Status, Plans & TODOs
 
-This is still very early.
+## Status
+Fuzzymenu is already meant to be useful but pretty early in terms of where I'd like it to go. **Some signatures and data structures may change, and documentation is incomplete.**
+It's alpha, and I'm working on it sporadically. Don't expect this to be 'Beta' in 2020. Maybe 2021.
 
-**Some signatures and data structures may change, and documentation is incomplete.**
-
-Some planned features:
+Some other planned features:
 
  * Menu Items:
   - [x] Interactive (2-step) normal mode commands (yank,delete,change,...) + motions/objects
@@ -203,9 +203,13 @@ Some planned features:
   - [ ] Macro support
   - [ ] Registers? (or maybe vim-peekaboo integration if it's too hard)
   - [ ] More LSP clients (coc, languageclient-neovim, ...)
-  - [ ] Some more 'vim fundamentals'
+  - [ ] visual mode & ranges - prompt how?
+  - [ ] writing config
  * UX
   * [ ] Per-menu-item help with `<c-h>` or something (maybe even a preview window?)
   * [ ] Probably redesign the layout of a line
-  * [ ] hook into vim gui menus with a single item
-  * [ ] Fancy prompt for ranges, etc?
+  * [ ] hook into vim gui menus (?)
+
+## Roadmap
+
+See [Project](https://github.com/laher/fuzzymenu.vim/projects/1)
