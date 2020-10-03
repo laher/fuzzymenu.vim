@@ -13,39 +13,21 @@ function! fuzzymenu#writingconfig#MapKey(params) abort range
   if has_key(a:params, 'fullscreen')
     let fullscreen = a:params['fullscreen']
   endif
-  call fuzzymenu#InsertModeIfNvim()
   call fzf#run(fzf#wrap('fuzzymenu', opts, fullscreen))
 endfunction
 
 function! s:MapKeySink(mode, arg) abort
-  let key = s:trim(split(a:arg, "\t")[0])
+  let key = fuzzymenu#Trim(split(a:arg, "\t")[0])
   echom key
-  let found = 0
-  let def = {}
-  let gMeta = {}
-  for g in s:menuItems
-    let gItems = g['items']
-    for i in items(gItems)
-      let k = i[0]
-      let d = i[1]
-      let def = s:merge(g['metadata'], d)
-      if key == s:key(k, def)
-        let found = 1
-        break
-      endif
-    endfor
-    if found == 1
-      break
-    endif
-  endfor
-  if !found
+  let def = fuzzymenu#Get(key)
+  if len(def) < 1
     echom printf("key '%s' not found!", key)
     "TODO: error how?
     return
   endif
 
   call inputsave()
-  let keys = input('Key mapping (e.g. '<leader>x'): ', '<leader>')
+  let keys = input('Key mapping (e.g. ''<leader>x''): ', '<leader>')
   call inputrestore()
 
   "" TODO vimrc file setting
@@ -154,7 +136,6 @@ function! fuzzymenu#writingconfig#WriteSetting() abort range
     \ 'options': ['--ansi', '--header', ':: Fuzzymenu - fuzzy select an item in order to create a mapping']}
   let opts[g:fuzzymenu_position] = g:fuzzymenu_size
   let fullscreen = 0
-  call fuzzymenu#InsertModeIfNvim()
   call fzf#run(fzf#wrap('fuzzymenu', opts, fullscreen))
 endfunction
 

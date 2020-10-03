@@ -70,6 +70,7 @@ if g:fuzzymenu_auto_add
 " vim-lsp mappings
 call fuzzymenu#AddAll({
       \ 'Go to definition': {'exec': 'LspDefinition'},
+      \ 'Show info': {'exec': 'LspHover'},
       \ 'Install language server': {'exec': 'LspInstallServer'},
       \ 'Find references': {'exec': 'LspReferences'},
       \ 'Rename': {'exec': 'LspRename'},
@@ -229,7 +230,7 @@ command! -bang -nargs=1 FzmOp call fuzzymenu#operatorpending#Run(<q-args>)
 
 ""
 " FzmMapKey launches a multi-step fzm sequence to map a key into your vim config
-command! -bang -nargs=0 FzmMapKey call fuzzymenu#MapKey({})
+command! -bang -nargs=0 FzmMapKey call fuzzymenu#writingconfig#MapKey({})
 
 ""
 " GGrep finds a file using git as a base dir

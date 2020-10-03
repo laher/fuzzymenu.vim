@@ -94,7 +94,7 @@ function! s:merge(defaults, override) abort
   return extend(copy(a:defaults), a:override)
 endfunction
 
-function! s:trim(input_string) abort
+function! fuzzymenu#Trim(input_string) abort
   if has('nvim') || v:versionlong >= 8001630
     return trim(a:input_string)
   else
@@ -103,7 +103,7 @@ function! s:trim(input_string) abort
 endfunction
 
 function fuzzymenu#Get(name) abort
-  let key = s:trim(split(a:name, "\t")[0])
+  let key = fuzzymenu#Trim(split(a:name, "\t")[0])
   for g in s:menuItems
     let gMetadata = items(g['metadata'])
     let gItems = items(g['items'])
@@ -245,7 +245,7 @@ function! fuzzymenu#MainSource(options) abort
 endfunction
 
 function! s:MenuSink(mode, arg) abort
-  let key = s:trim(split(a:arg, "\t")[0])
+  let key = fuzzymenu#Trim(split(a:arg, "\t")[0])
   let found = 0
   let def = {}
   let gMeta = {}
