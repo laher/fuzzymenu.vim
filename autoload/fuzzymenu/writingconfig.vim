@@ -80,12 +80,11 @@ let s:settings = {
       \ 'visualbell': {'d': 'Flash the screen instead of beeping on errors.', 'no': ['^', 'NOT ']},
       \ 'g:fuzzymenu_vim_config_auto_write': {'d': 'Automatically write & reload vim config.', 'options': [1, 0]},
       \ 'background': {'d': 'Notify vim about the background (of your terminal)', 'options': ['dark','light']},
+      \ 'shiftwidth': {'d': 'When shifting, indent using n spaces', 'value': 'numeric'},
+      \ 'tabstop': {'d': 'Indent using n spaces', 'value': 'numeric'},
+      \ 'colorscheme': {'d': 'Change color scheme', 'value': 'string'},
+      \ 'title': {'d': 'Change window title', 'value': 'string', 'write': 'no'},
       \ }
-
-      " \ 'shiftwidth': {'d': 'When shifting, indent using n spaces', 'value': 'numeric'},
-      " \ 'tabstop': {'d': 'Indent using n spaces', 'value': 'numeric'},
-      " \ 'colorscheme': {'d': 'Change color scheme', 'value': 'string'},
-      " \ 'title': {'d': 'Change window title', 'value': 'string', 'write': 'no'},
 " filetype indent on: Enable indentation rules that are file-type specific.
 " shiftround: When shifting lines, round the indentation to the nearest multiple of “shiftwidth.”
 " searching
@@ -167,6 +166,7 @@ endfunction
 
 function! s:WriteSettingSink(option_provided, option_val, arg) abort
   let setting = split(a:arg, "\t")[0]
+  " find setting in s:settings ...
   if has_key(s:settings, setting)
     let key = setting
     let def = s:settings[setting]
@@ -176,6 +176,7 @@ function! s:WriteSettingSink(option_provided, option_val, arg) abort
       let def = s:settings[key]
     endif
   endif
+
   " search for existing string
   if setting != ''
     let ln = 'set ' . setting
@@ -200,6 +201,13 @@ function! s:WriteSettingSink(option_provided, option_val, arg) abort
       let fullscreen = 0
       call fuzzymenu#InsertModeIfNvim()
       call fzf#run(fzf#wrap('fuzzymenu', opts, fullscreen))
+      return
+    elseif has_key(def, 'value') 
+      " free text box
+      call inputsave()
+      let option_val = input('Value for ' . key . ':')
+      call inputrestore()
+      call s:WriteSettingSink(1, option_val, a:arg)
       return
     else
     endif
