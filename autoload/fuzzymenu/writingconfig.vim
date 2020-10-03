@@ -13,6 +13,7 @@ function! fuzzymenu#writingconfig#MapKey(params) abort range
   if has_key(a:params, 'fullscreen')
     let fullscreen = a:params['fullscreen']
   endif
+  call fuzzymenu#InsertModeIfNvim()
   call fzf#run(fzf#wrap('fuzzymenu', opts, fullscreen))
 endfunction
 
@@ -95,12 +96,16 @@ let s:settings = {
       \ 'cursorline': {'d': 'Highlight the line currently under cursor.', 'no': ['^', 'NOT ']},
       \ 'noerrorbells': {'d': 'Disable beep on errors.'},
       \ 'visualbell': {'d': 'Flash the screen instead of beeping on errors.', 'no': ['^', 'NOT ']},
-      \ 'g:fuzzymenu_vim_config_auto_write': {'d': 'Automatically write & reload vim config.', 'options': ['1', '0']},
+      \ 'g:fuzzymenu_vim_config_auto_write': {'d': 'Automatically write & reload vim config.', 'options': [1, 0]},
+      \ 'background': {'d': 'Notify vim about the background (of your terminal)', 'options': ['dark','light']},
       \ }
+
+      " \ 'shiftwidth': {'d': 'When shifting, indent using n spaces', 'value': 'numeric'},
+      " \ 'tabstop': {'d': 'Indent using n spaces', 'value': 'numeric'},
+      " \ 'colorscheme': {'d': 'Change color scheme', 'value': 'string'},
+      " \ 'title': {'d': 'Change window title', 'value': 'string', 'write': 'no'},
 " filetype indent on: Enable indentation rules that are file-type specific.
 " shiftround: When shifting lines, round the indentation to the nearest multiple of “shiftwidth.”
-" shiftwidth=4: When shifting, indent using four spaces.
-" tabstop=4: Indent using four spaces.
 " searching
 "complete-=i: Limit the files searched for auto-completes.
 "lazyredraw: Don’t update screen during macro and script execution.
@@ -149,6 +154,7 @@ function! fuzzymenu#writingconfig#WriteSetting() abort range
     \ 'options': ['--ansi', '--header', ':: Fuzzymenu - fuzzy select an item in order to create a mapping']}
   let opts[g:fuzzymenu_position] = g:fuzzymenu_size
   let fullscreen = 0
+  call fuzzymenu#InsertModeIfNvim()
   call fzf#run(fzf#wrap('fuzzymenu', opts, fullscreen))
 endfunction
 
@@ -195,7 +201,13 @@ function! s:WriteSettingSink(option_provided, option_val, arg) abort
     if a:option_provided == 1
       " don't present 'options' again
       if a:option_val != ''
-        let ln = 'let ' . setting . '=' . a:option_val
+        if type(a:option_val) == 0 || type(a:option_val) == 5 " numeric types - int or float
+          let ln = 'let ' . setting . '=' . a:option_val
+        elseif type(a:option_val) == 1 " string
+          let ln = 'let ' . setting . '=''' . a:option_val . ''''
+        else
+          echom 'whoa, unsupported setting type (function/array/map). Ignoring value'
+        endif
       endif
     elseif has_key(def, 'options') 
       " present options
@@ -205,6 +217,7 @@ function! s:WriteSettingSink(option_provided, option_val, arg) abort
         \ 'options': ['--ansi', '--header', ':: Fuzzymenu - fuzzy select an option for this setting']}
       let opts[g:fuzzymenu_position] = g:fuzzymenu_size
       let fullscreen = 0
+      call fuzzymenu#InsertModeIfNvim()
       call fzf#run(fzf#wrap('fuzzymenu', opts, fullscreen))
       return
     else
