@@ -26,16 +26,6 @@ function! fuzzymenu#AddAll(items, metadata) abort
     return
   endif
   call add(s:menuItems, {'items': a:items, 'metadata': a:metadata})
-  " let kvPairs = items(a:items)
-  " for i in kvPairs
-  "   let name = i[0]
-  "   let v = i[1]
-  "   let def = copy(a:baseDef)
-  "   for j in items(v)
-  "     let def[j[0]] = j[1]
-  "   endfor
-  "   call fuzzymenu#Add(name, def)
-  " endfor
 endfunction
 
 let s:allowedDefKeys = ['exec', 'normal', 'hint']
@@ -168,21 +158,13 @@ endfunction
 " @public
 " Main source of menu items. Combine with a Sink
 function! fuzzymenu#MainSource(options) abort
-  let currentMode = 'n'
-  if has_key(a:options, 'mode')
-    let currentMode = a:options['mode']
-  endif
-  let extension = ''
-  if has_key(a:options, 'filetype')
-    let extension = a:options['filetype']
-  endif
-  let tags = []
-  if has_key(a:options, 'tags')
-    let tags = a:options['tags']
-  endif
+  let currentMode = has_key(a:options, 'mode') ?  a:options['mode'] : 'n'
+  let extension = has_key(a:options, 'filetype') ? a:options['filetype'] : ''
+  let tags = has_key(a:options, 'tags') ? a:options['tags'] : []
   let ret = []
   let rows = []
   let width= winwidth(0) - (max([len(line('$')), &numberwidth-1]) + 1)
+
   for g in s:menuItems
     let gMetadata = g['metadata']
     let gItems = items(g['items'])
@@ -193,10 +175,7 @@ function! fuzzymenu#MainSource(options) abort
       let k = i[0]
       let d = i[1]
       let def = s:merge(gMetadata, d)
-      let help = ''
-      if has_key(def, 'help')
-        let help = def['help']
-      endif
+      let help = has_key(def, 'help') ? def['help'] : ''
       if has_key(def, 'modes')
         let modes = def['modes']
         if  modes !~ currentMode
@@ -206,6 +185,7 @@ function! fuzzymenu#MainSource(options) abort
       endif
       let key = s:key(k, def)
 
+      " handle operation itself
       if has_key(def, 'exec')
         let cmd = has_key(def, 'hint') ? def['hint'] : def['exec']
         if cmd =~ '^call '
@@ -220,7 +200,6 @@ function! fuzzymenu#MainSource(options) abort
         " TODO: print error
         return []
       endif
-
       let mx = 0
       let row = [key, cmd]
       call add(rows, row)
@@ -248,7 +227,6 @@ function! s:MenuSink(mode, arg) abort
   let key = fuzzymenu#Trim(split(a:arg, "\t")[0])
   let found = 0
   let def = {}
-  let gMeta = {}
   for g in s:menuItems
     let gItems = g['items']
     for i in items(gItems)
