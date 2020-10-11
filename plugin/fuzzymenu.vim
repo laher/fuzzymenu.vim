@@ -155,7 +155,7 @@ call fuzzymenu#Add('Operators (text objects and motions)', {
       \})
 
 call fuzzymenu#Add('Apply setting', {
-      \ 'exec': 'call fuzzymenu#writingconfig#WriteSetting()'}, {
+      \ 'exec': 'call fuzzymenu#vimconfig#WriteSetting()'}, {
       \ 'after': 'call fuzzymenu#InsertModeIfNvim()', 
       \ 'tags': ['normal','fzm']
       \})
@@ -230,7 +230,7 @@ command! -bang -nargs=1 FzmOp call fuzzymenu#operatorpending#Run(<q-args>)
 
 ""
 " FzmMapKey launches a multi-step fzm sequence to map a key into your vim config
-command! -bang -nargs=0 FzmMapKey call fuzzymenu#writingconfig#MapKey({})
+command! -bang -nargs=0 FzmMapKey call fuzzymenu#vimconfig#MapKey({})
 
 ""
 " GGrep finds a file using git as a base dir

@@ -1,7 +1,7 @@
 ""
 " @public
 " Invoke fuzzymenu to map a key
-function! fuzzymenu#writingconfig#MapKey(params) abort range
+function! fuzzymenu#vimconfig#MapKey(params) abort range
   let mode = 'n'
   let filetype = expand("%:e")
   let opts = {
@@ -126,7 +126,7 @@ let s:settings = {
 ""
 " @public
 " Invoke fuzzymenu to map a key
-function! fuzzymenu#writingconfig#WriteSetting() abort range
+function! fuzzymenu#vimconfig#WriteSetting() abort range
   let option_provided = 0
   let option_val = ''
   let opts = {
