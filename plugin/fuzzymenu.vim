@@ -26,16 +26,18 @@ let g:fuzzymenu_position = get(g:, 'fuzzymenu_position', 'down')
 " Relative size of menu (default is '33%')
 let g:fuzzymenu_size = get(g:, 'fuzzymenu_size', '33%')
 
-let fvc = '~/.vimrc'
-if has('nvim')
-    let fvc = '~/.init.vim' 
-endif 
+let fvc = '~/.vimrc.fuzzymenu'
 
 ""
 " @setting fuzzymenu_vim_config
 " config file used for dynamically updating vim settings 
 " Recommend using a secondary file, then including it from .vimrc
 let g:fuzzymenu_vim_config = get(g:, 'fuzzymenu_vim_config', fvc)
+
+if filereadable(expand(g:fuzzymenu_vim_config))
+    """ echo "include fuzzymenu vim config: " . expand(g:fuzzymenu_vim_config)
+    exec 'source ' . expand(g:fuzzymenu_vim_config)
+endif
 
 " @setting fuzzymenu_auto_write
 " auto write config 

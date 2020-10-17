@@ -98,19 +98,38 @@ fuzzymenu comes with a GROWING list of menu items (please submit more via pull r
  * Various commands from fzm.vim.
  * Various LSP features (requires [vim-lsp](https://github.com/prabirshrestha/vim-lsp): go to definition/implementation/references. rename, format, organize imports).
  * Various git features (requires [fugitive](https://github.com/tpope/vim-fugitive) ).
- * Various go tools (requires [gothx.vim](https://github.com/laher/gothx.vim) ).
+ * Various go tools (requires [vim-go](https://github.com/fatih/vim-go) or [gothx.vim](https://github.com/laher/gothx.vim) ).
  * A few fundamentals: setting case-[in]sensitive searches, show/hiding line numbers and whitespace characters.
+ * Configuring vim itself (mapping keys; some common settings and options)
 
 | Area           | Dependencies   | Registered by fuzzymenu | Registered by dependency |
 |----------------|----------------|-------------------------|--------------------------|
 | fundamentals   | n/a            | [x]                     |                          |
+| operators & text objects | n/a  | [x]                     |                          |
+| vim config     | n/a            | [x]                     |                          |
 | FZF            | (fzf, fzf.vim) | [x]                     |                          |
 | LSP            | [vim-lsp](https://github.com/prabirshrestha/vim-lsp) | [x] |        |
-| Go             | [gothx](https://github.com/laher/gothx.vim)          |     | [x]    |
 | Go             | [vim-go](https://github.com/fatih/vim-go)            | [x] |        |
+| Go             | [gothx](https://github.com/laher/gothx.vim)          |     | [x]    |
 | git            | [fugitive](https://github.com/tpope/vim-fugitive)    | [x] |        |
 
 More to follow... _For example, I'm keen to support multiple providers for given features ... for LSP, this could include vim-lsp, coc.vim & languageclient-neovim. For Go, gothx.vim and vim-go._
+
+### Configuring vim with Fuzzymenu
+
+Fuzzymenu supplies some functionality to update your vim config. Fuzzymenu can add key mappings, and can update your general config
+
+ * This is powerful because it allows you to change your vim setup on-the-fly, as with a typical GUI text editor.
+ * _WARNING: but note - if you let fuzzymenu write your config, then please acknowledge that its's not a fool-proof system._
+   * Do not mix-and-match your hand-written config files with fuzzymenu's generated config.
+   * fuzzymenu matches and replaces text based on some rudimentary parsing (regexes). Don't let it edit a file containing any sophisticated viml, it could end up doing bad things to your vim.
+
+Approach:
+
+ * `fuzzymenu` updates a specific vim config file (called ~/.vimrc.fuzzymenu by default, but you can change it using `g:fuzzymenu_write_config`).
+ * fuzzymenu `source`s this file (you can source it yourself if you prefer from your `.vimrc`/`init.vim`, if you prefer)
+
+Note, you can disable fuzzymenu's writing of this file, by setting `set g:fuzzymenu_write_config_autowrite=0`
 
 ## Extend fuzzymenu.vim
 
