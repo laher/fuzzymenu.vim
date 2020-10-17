@@ -157,13 +157,11 @@ call fuzzymenu#Add('Operators (text objects and motions)', {
 call fuzzymenu#AddAll({
       \'Apply setting (persist)': { 'exec': 'call fuzzymenu#vimconfig#ApplySetting(1)'}, 
       \'Apply setting (temporary)': { 'exec': 'call fuzzymenu#vimconfig#ApplySetting(0)'}, 
+      \'Create a key mapping (persist)': { 'exec': 'call fuzzymenu#vimconfig#MapKey({})' },
       \ },
       \ { 'after': 'call fuzzymenu#InsertModeIfNvim()', 'tags': ['normal','fzm']})
 
 call fuzzymenu#Add('Put (paste)', {'normal': 'p'}, {'tags': ['normal']})
-
-"" FZM awesomesauce
-call fuzzymenu#Add('Create a key mapping', {'exec': 'FzmMapKey'}, {'tags':['normal','fzm'], 'after': 'call fuzzymenu#InsertModeIfNvim()'})
 
 """ fzf tools
 call fuzzymenu#AddAll({
