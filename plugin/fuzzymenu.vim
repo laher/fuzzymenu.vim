@@ -154,11 +154,11 @@ call fuzzymenu#Add('Operators (text objects and motions)', {
       \ 'tags': ['normal','fzm']
       \})
 
-call fuzzymenu#Add('Apply setting', {
-      \ 'exec': 'call fuzzymenu#vimconfig#WriteSetting()'}, {
-      \ 'after': 'call fuzzymenu#InsertModeIfNvim()', 
-      \ 'tags': ['normal','fzm']
-      \})
+call fuzzymenu#AddAll({
+      \'Apply setting (persist)': { 'exec': 'call fuzzymenu#vimconfig#ApplySetting(1)'}, 
+      \'Apply setting (temporary)': { 'exec': 'call fuzzymenu#vimconfig#ApplySetting(0)'}, 
+      \ },
+      \ { 'after': 'call fuzzymenu#InsertModeIfNvim()', 'tags': ['normal','fzm']})
 
 call fuzzymenu#Add('Put (paste)', {'normal': 'p'}, {'tags': ['normal']})
 

@@ -126,12 +126,12 @@ let s:settings = {
 ""
 " @public
 " Invoke fuzzymenu to map a key
-function! fuzzymenu#vimconfig#WriteSetting() abort range
+function! fuzzymenu#vimconfig#ApplySetting(write) abort range
   let option_provided = 0
   let option_val = ''
   let opts = {
     \ 'source': s:SettingsSource(),
-    \ 'sink': function('s:WriteSettingSink', [option_provided, option_val]),
+    \ 'sink': function('s:ApplySettingSink', [option_provided, option_val, a:write]),
     \ 'options': ['--ansi', '--header', ':: Fuzzymenu - fuzzy select an item in order to create a mapping']}
   let opts[g:fuzzymenu_position] = g:fuzzymenu_size
   let fullscreen = 0
@@ -164,7 +164,7 @@ function! s:SettingsSource() abort
   return settings
 endfunction
 
-function! s:WriteSettingSink(option_provided, option_val, arg) abort
+function! s:ApplySettingSink(option_provided, option_val, write, arg) abort
   let setting = split(a:arg, "\t")[0]
   " find setting in s:settings ...
   if has_key(s:settings, setting)
@@ -195,7 +195,7 @@ function! s:WriteSettingSink(option_provided, option_val, arg) abort
       " present options
       let opts = {
         \ 'source': def['options'],
-        \ 'sink': function('s:writeSettingWithOption', [key, 1]),
+        \ 'sink': function('s:ApplySettingWithOption', [key, 1, a:write]),
         \ 'options': ['--ansi', '--header', ':: Fuzzymenu - fuzzy select an option for this setting']}
       let opts[g:fuzzymenu_position] = g:fuzzymenu_size
       let fullscreen = 0
@@ -207,17 +207,22 @@ function! s:WriteSettingSink(option_provided, option_val, arg) abort
       call inputsave()
       let option_val = input('Value for ' . key . ':')
       call inputrestore()
-      call s:WriteSettingSink(1, option_val, a:arg)
+      call s:ApplySettingSink(1, option_val, a:write, a:arg)
       return
     else
     endif
-    call s:addConfig(ln, key, def)
+    if a:write
+      call s:addConfig(ln, key, def)
+    else
+      "" just call it
+      execute ':' . ln
+    endif
   endif
 endfunction
 
 " switcharoo because of how fzf sinks work (last arg must be the fzf result)
-function s:writeSettingWithOption(key, option_provided, option_val)
-  call s:WriteSettingSink(a:option_provided, a:option_val, a:key)
+function s:ApplySettingWithOption(key, option_provided, write, option_val)
+  call s:ApplySettingSink(a:option_provided, a:option_val, a:write, a:key)
 endfunction
 
 function s:addConfig(ln, key, def)
@@ -235,9 +240,11 @@ function s:addConfig(ln, key, def)
   echom m
   if m
     echom 'found'
+    """ delete line
     execute 'normal! dd'
   else
     echom 'not found'
+    """ navigate to end of file
     execute 'normal! G$'
   endif
   call append(line('$'), a:ln) 
@@ -249,5 +256,6 @@ function s:addConfig(ln, key, def)
     execute 'source '. file
     echom 'file written'
   endif
+  """ navigate to end of file
   execute 'normal! G$'
 endfunction
