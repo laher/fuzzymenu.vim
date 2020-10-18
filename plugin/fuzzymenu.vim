@@ -57,7 +57,7 @@ nnoremap <silent> <Plug>FzmOps :call fuzzymenu#operators#OperatorCommands()<cr>
 ""
 " Open fuzzymenu in normal mode.
 " TODO: this is super slow when mapped... why?!
-xnoremap <silent> <Plug>FzmVisual :call fuzzymenu#Run({'visual':1})<cr>
+xnoremap <silent> <Plug>FzmVisual :call fuzzymenu#RunVisual()<cr>
 
 ""
 " @setting g:fuzzymenu_auto_add
@@ -149,6 +149,18 @@ for i in items(fuzzymenu#operators#Get())
 endfor
 call fuzzymenu#AddAll(ops,
     \ {'after': 'call fuzzymenu#InsertModeIfNvim()', 'tags': ['normal','fzf']})
+
+let ops = {}
+for i in items(fuzzymenu#operators#Get())
+    let name = i[1]
+    let op = i[0]
+    "" remove 'g' prefix from uppercase/lowercase/format/...
+    let op = substitute(op, '^g', '', '')
+    let ops[name] = { 'visual': op }
+endfor
+
+call fuzzymenu#AddAll(ops,
+    \ {'tags': ['visual','fzf']})
 
 call fuzzymenu#Add('Operators (text objects and motions)', {
       \ 'exec': 'FzmOps'}, {
