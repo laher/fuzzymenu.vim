@@ -18,7 +18,6 @@ endfunction
 
 function! s:MapKeySink(mode, arg) abort
   let key = fuzzymenu#Trim(split(a:arg, "\t")[0])
-  echom key
   let def = fuzzymenu#Get(key)
   if len(def) < 1
     echom printf("key '%s' not found!", key)
@@ -53,12 +52,20 @@ function! s:MapKeySink(mode, arg) abort
   endif
   if has_key(def, 'after')
    let after = def['after']
-   """ TODO ...  I think we can leave this out (only needed during an Fzm invocation)
+   """ TODO ...  I think we can leave this out (normally only needed during an Fzm invocation)
   endif
   if mapping != ''
-    echo mapping
     call append(line('$'), mapping) 
-    """ don't save. suggest
+    """ if not auto_write, don't save. suggest
+    let auto_write = g:fuzzymenu_vim_config_auto_write
+    if auto_write == 1
+      execute 'w'
+      let file = g:fuzzymenu_vim_config
+      execute 'source '. file
+      echom 'file ' . file . ' written and re-sourced'
+    endif
+    """ navigate to end of file
+    execute 'normal! G$'
   endif
 endfunction
 
@@ -212,7 +219,7 @@ function! s:ApplySettingSink(option_provided, option_val, write, arg) abort
     else
     endif
     if a:write
-      call s:addConfig(ln, key, def)
+      call s:replaceConfigByKey(ln, key, def)
     else
       "" just call it
       execute ':' . ln
@@ -220,12 +227,14 @@ function! s:ApplySettingSink(option_provided, option_val, write, arg) abort
   endif
 endfunction
 
-" switcharoo because of how fzf sinks work (last arg must be the fzf result)
+""" switcharoo because of how fzf sinks work (last arg must be the fzf result)
 function s:ApplySettingWithOption(key, option_provided, write, option_val)
   call s:ApplySettingSink(a:option_provided, a:option_val, a:write, a:key)
 endfunction
 
-function s:addConfig(ln, key, def)
+
+""" replace an entry
+function s:replaceConfigByKey(ln, key, def)
   let file = g:fuzzymenu_vim_config
   execute 'e ' . file
   " match existing lines
@@ -234,12 +243,9 @@ function s:addConfig(ln, key, def)
   else
     let search = '^\(s\|l\)et ' . a:key
   endif
-  echom search
   let start = line('.')
   let m = search(search)
-  echom m
   if m
-    echom 'found'
     """ delete line
     execute 'normal! dd'
   else
@@ -254,7 +260,7 @@ function s:addConfig(ln, key, def)
     execute 'w'
     let file = g:fuzzymenu_vim_config
     execute 'source '. file
-    echom 'file written'
+    echom 'file ' . file . ' written and re-sourced'
   endif
   """ navigate to end of file
   execute 'normal! G$'

@@ -35,7 +35,7 @@ let fvc = '~/.vimrc.fuzzymenu'
 let g:fuzzymenu_vim_config = get(g:, 'fuzzymenu_vim_config', fvc)
 
 if filereadable(expand(g:fuzzymenu_vim_config))
-    """ echo "include fuzzymenu vim config: " . expand(g:fuzzymenu_vim_config)
+    """ re-interpret fuzzymenu vim config:
     exec 'source ' . expand(g:fuzzymenu_vim_config)
 endif
 
