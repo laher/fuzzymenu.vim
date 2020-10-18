@@ -26,16 +26,6 @@ function! fuzzymenu#AddAll(items, metadata) abort
     return
   endif
   call add(s:menuItems, {'items': a:items, 'metadata': a:metadata})
-  " let kvPairs = items(a:items)
-  " for i in kvPairs
-  "   let name = i[0]
-  "   let v = i[1]
-  "   let def = copy(a:baseDef)
-  "   for j in items(v)
-  "     let def[j[0]] = j[1]
-  "   endfor
-  "   call fuzzymenu#Add(name, def)
-  " endfor
 endfunction
 
 let s:allowedDefKeys = ['exec', 'normal', 'hint']
@@ -94,7 +84,7 @@ function! s:merge(defaults, override) abort
   return extend(copy(a:defaults), a:override)
 endfunction
 
-function! s:trim(input_string) abort
+function! fuzzymenu#Trim(input_string) abort
   if has('nvim') || v:versionlong >= 8001630
     return trim(a:input_string)
   else
@@ -103,7 +93,7 @@ function! s:trim(input_string) abort
 endfunction
 
 function fuzzymenu#Get(name) abort
-  let key = s:trim(split(a:name, "\t")[0])
+  let key = fuzzymenu#Trim(split(a:name, "\t")[0])
   for g in s:menuItems
     let gMetadata = items(g['metadata'])
     let gItems = items(g['items'])
@@ -141,7 +131,7 @@ func! s:compare(i1, i2)
   return a:i1[0] == a:i2[0] ? 0 : a:i1[0] > a:i2[0] ? 1 : -1
 endfunc
 
-function! s:ShouldSkip(def, extension) abort
+function! s:ShouldSkip(def, extension, tags) abort
     if has_key(a:def, 'for')
       let conditions = a:def['for']
       if type(conditions) != type({})
@@ -164,34 +154,38 @@ function! s:ShouldSkip(def, extension) abort
     return 0
 endfunction
 
-function! s:MenuSource(currentMode) abort
-  let extension = expand("%:e")
+""
+" @public
+" Main source of menu items. Combine with a Sink
+function! fuzzymenu#MainSource(options) abort
+  let currentMode = has_key(a:options, 'mode') ?  a:options['mode'] : 'n'
+  let extension = has_key(a:options, 'filetype') ? a:options['filetype'] : ''
+  let tags = has_key(a:options, 'tags') ? a:options['tags'] : []
   let ret = []
   let rows = []
   let width= winwidth(0) - (max([len(line('$')), &numberwidth-1]) + 1)
+
   for g in s:menuItems
     let gMetadata = g['metadata']
     let gItems = items(g['items'])
-    if s:ShouldSkip(gMetadata, extension)
+    if s:ShouldSkip(gMetadata, extension, tags)
       continue
     endif
     for i in gItems
       let k = i[0]
       let d = i[1]
       let def = s:merge(gMetadata, d)
-      let help = ''
-      if has_key(def, 'help')
-        let help = def['help']
-      endif
+      let help = has_key(def, 'help') ? def['help'] : ''
       if has_key(def, 'modes')
         let modes = def['modes']
-        if  modes !~ a:currentMode
+        if  modes !~ currentMode
           " doesn't apply
           continue
         endif
       endif
       let key = s:key(k, def)
 
+      " handle operation itself
       if has_key(def, 'exec')
         let cmd = has_key(def, 'hint') ? def['hint'] : def['exec']
         if cmd =~ '^call '
@@ -206,7 +200,6 @@ function! s:MenuSource(currentMode) abort
         " TODO: print error
         return []
       endif
-
       let mx = 0
       let row = [key, cmd]
       call add(rows, row)
@@ -231,10 +224,9 @@ function! s:MenuSource(currentMode) abort
 endfunction
 
 function! s:MenuSink(mode, arg) abort
-  let key = s:trim(split(a:arg, "\t")[0])
+  let key = fuzzymenu#Trim(split(a:arg, "\t")[0])
   let found = 0
   let def = {}
-  let gMeta = {}
   for g in s:menuItems
     let gItems = g['items']
     for i in items(gItems)
@@ -260,6 +252,7 @@ function! s:MenuSink(mode, arg) abort
       " execute on selected range
       " TODO: only support range when it makes sense to? ... or should we just allow it? Someone can always just use normal-mode if it fails
       execute "'<,'>" . def['exec']
+
     else
       execute def['exec']
     endif
@@ -274,6 +267,7 @@ function! s:MenuSink(mode, arg) abort
    execute after
   endif
 endfunction
+
 
 function! fuzzymenu#InsertModeIfNvim() abort
      if has("nvim")
@@ -319,9 +313,10 @@ function! fuzzymenu#Run(params) abort range
       let mode = 'v'
     endif
   endif
-
+  let filetype = expand("%:e")
+  let sourceOpts = {'mode': mode, 'filetype': filetype}
   let opts = {
-    \ 'source': s:MenuSource(mode),
+    \ 'source': fuzzymenu#MainSource(sourceOpts),
     \ 'sink': function('s:MenuSink', [mode]),
     \ 'options': ['--ansi', '--header', ':: Fuzzymenu - fuzzy select an item. _Try "Operator"_']}
   let opts[g:fuzzymenu_position] = g:fuzzymenu_size
@@ -331,6 +326,7 @@ function! fuzzymenu#Run(params) abort range
   endif
   call fzf#run(fzf#wrap('fuzzymenu', opts, fullscreen))
 endfunction
+
 
 function! s:get_color(attr, ...) abort
   let gui = has('termguicolors') && &termguicolors

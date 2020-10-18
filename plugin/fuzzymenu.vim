@@ -1,4 +1,4 @@
-if exists('g:fuzzymenu_loaded')
+﻿if exists('g:fuzzymenu_loaded')
     finish
 endif
 let g:fuzzymenu_loaded = 1
@@ -25,6 +25,24 @@ let g:fuzzymenu_position = get(g:, 'fuzzymenu_position', 'down')
 " @setting fuzzymenu_size
 " Relative size of menu (default is '33%')
 let g:fuzzymenu_size = get(g:, 'fuzzymenu_size', '33%')
+
+let fvc = '~/.vimrc.fuzzymenu'
+
+""
+" @setting fuzzymenu_vim_config
+" config file used for dynamically updating vim settings 
+" Recommend using a secondary file, then including it from .vimrc
+let g:fuzzymenu_vim_config = get(g:, 'fuzzymenu_vim_config', fvc)
+
+if filereadable(expand(g:fuzzymenu_vim_config))
+    """ re-interpret fuzzymenu vim config:
+    exec 'source ' . expand(g:fuzzymenu_vim_config)
+endif
+
+" @setting fuzzymenu_auto_write
+" auto write config 
+" Recommend using a secondary file, then including it from .vimrc
+let g:fuzzymenu_vim_config_auto_write = get(g:, 'fuzzymenu_vim_config_auto_write', 1)
 
 ""
 " Open fuzzymenu in normal mode.
@@ -54,6 +72,7 @@ if g:fuzzymenu_auto_add
 " vim-lsp mappings
 call fuzzymenu#AddAll({
       \ 'Go to definition': {'exec': 'LspDefinition'},
+      \ 'Show info': {'exec': 'LspHover'},
       \ 'Install language server': {'exec': 'LspInstallServer'},
       \ 'Find references': {'exec': 'LspReferences'},
       \ 'Rename': {'exec': 'LspRename'},
@@ -130,11 +149,19 @@ for i in items(fuzzymenu#operators#Get())
 endfor
 call fuzzymenu#AddAll(ops,
     \ {'after': 'call fuzzymenu#InsertModeIfNvim()', 'tags': ['normal','fzf']})
+
 call fuzzymenu#Add('Operators (text objects and motions)', {
       \ 'exec': 'FzmOps'}, {
       \ 'after': 'call fuzzymenu#InsertModeIfNvim()', 
-      \ 'tags': ['normal','fzf']
+      \ 'tags': ['normal','fzm']
       \})
+
+call fuzzymenu#AddAll({
+      \'Apply setting (persist)': { 'exec': 'call fuzzymenu#vimconfig#ApplySetting(1)'}, 
+      \'Apply setting (temporary)': { 'exec': 'call fuzzymenu#vimconfig#ApplySetting(0)'}, 
+      \'Create a key mapping (persist)': { 'exec': 'call fuzzymenu#vimconfig#MapKey({})' },
+      \ },
+      \ { 'after': 'call fuzzymenu#InsertModeIfNvim()', 'tags': ['normal','fzm']})
 
 call fuzzymenu#Add('Put (paste)', {'normal': 'p'}, {'tags': ['normal']})
 
@@ -202,12 +229,16 @@ command! -bang -nargs=0 FzmOps call fuzzymenu#operators#OperatorCommands()
 command! -bang -nargs=1 FzmOp call fuzzymenu#operatorpending#Run(<q-args>)
 
 ""
+" FzmMapKey launches a multi-step fzm sequence to map a key into your vim config
+command! -bang -nargs=0 FzmMapKey call fuzzymenu#vimconfig#MapKey({})
+
+""
 " GGrep finds a file using git as a base dir
 " GGrep runs fzf#vim#grep with git-grep. This is recommended in fzf docs
 command! -bang -nargs=* GGrep
-\ call fzf#vim#grep(
-\   'git grep --line-number '.shellescape(<q-args>), 0,
-\   fzf#vim#with_preview({ 'dir': systemlist('git rev-parse --show-toplevel')[0] }), <bang>0)
+  \ call fzf#vim#grep(
+  \   'git grep --line-number -- '.shellescape(<q-args>), 0,
+  \   fzf#vim#with_preview({ 'dir': systemlist('git rev-parse --show-toplevel')[0] }), <bang>0)
 
 
 " restore Vi compatibility settings
