@@ -8,7 +8,6 @@ function! fuzzymenu#vimconfig#MapKey(params) abort range
     \ 'source': fuzzymenu#MainSource({'mode': mode, 'filetype': filetype}),
     \ 'sink': function('s:MapKeySink', [mode]),
     \ 'options': ['--ansi', '--header', ':: Fuzzymenu - fuzzy select an item in order to create a mapping']}
-  let opts[g:fuzzymenu_position] = g:fuzzymenu_size
   let fullscreen = 0
   if has_key(a:params, 'fullscreen')
     let fullscreen = a:params['fullscreen']
@@ -140,7 +139,6 @@ function! fuzzymenu#vimconfig#ApplySetting(write) abort range
     \ 'source': s:SettingsSource(),
     \ 'sink': function('s:ApplySettingSink', [option_provided, option_val, a:write]),
     \ 'options': ['--ansi', '--header', ':: Fuzzymenu - fuzzy select an item in order to create a mapping']}
-  let opts[g:fuzzymenu_position] = g:fuzzymenu_size
   let fullscreen = 0
   call fzf#run(fzf#wrap('fuzzymenu', opts, fullscreen))
 endfunction
@@ -204,7 +202,6 @@ function! s:ApplySettingSink(option_provided, option_val, write, arg) abort
         \ 'source': def['options'],
         \ 'sink': function('s:ApplySettingWithOption', [key, 1, a:write]),
         \ 'options': ['--ansi', '--header', ':: Fuzzymenu - fuzzy select an option for this setting']}
-      let opts[g:fuzzymenu_position] = g:fuzzymenu_size
       let fullscreen = 0
       call fuzzymenu#InsertModeIfNvim()
       call fzf#run(fzf#wrap('fuzzymenu', opts, fullscreen))

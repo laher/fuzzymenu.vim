@@ -22,11 +22,6 @@ See also, |fzf|
 ==============================================================================
 CONFIGURATION                                           *fuzzymenu.vim-config*
 
-                                                        *g:fuzzymenu_position*
-Position of the fuzzymenu (using fzf positions down/up/left/right)
-
-                                                            *g:fuzzymenu_size*
-Relative size of menu (default is '33%')
 
                                                         *g:fuzzymenu_auto_add*
 Automatically add menu items. Note: I'll break these up in future into several

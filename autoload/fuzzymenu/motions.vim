@@ -41,7 +41,6 @@ function! fuzzymenu#motions#Run(operator, multiplier) abort
     \ 'sink': function('s:MotionsSink'),
     \ 'options': ['--ansi',
     \   '--header', ':: choose a motion'],
-    \ g:fuzzymenu_position : g:fuzzymenu_size,
   \ }
   call fzf#run(fzf#wrap('fzm#Motions', opts, 0))
 endfunction

@@ -319,7 +319,6 @@ function! fuzzymenu#Run(params) abort range
     \ 'source': fuzzymenu#MainSource(sourceOpts),
     \ 'sink': function('s:MenuSink', [mode]),
     \ 'options': ['--ansi', '--header', ':: Fuzzymenu - fuzzy select an item. _Try "Operator"_']}
-  let opts[g:fuzzymenu_position] = g:fuzzymenu_size
   let fullscreen = 0
   if has_key(a:params, 'fullscreen')
     let fullscreen = a:params['fullscreen']

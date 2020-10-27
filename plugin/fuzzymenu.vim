@@ -16,16 +16,6 @@ set cpo&vim
 "
 " See also, |fzf|
 
-""
-" @setting fuzzymenu_position
-" Position of the fuzzymenu (using fzf positions down/up/left/right)
-let g:fuzzymenu_position = get(g:, 'fuzzymenu_position', 'down')
-
-""
-" @setting fuzzymenu_size
-" Relative size of menu (default is '33%')
-let g:fuzzymenu_size = get(g:, 'fuzzymenu_size', '33%')
-
 let fvc = '~/.vimrc.fuzzymenu'
 
 ""

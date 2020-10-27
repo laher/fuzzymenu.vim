@@ -10,7 +10,6 @@ function! fuzzymenu#textobjects#Run(operator, category) abort
     \ 'sink': function('s:TextObjectsSink'),
     \ 'options': ['--ansi',
     \   '--header', ':: choose a text object'],
-    \ g:fuzzymenu_position : g:fuzzymenu_size,
   \ }
   call fzf#run(fzf#wrap('fzm#TextObjects', opts, 0))
 endfunction
@@ -21,7 +20,6 @@ function! fuzzymenu#textobjects#Curated(operator) abort
     \ 'source': s:TextObjectsCuratedSource(a:operator),
     \ 'sink': function('s:TextObjectsSinkCurated', [a:operator]),
     \ 'options': '--ansi',
-    \ g:fuzzymenu_position : g:fuzzymenu_size,
   \ }
   call fzf#run(fzf#wrap('fzm#TextObjects', opts, 0))
 endfunction
