@@ -34,13 +34,13 @@ Plug 'junegunn/fzf.vim'
 Plug 'laher/fuzzymenu.vim'
 ```
 
-Then, for convenience, a mapping such as `<Leader><Leader>`, `<Leader>m`, or `<c-p>`:
+Then, for convenience, a mapping starting with Ctrl key is preferable, as it works in different modes
 
 ```vim
-  nmap <Leader><Leader> :call fuzzymenu#Run({})<cr>
+  nmap <C-Space> :call fuzzymenu#Run({})<cr>
+  vmap <C-Space> :call fuzzymenu#RunVisual()<cr>
 ```
 
- * By default, the leader key is mapped to `\`. (I map leader to ' ': `mapleader=' '`)
  * _The fzf plugin itself depends on a binary file `fzf`. If you don't have it already, `:call fzf#install()` (or see fzf docs)._
 
 ## Usage
