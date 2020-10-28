@@ -264,11 +264,12 @@ function! s:MenuSink(mode, fl, ll, arg) abort
     return
   endif
   if has_key(def, 'exec')
-    if a:mode == 'v'
+    if a:mode == 'v' || a:mode == 'V' || a:mode == '^V'
       " execute on selected range
-      " TODO: only support range when it makes sense to? ... or should we just allow it? Someone can always just use normal-mode if it fails
+      " This will only be executed for entries explicitly tagged as 'visual'
       execute "'<,'>" . def['exec']
     else
+      echom a:mode
       execute def['exec']
     endif
   elseif has_key(def, 'normal')

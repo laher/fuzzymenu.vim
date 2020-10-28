@@ -97,7 +97,7 @@ call fuzzymenu#AddAll({
     \ 'for': {'exists': 'g:loaded_fugitive'}})
 " this one is also tagged github
 call fuzzymenu#Add('Browse to file/selection', {'exec': 'GBrowse'}, { 
-    \ 'after': 'call fuzzymenu#InsertModeIfNvim()', 'tags': ['git', 'github'],
+    \ 'after': 'call fuzzymenu#InsertModeIfNvim()', 'tags': ['git', 'github', 'visual'],
     \ 'for': {'exists': 'g:loaded_fugitive'}})
 
 
