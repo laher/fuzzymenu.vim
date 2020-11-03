@@ -83,6 +83,19 @@ call fuzzymenu#AddAll({
     \ {'tags': ['lsp', 'vim-lsp'],
     \ 'for': {'exists': 'g:lsp_loaded'}})
 
+" coc-nvim mappings
+call fuzzymenu#AddAll({
+      \ 'Go to definition': {'exec': 'call CocActionAsync("jumpDefinition")'},
+      \ 'Show info': {'exec': 'CocInfo'},
+      \ 'Install language server': {'exec': 'CocInstall'},
+      \ 'Find references': {'exec': 'call CocActionSync("jumpReferences")'},
+      \ 'Rename': {'exec': 'CocRename'},
+      \ 'Organize imports': {'exec': 'CocCommand editor.action.organizeImport'},
+      \ 'Go to implementation': {'exec': 'call CocActionAsync("jumpImplementation")'},
+    \ },
+    \ {'tags': ['lsp', 'coc'],
+    \ 'for': {'exists': 'g:coc_enabled'}})
+
 " fuzzymenu
 " git mappings
 call fuzzymenu#AddAll({
