@@ -57,7 +57,7 @@ nnoremap <silent> <Plug>FzmOps :call fuzzymenu#operators#OperatorCommands()<cr>
 ""
 " Open fuzzymenu in normal mode.
 " TODO: this is super slow when mapped... why?!
-xnoremap <silent> <Plug>FzmVisual :call fuzzymenu#Run({'visual':1})<cr>
+xnoremap <silent> <Plug>FzmVisual :call fuzzymenu#RunVisual()<cr>
 
 ""
 " @setting g:fuzzymenu_auto_add
@@ -83,6 +83,19 @@ call fuzzymenu#AddAll({
     \ {'tags': ['lsp', 'vim-lsp'],
     \ 'for': {'exists': 'g:lsp_loaded'}})
 
+" coc-nvim mappings
+call fuzzymenu#AddAll({
+      \ 'Go to definition': {'exec': 'call CocActionAsync("jumpDefinition")'},
+      \ 'Show info': {'exec': 'CocInfo'},
+      \ 'Install language server': {'exec': 'CocInstall'},
+      \ 'Find references': {'exec': 'call CocActionSync("jumpReferences")'},
+      \ 'Rename': {'exec': 'CocRename'},
+      \ 'Organize imports': {'exec': 'CocCommand editor.action.organizeImport'},
+      \ 'Go to implementation': {'exec': 'call CocActionAsync("jumpImplementation")'},
+    \ },
+    \ {'tags': ['lsp', 'coc'],
+    \ 'for': {'exists': 'g:coc_enabled'}})
+
 " fuzzymenu
 " git mappings
 call fuzzymenu#AddAll({
@@ -97,7 +110,7 @@ call fuzzymenu#AddAll({
     \ 'for': {'exists': 'g:loaded_fugitive'}})
 " this one is also tagged github
 call fuzzymenu#Add('Browse to file/selection', {'exec': 'GBrowse'}, { 
-    \ 'after': 'call fuzzymenu#InsertModeIfNvim()', 'tags': ['git', 'github'],
+    \ 'after': 'call fuzzymenu#InsertModeIfNvim()', 'tags': ['git', 'github', 'visual'],
     \ 'for': {'exists': 'g:loaded_fugitive'}})
 
 
@@ -149,6 +162,18 @@ for i in items(fuzzymenu#operators#Get())
 endfor
 call fuzzymenu#AddAll(ops,
     \ {'after': 'call fuzzymenu#InsertModeIfNvim()', 'tags': ['normal','fzf']})
+
+let ops = {}
+for i in items(fuzzymenu#operators#Get())
+    let name = i[1]
+    let op = i[0]
+    "" remove 'g' prefix from uppercase/lowercase/format/...
+    let op = substitute(op, '^g', '', '')
+    let ops[name] = { 'visual': op }
+endfor
+
+call fuzzymenu#AddAll(ops,
+    \ {'tags': ['visual','fzf']})
 
 call fuzzymenu#Add('Operators (text objects and motions)', {
       \ 'exec': 'FzmOps'}, {

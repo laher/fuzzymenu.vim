@@ -28,8 +28,8 @@ function! fuzzymenu#AddAll(items, metadata) abort
   call add(s:menuItems, {'items': a:items, 'metadata': a:metadata})
 endfunction
 
-let s:allowedDefKeys = ['exec', 'normal', 'hint']
-let s:requiredDefKeys = ['exec', 'normal']
+let s:allowedDefKeys = ['exec', 'normal', 'hint', 'visual']
+let s:requiredDefKeys = ['exec', 'normal', 'visual']
 function! s:validate(name, def) abort
   let ks = keys(a:def)
   let found = 0
@@ -151,6 +151,19 @@ function! s:ShouldSkip(def, extension, tags) abort
         endif
       endif
     endif
+    if len(a:tags)
+      "" skip unless this item has a matching tag
+      if has_key(a:def, 'tags')
+        for i in a:def['tags']
+          for j in a:tags
+            if i == j
+              return 0
+            endif
+          endfor
+        endfor
+      endif
+      return 1
+    endif
     return 0
 endfunction
 
@@ -196,6 +209,9 @@ function! fuzzymenu#MainSource(options) abort
       elseif has_key(def, 'normal')
         let cmd = has_key(def, 'hint') ? def['hint'] : def['normal']
         let cmd = s:color('cyan', 'normal: ') . cmd
+      elseif has_key(def, 'visual')
+        let cmd = has_key(def, 'hint') ? def['hint'] : def['visual']
+        let cmd = s:color('cyan', 'visual: ') . cmd
       else
         " TODO: print error
         return []
@@ -223,7 +239,7 @@ function! fuzzymenu#MainSource(options) abort
   return ret
 endfunction
 
-function! s:MenuSink(mode, arg) abort
+function! s:MenuSink(mode, fl, ll, arg) abort
   let key = fuzzymenu#Trim(split(a:arg, "\t")[0])
   let found = 0
   let def = {}
@@ -248,17 +264,21 @@ function! s:MenuSink(mode, arg) abort
     return
   endif
   if has_key(def, 'exec')
-    if a:mode == 'v'
+    if a:mode == 'v' || a:mode == 'V' || a:mode == '^V'
       " execute on selected range
-      " TODO: only support range when it makes sense to? ... or should we just allow it? Someone can always just use normal-mode if it fails
+      " This will only be executed for entries explicitly tagged as 'visual'
       execute "'<,'>" . def['exec']
-
     else
+      echom a:mode
       execute def['exec']
     endif
   elseif has_key(def, 'normal')
-    " TODO: check mode?
     call feedkeys(def['normal'])
+  elseif has_key(def, 'visual')
+    " note: don't even try to enter the _actual mode_.
+    " gv seems to work for V and ^V (but gV/g^V don't)
+    execute 'normal! gv'
+    call feedkeys(def['visual'] . "\<CR>")
   else
     echo "invalid key for fuzzymenu: " . key
   endif
@@ -267,7 +287,6 @@ function! s:MenuSink(mode, arg) abort
    execute after
   endif
 endfunction
-
 
 function! fuzzymenu#InsertModeIfNvim() abort
      if has("nvim")
@@ -303,28 +322,44 @@ function! fuzzymenu#GitGrepUnderCursor()
 \   fzf#vim#with_preview({ 'dir': systemlist('git rev-parse --show-toplevel')[0] }), 0)
 endfunction
 
+function! fuzzymenu#RunVisual() abort range
+  call fuzzymenu#Run({'visual': 1, 'mode': visualmode(), 'firstline': a:firstline, 'lastline': a:lastline})
+endfunction
+
 ""
 " @public
 " Invoke fuzzymenu
-function! fuzzymenu#Run(params) abort range
+function! fuzzymenu#Run(params) abort
   let mode = 'n'
+  let visual = 0
+  let tags = []
+  let firstline = 0
+  let lastline = 0
   if has_key(a:params, 'visual')
+    " echo a:params
     if a:params['visual'] == 1
-      let mode = 'v'
+      let visual = a:params['visual']
+      let mode = a:params['mode']
+      let firstline = a:params['firstline']
+      let lastline = a:params['lastline']
+      call add(tags, 'visual')
     endif
   endif
+  if has_key(a:params, 'tags')
+    let tags = tags + a:params['tags']
+  endif
   let filetype = expand("%:e")
-  let sourceOpts = {'mode': mode, 'filetype': filetype}
+  let sourceOpts = {'mode': mode, 'filetype': filetype, 'tags': tags}
   let opts = {
     \ 'source': fuzzymenu#MainSource(sourceOpts),
-    \ 'sink': function('s:MenuSink', [mode]),
+    \ 'sink': function('s:MenuSink', [mode, firstline, lastline]),
     \ 'options': ['--ansi', '--header', ':: Fuzzymenu - fuzzy select an item. _Try "Operator"_']}
   let opts[g:fuzzymenu_position] = g:fuzzymenu_size
   let fullscreen = 0
   if has_key(a:params, 'fullscreen')
     let fullscreen = a:params['fullscreen']
   endif
-  call fzf#run(fzf#wrap('fuzzymenu', opts, fullscreen))
+  return fzf#run(fzf#wrap('fuzzymenu', opts, fullscreen))
 endfunction
 
 

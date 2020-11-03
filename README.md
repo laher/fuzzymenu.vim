@@ -34,13 +34,13 @@ Plug 'junegunn/fzf.vim'
 Plug 'laher/fuzzymenu.vim'
 ```
 
-Then, for convenience, a mapping such as `<Leader><Leader>`, `<Leader>m`, or `<c-p>`:
+Then, for convenience, a mapping starting with Ctrl key is preferable, as it works in different modes
 
 ```vim
-  nmap <Leader><Leader> :call fuzzymenu#Run({})<cr>
+  nmap <C-Space> :call fuzzymenu#Run({})<cr>
+  vmap <C-Space> :call fuzzymenu#RunVisual()<cr>
 ```
 
- * By default, the leader key is mapped to `\`. (I map leader to ' ': `mapleader=' '`)
  * _The fzf plugin itself depends on a binary file `fzf`. If you don't have it already, `:call fzf#install()` (or see fzf docs)._
 
 ## Usage
@@ -96,7 +96,9 @@ fuzzymenu comes with a GROWING list of menu items (please submit more via pull r
 
  * Some interactive helpers for normal-mode commands & text-objects (yank, delete, change some text).
  * Various commands from fzm.vim.
- * Various LSP features (requires [vim-lsp](https://github.com/prabirshrestha/vim-lsp): go to definition/implementation/references. rename, format, organize imports).
+ * Various LSP features (requires one of these):
+   * [vim-lsp](https://github.com/prabirshrestha/vim-lsp): go to definition/implementation/references. rename, format, organize imports).
+   * [Coc.nvim](https://github.com/neoclide/coc.nvim): similar to vim-lsp
  * Various git features (requires [fugitive](https://github.com/tpope/vim-fugitive) ).
  * Various go tools (requires [vim-go](https://github.com/fatih/vim-go) or [gothx.vim](https://github.com/laher/gothx.vim) ).
  * A few fundamentals: setting case-[in]sensitive searches, show/hiding line numbers and whitespace characters.
@@ -108,7 +110,7 @@ fuzzymenu comes with a GROWING list of menu items (please submit more via pull r
 | operators & text objects | n/a  | [x]                     |                          |
 | vim config     | n/a            | [x]                     |                          |
 | FZF            | (fzf, fzf.vim) | [x]                     |                          |
-| LSP            | [vim-lsp](https://github.com/prabirshrestha/vim-lsp) | [x] |        |
+| LSP            | [vim-lsp](https://github.com/prabirshrestha/vim-lsp) OR [Coc.nvim](https://github.com/neoclide/coc.nvim) | [x] |        |
 | Go             | [vim-go](https://github.com/fatih/vim-go)            | [x] |        |
 | Go             | [gothx](https://github.com/laher/gothx.vim)          |     | [x]    |
 | git            | [fugitive](https://github.com/tpope/vim-fugitive)    | [x] |        |
