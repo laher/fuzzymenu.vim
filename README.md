@@ -96,7 +96,9 @@ fuzzymenu comes with a GROWING list of menu items (please submit more via pull r
 
  * Some interactive helpers for normal-mode commands & text-objects (yank, delete, change some text).
  * Various commands from fzm.vim.
- * Various LSP features (requires [vim-lsp](https://github.com/prabirshrestha/vim-lsp): go to definition/implementation/references. rename, format, organize imports).
+ * Various LSP features (requires one of these):
+   * [vim-lsp](https://github.com/prabirshrestha/vim-lsp): go to definition/implementation/references. rename, format, organize imports).
+   * [Coc.nvim](https://github.com/neoclide/coc.nvim): similar to vim-lsp
  * Various git features (requires [fugitive](https://github.com/tpope/vim-fugitive) ).
  * Various go tools (requires [vim-go](https://github.com/fatih/vim-go) or [gothx.vim](https://github.com/laher/gothx.vim) ).
  * A few fundamentals: setting case-[in]sensitive searches, show/hiding line numbers and whitespace characters.
@@ -108,7 +110,7 @@ fuzzymenu comes with a GROWING list of menu items (please submit more via pull r
 | operators & text objects | n/a  | [x]                     |                          |
 | vim config     | n/a            | [x]                     |                          |
 | FZF            | (fzf, fzf.vim) | [x]                     |                          |
-| LSP            | [vim-lsp](https://github.com/prabirshrestha/vim-lsp) | [x] |        |
+| LSP            | [vim-lsp](https://github.com/prabirshrestha/vim-lsp) OR [Coc.nvim](https://github.com/neoclide/coc.nvim) | [x] |        |
 | Go             | [vim-go](https://github.com/fatih/vim-go)            | [x] |        |
 | Go             | [gothx](https://github.com/laher/gothx.vim)          |     | [x]    |
 | git            | [fugitive](https://github.com/tpope/vim-fugitive)    | [x] |        |
