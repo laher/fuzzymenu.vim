@@ -46,18 +46,15 @@ let g:fuzzymenu_vim_config_auto_write = get(g:, 'fuzzymenu_vim_config_auto_write
 
 ""
 " Open fuzzymenu in normal mode.
-" TODO: this is super slow when mapped... why?!
-nnoremap <silent> <Plug>Fzm :call fuzzymenu#Run({})<cr>
+nnoremap <silent> <Plug>(Fzm) :call fuzzymenu#Run({})<cr>
 
 ""
 " Open fuzzymenu's guided operators menu.
-" TODO: this is super slow when mapped... why?!
-nnoremap <silent> <Plug>FzmOps :call fuzzymenu#operators#OperatorCommands()<cr>
+nnoremap <silent> <Plug>(FzmOps) :call fuzzymenu#operators#OperatorCommands()<cr>
 
 ""
 " Open fuzzymenu in normal mode.
-" TODO: this is super slow when mapped... why?!
-xnoremap <silent> <Plug>FzmVisual :call fuzzymenu#RunVisual()<cr>
+xnoremap <silent> <Plug>(FzmVisual) :call fuzzymenu#RunVisual()<cr>
 
 ""
 " @setting g:fuzzymenu_auto_add
@@ -227,12 +224,12 @@ endif
 "
 " @section Mappings, mappings
 " There are one normal-mode mapping, "<Leader><Leader>" to invoke fuzzymenu
-" if !hasmapto('<Plug>Fzm', 'n')
-"    nmap <Leader><Leader> <Plug>Fzm
+" if !hasmapto('<Plug>(Fzm)', 'n')
+"    nmap <Leader><Leader> <Plug>(Fzm)
 " endif
 
-" if !hasmapto('<Plug>Fzm', 'v')
-"    xmap <Leader><Leader> <Plug>FzmVisual
+" if !hasmapto('<Plug>(Fzm)', 'v')
+"    xmap <Leader><Leader> <Plug>(FzmVisual)
 " endif
 
 " endif
