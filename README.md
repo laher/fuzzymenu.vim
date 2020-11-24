@@ -37,8 +37,8 @@ Plug 'laher/fuzzymenu.vim'
 Then, for convenience, a mapping starting with Ctrl key is preferable, as it works in different modes
 
 ```vim
-  nmap <C-Space> :call fuzzymenu#Run({})<cr>
-  vmap <C-Space> :call fuzzymenu#RunVisual()<cr>
+  nmap <silent> <C-space> <Plug>(Fzm)
+  vmap <silent> <C-space> <Plug>(FzmVisual)
 ```
 
  * _The fzf plugin itself depends on a binary file `fzf`. If you don't have it already, `:call fzf#install()` (or see fzf docs)._
