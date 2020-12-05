@@ -185,9 +185,11 @@ function! fuzzymenu#MainSource(options) abort
       endif
     endif
   endif
-  "" adjust based on ''
+  "" adjust based on 'max line length'
   let width= width - (max([len(line('$')), &numberwidth-1]) + 1)
 
+  let g:fuzzymenu_width_adjust = get(g:, 'fuzzymenu_width_adjust', 0)
+  let width = width + g:fuzzymenu_width_adjust
 
   for g in s:menuItems
     let gMetadata = g['metadata']
