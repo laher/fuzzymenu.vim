@@ -23,6 +23,12 @@ let fvc = '~/.vimrc.fuzzymenu'
 " config file used for dynamically updating vim settings 
 " Recommend using a secondary file, then including it from .vimrc
 let g:fuzzymenu_vim_config = get(g:, 'fuzzymenu_vim_config', fvc)
+  
+""
+" @setting fuzzymenu_align_adjust
+" Adjust alignment of right-aligned text
+" Use a negative number to adjust leftwards
+let g:fuzzymenu_align_adjust = get(g:, 'fuzzymenu_align_adjust', 0)
 
 if filereadable(expand(g:fuzzymenu_vim_config))
     """ re-interpret fuzzymenu vim config:
