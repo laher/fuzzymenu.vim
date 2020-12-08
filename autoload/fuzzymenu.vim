@@ -290,13 +290,13 @@ endfunction
 
 function! fuzzymenu#InsertModeIfNvim() abort
      if has("nvim")
-       call feedkeys('i')
+       startinsert
      endif
 endfunction
 
 function! fuzzymenu#InsertMode() abort
      if has("nvim")
-       call feedkeys('i')
+       startinsert
      else
        startinsert
      endif
