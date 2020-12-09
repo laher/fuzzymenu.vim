@@ -67,6 +67,7 @@ fuzzymenu uses the `fzf` user interface.
  * Use Up/Down arrows (or k/j), to select the item you want.
  * Press Enter to select the item, which _may_ be another fzf entry, in some cases.
  * To cancel, `Esc`/`Ctrl-C`/`:q` to cancel.
+ * fuzzymenu now respects `g:fzf_layout`. Note that not all layouts play nicely with fuzzymenu's alignment. If your `fzf_layout` doesn't seem to suit fuzzymenu, try configuring the numeric `g:fuzzymenu_align_adjust`, to adjust the right-aligned commands to the left (use a negative number) or right (a number greater than 0).
 
 #### 2b. Fuzzymenu specifics:
 
