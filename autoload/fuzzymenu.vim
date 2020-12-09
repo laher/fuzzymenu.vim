@@ -366,10 +366,14 @@ function! fuzzymenu#Run(params) abort
   endif
   let filetype = expand("%:e")
   let sourceOpts = {'mode': mode, 'filetype': filetype, 'tags': tags}
+  let options = ['--ansi', '--header', ':: Fuzzymenu - fuzzy select an item. _Try "Operator"_']
+  if s:has_fzm_preview()
+    let options = options + ['--preview', 'showy vim:help --piper bat -f 1 -k {}']
+  endif
   let opts = {
     \ 'source': fuzzymenu#MainSource(sourceOpts),
     \ 'sink': function('s:MenuSink', [mode, firstline, lastline]),
-    \ 'options': ['--ansi', '--header', ':: Fuzzymenu - fuzzy select an item. _Try "Operator"_']}
+    \ 'options': options}
   let fullscreen = 0
   if has_key(a:params, 'fullscreen')
     let fullscreen = a:params['fullscreen']
@@ -377,6 +381,9 @@ function! fuzzymenu#Run(params) abort
   return fzf#run(fzf#wrap('fuzzymenu', opts, fullscreen))
 endfunction
 
+function! s:has_fzm_preview() abort
+  return executable('fzmpreview')
+endfunction
 
 function! s:get_color(attr, ...) abort
   let gui = has('termguicolors') && &termguicolors
