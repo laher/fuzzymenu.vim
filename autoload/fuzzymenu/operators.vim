@@ -22,7 +22,6 @@ function! fuzzymenu#operators#OperatorCommands() abort
     \ 'source': s:OperatorsSource(),
     \ 'sink': function('s:OperatorsSink'),
     \ 'options': '--ansi',
-    \ g:fuzzymenu_position : g:fuzzymenu_size,
   \ }
   call fzf#run(fzf#wrap('fzm#operators#OperatorCommands', opts, 0))
 endfunction

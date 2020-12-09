@@ -28,7 +28,6 @@ function! fuzzymenu#operatorpending#Run(operator) abort
     \ 'sink': function('s:OperatorPendingSink', [a:operator]),
     \ 'options': ['--ansi',
     \   '--header', ':: choose a text object, motion, or multiplier'],
-    \ g:fuzzymenu_position : g:fuzzymenu_size,
   \ }
   call fzf#run(fzf#wrap('fzm#OperatorPending', opts, 0))
 endfunction

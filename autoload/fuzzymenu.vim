@@ -176,7 +176,19 @@ function! fuzzymenu#MainSource(options) abort
   let tags = has_key(a:options, 'tags') ? a:options['tags'] : []
   let ret = []
   let rows = []
-  let width= winwidth(0) - (max([len(line('$')), &numberwidth-1]) + 1)
+  let width = winwidth(0)
+  """ adjust width for windows
+  if exists('g:fzf_layout')
+    if has_key(g:fzf_layout, 'window')
+      if has_key(g:fzf_layout['window'], 'width')
+        let width = g:fzf_layout['window']['width'] * width
+      endif
+    endif
+  endif
+  "" adjust based on 'max line length'
+  let width= width - (max([len(line('$')), &numberwidth-1]) + 1)
+  let g:fuzzymenu_align_adjust = get(g:, 'fuzzymenu_align_adjust', 0)
+  let width = width + g:fuzzymenu_align_adjust
 
   for g in s:menuItems
     let gMetadata = g['metadata']
@@ -224,7 +236,7 @@ function! fuzzymenu#MainSource(options) abort
 
   "" handle whitespace indentation
   for i in rows
-    let gap=width-len(i[0])-25
+    let gap=float2nr(width)-len(i[0])-25
     if gap<6
       let gap=6
     endif
@@ -358,7 +370,6 @@ function! fuzzymenu#Run(params) abort
     \ 'source': fuzzymenu#MainSource(sourceOpts),
     \ 'sink': function('s:MenuSink', [mode, firstline, lastline]),
     \ 'options': ['--ansi', '--header', ':: Fuzzymenu - fuzzy select an item. _Try "Operator"_']}
-  let opts[g:fuzzymenu_position] = g:fuzzymenu_size
   let fullscreen = 0
   if has_key(a:params, 'fullscreen')
     let fullscreen = a:params['fullscreen']
