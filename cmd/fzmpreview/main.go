@@ -25,6 +25,7 @@ type VimHelpCmd struct {
 	options     *Options
 	Piper       string `long:"piper" description:"pipe output through an external command" default:""`
 	RuntimePath string `short:"r" long:"vimruntime" description:"path of runtime" default:"/usr/share/vim/vim82"`
+	PluginBase  string `long:"pluginbase" description:"path where plugins are installed"`
 	MaxLines    int    `short:"l" long:"max-lines" description:"most lines to display" default:"20"`
 	Format      int    `short:"f" long:"format" description:"format of incoming data. 0=key-only,1=fuzzymenu-style"`
 	Key         string `short:"k" long:"key" description:"Key of help item" required:"yes"`
@@ -97,11 +98,24 @@ func (c *VimHelpCmd) Execute(args []string) error {
 	}
 	docDirs := []string{
 		filepath.Join(c.RuntimePath, "doc"),
-		// todo load from runtimepath. Some test ones for now
-		filepath.Join(homeDir, ".vim", "plugged", "fzf", "doc"),
-		filepath.Join(homeDir, ".vim", "plugged", "fzf.vim", "doc"),
-		filepath.Join(homeDir, ".vim", "plugged", "vim-go", "doc"),
-		filepath.Join(homeDir, ".vim", "plugged", "coc.nvim", "doc"),
+		// ~todo (see below)~ load from runtimepath. Some test ones for now
+		// filepath.Join(homeDir, ".vim", "plugged", "fzf", "doc"),
+		// filepath.Join(homeDir, ".vim", "plugged", "fzf.vim", "doc"),
+		// filepath.Join(homeDir, ".vim", "plugged", "vim-go", "doc"),
+		// filepath.Join(homeDir, ".vim", "plugged", "coc.nvim", "doc"),
+	}
+	if c.PluginBase != "" {
+		gl := c.PluginBase + "/*/doc"
+		if strings.HasPrefix(gl, "~") {
+			gl = homeDir + gl[1:]
+		}
+		matches, err := filepath.Glob(gl)
+		if err != nil {
+			// fmt.Println("glob error ", err)
+			// skip plugins
+		} else {
+			docDirs = append(docDirs, matches...)
+		}
 	}
 	for _, docDir := range docDirs {
 		tagsFile := filepath.Join(docDir, "tags")

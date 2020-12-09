@@ -368,7 +368,12 @@ function! fuzzymenu#Run(params) abort
   let sourceOpts = {'mode': mode, 'filetype': filetype, 'tags': tags}
   let options = ['--ansi', '--header', ':: Fuzzymenu - fuzzy select an item. _Try "Operator"_']
   if s:has_fzm_preview()
-    let options = options + ['--preview', 'showy vim:help --piper bat -f 1 -k {}']
+    let pluginbase = ''
+    """ TODO other plugin managers
+    if &runtimepath =~ ".vim/plugged"
+      let pluginbase = '--pluginbase "~/.vim/plugged"'
+    endif
+    let options = options + ['--preview', 'fzmpreview vim:help '.pluginbase.'--piper bat -f 1 -k {}']
   endif
   let opts = {
     \ 'source': fuzzymenu#MainSource(sourceOpts),
