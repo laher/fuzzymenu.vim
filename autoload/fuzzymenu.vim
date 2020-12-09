@@ -289,14 +289,18 @@ function! s:MenuSink(mode, fl, ll, arg) abort
 endfunction
 
 function! fuzzymenu#InsertModeIfNvim() abort
-     if has("nvim")
-       startinsert
+     if has("nvim-0.5")
+         startinsert
+     elseif has("nvim")
+         call feedkeys('i')
      endif
 endfunction
 
 function! fuzzymenu#InsertMode() abort
-     if has("nvim")
-       startinsert
+     if has("nvim-0.5")
+         startinsert
+     elseif has("nvim")
+         call feedkeys('i')
      else
        startinsert
      endif
