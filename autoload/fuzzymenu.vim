@@ -7,13 +7,43 @@ set cpo&vim
 " each item should be {'items': [{'key':'x', 'exec':'y'}], 'metadata': {}}
 let s:menuItems = []
 
+" must be executed outside of a function call
+let s:is_win = has('win32') || has('win64')
+if s:is_win && &shellslash
+  set noshellslash
+  let s:base_dir = expand('<sfile>:h:h')
+  set shellslash
+else
+  let s:base_dir = expand('<sfile>:h:h')
+endif
+
 ""
 " @public
-" @usage {items} {baseDef}
+" @usage 
+" Install fuzzymenu dependencies for better features 
+function! fuzzymenu#Install()
+  if !executable('go')
+    throw 'fuzzymenu tooling _currently_ relies on golang for installation. Please install go if you like the latest goodness'
+  endif
+  let script = 'cd ' . s:base_dir . ' && go install ./...'
+  echom 'Installing fuzzymenu tooling with: ' . script
+  call system(script)
+  if v:shell_error
+    throw 'Failed to install fuzzymenu tooling: '.v:shell_error
+  endif
+  if !executable('fzmpreview')
+    throw 'Failed to install fuzzymenu tooling. fzmpreview not found on path'
+  endif
+  echom 'Install complete'
+endfunction
+
+""
+" @public
+" @usage {items} {metadata}
 " Add several menu items to fuzzymenu. {items} is a dict of names and defs.
-" {baseDef} is a dict to combine with each item
+" {metadata} is a dict to combine with each item
 " (see Add()).
-" {baseDef} is a dict with common members
+" {metadata} is a dict with common members
 function! fuzzymenu#AddAll(items, metadata) abort
   for i in items(a:items)
     if !s:validate(i[0], i[1])
