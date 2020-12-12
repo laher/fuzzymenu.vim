@@ -7,16 +7,6 @@ set cpo&vim
 " each item should be {'items': [{'key':'x', 'exec':'y'}], 'metadata': {}}
 let s:menuItems = []
 
-" must be executed outside of a function call
-let s:is_win = has('win32') || has('win64')
-if s:is_win && &shellslash
-  set noshellslash
-  let s:base_dir = expand('<sfile>:h:h')
-  set shellslash
-else
-  let s:base_dir = expand('<sfile>:h:h')
-endif
-
 ""
 " @public
 " @usage 
