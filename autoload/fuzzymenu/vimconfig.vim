@@ -1,6 +1,6 @@
 ""
 " @public
-" Invoke fuzzymenu to map a key
+" Invoke fuzzymenu to map a key (first use fzf UI to select a feature to map)
 function! fuzzymenu#vimconfig#MapKey(params) abort range
   let mode = 'n'
   let filetype = expand("%:e")
@@ -13,6 +13,11 @@ function! fuzzymenu#vimconfig#MapKey(params) abort range
     let fullscreen = a:params['fullscreen']
   endif
   call fzf#run(fzf#wrap('fuzzymenu', opts, fullscreen))
+endfunction
+
+" map a key, for a pre-selected fuzzymenu entry
+function! fuzzymenu#vimconfig#MapKeyTo(arg) abort
+  call s:MapKeySink('n', a:arg)
 endfunction
 
 function! s:MapKeySink(mode, arg) abort

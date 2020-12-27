@@ -288,8 +288,25 @@ function! fuzzymenu#MainSource(options) abort
   return ret
 endfunction
 
-function! s:MenuSink(mode, fl, ll, arg) abort
-  let key = fuzzymenu#Trim(split(a:arg, "\t")[0])
+function! s:MenuSink(sinkOpts, arg) abort
+  let mode = a:sinkOpts['mode']
+  let fl = a:sinkOpts['firstline']
+  let ll = a:sinkOpts['lastline']
+  let action = ''
+  if has_key(a:sinkOpts, 'actions')
+    if len(a:arg) < 2
+      return
+    endif
+    let action_key = remove(a:arg, 0)
+    let action_val = get(a:sinkOpts['actions'], action_key, '')
+    if action_val != ''
+      call call(action_val, [a:arg[0]])
+      return
+    endif
+  endif
+  " only one arg expected (this sink is not compatible with 'multi')
+  let parts = split(a:arg[0], "\t")
+  let key = fuzzymenu#Trim(parts[0])
   let found = 0
   let def = {}
   for g in s:menuItems
@@ -313,12 +330,12 @@ function! s:MenuSink(mode, fl, ll, arg) abort
     return
   endif
   if has_key(def, 'exec')
-    if a:mode == 'v' || a:mode == 'V' || a:mode == '^V'
+    if mode == 'v' || mode == 'V' || mode == '^V'
       " execute on selected range
       " This will only be executed for entries explicitly tagged as 'visual'
       execute "'<,'>" . def['exec']
     else
-      echom a:mode
+      echom mode
       execute def['exec']
     endif
   elseif has_key(def, 'normal')
@@ -383,18 +400,16 @@ endfunction
 " @public
 " Invoke fuzzymenu
 function! fuzzymenu#Run(params) abort
-  let mode = 'n'
   let visual = 0
   let tags = []
-  let firstline = 0
-  let lastline = 0
+  let sinkOpts = {'mode': 'n', 'firstline': 0, 'lastline': 0}
   if has_key(a:params, 'visual')
     " echo a:params
     if a:params['visual'] == 1
-      let visual = a:params['visual']
-      let mode = a:params['mode']
-      let firstline = a:params['firstline']
-      let lastline = a:params['lastline']
+      let visual = 1
+      let sinkOpts['mode'] = a:params['mode']
+      let sinkOpts['firstline'] = a:params['firstline']
+      let sinkOpts['lastline'] = a:params['lastline']
       call add(tags, 'visual')
     endif
   endif
@@ -402,21 +417,33 @@ function! fuzzymenu#Run(params) abort
     let tags = tags + a:params['tags']
   endif
   let filetype = expand("%:e")
-  let sourceOpts = {'mode': mode, 'filetype': filetype, 'tags': tags}
+  let sourceOpts = {'mode': sinkOpts['mode'], 'filetype': filetype, 'tags': tags}
   let options = ['--ansi', '--header', ':: Fuzzymenu - fuzzy select an item. _Try "Operator"_']
+
   if s:has_fzm_preview()
     let pluginbase = ''
     """ TODO other plugin managers
     if &runtimepath =~ ".vim/plugged"
       let pluginbase = '--pluginbase "~/.vim/plugged"'
     endif
+    " TODO - different actions? 
+    " should we always support ctrl-t? 
+    " should we have some defaults like fzf?
+    let sinkOpts['actions'] = {'ctrl-t': 'fuzzymenu#vimconfig#MapKeyTo'}
+    let options = options + ['--expect', 'ctrl-t']
     let options = options + ['--preview', 'fzmpreview vim:help '.pluginbase.'--piper bat -f 1 -k {}']
     let sourceOpts['indent'] = 0
   endif
+  "" sinkOpts is not a fzf option. It's for use by the opts.sink function, below
   let opts = {
     \ 'source': fuzzymenu#MainSource(sourceOpts),
-    \ 'sink': function('s:MenuSink', [mode, firstline, lastline]),
+    \ 'sinkOpts': sinkOpts, 
     \ 'options': options}
+  function! opts.sink(lines)
+    return s:MenuSink(self.sinkOpts, a:lines)
+  endfunction
+  " sink* is to process all lines at once. This is important for --expect and 'actions'
+  let opts['sink*'] = remove(opts, 'sink')
   let fullscreen = 0
   if has_key(a:params, 'fullscreen')
     let fullscreen = a:params['fullscreen']
