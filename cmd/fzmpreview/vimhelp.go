@@ -36,6 +36,7 @@ func (c *VimHelpCmd) Execute(args []string) error {
 		return err
 	}
 	k := c.Key
+
 	switch c.Format {
 	case 1:
 		// from fuzzymenu (or similar)
@@ -58,10 +59,15 @@ func (c *VimHelpCmd) Execute(args []string) error {
 				break
 			}
 		}
-		fmt.Fprintln(out, green("%s\n", parts[1]))
+		fmt.Fprintln(out, green("%s", parts[1]))
 	default:
-		fmt.Fprintln(out, green("%s\n", k))
+		fmt.Fprintln(out, green("%s", k))
 	}
+	// help
+	// TODO: should we provide some other options here? Maybe 'tips'?
+	fmt.Fprintln(out, magenta("%s", "** Press Ctrl-T to map a key to this feature **"))
+	fmt.Fprintln(out)
+
 	// bang isn't usually part of the key
 	if strings.HasSuffix(k, "!") {
 		k = k[:len(k)-1]
@@ -71,13 +77,9 @@ func (c *VimHelpCmd) Execute(args []string) error {
 	if err == nil {
 		homeDir = u.HomeDir
 	}
+	// TODO find vim8 'pack' plugins?
 	docDirs := []string{
 		filepath.Join(c.RuntimePath, "doc"),
-		// ~todo (see below)~ load from runtimepath. Some test ones for now
-		// filepath.Join(homeDir, ".vim", "plugged", "fzf", "doc"),
-		// filepath.Join(homeDir, ".vim", "plugged", "fzf.vim", "doc"),
-		// filepath.Join(homeDir, ".vim", "plugged", "vim-go", "doc"),
-		// filepath.Join(homeDir, ".vim", "plugged", "coc.nvim", "doc"),
 	}
 	if c.PluginBase != "" {
 		gl := c.PluginBase + "/*/doc"
@@ -148,7 +150,6 @@ func (c *VimHelpCmd) Execute(args []string) error {
 			}
 		}
 	}
-	// TODO: check runtimepath segments for 'doc' files
 	fmt.Fprintln(out, "no 'help' found")
 	return nil
 }
