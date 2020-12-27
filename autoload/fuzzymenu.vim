@@ -152,9 +152,11 @@ endfunction
 function s:colorizeTags(key)
     let parts = split(a:key, "[")
     if len(parts)>1
-      let parts[1] = s:color('cyan', parts[1])
+      let parts2 = split(parts[1], "]")
+      let tags = s:color('green', parts2[0])
+      return parts[0] . '[' . tags . ']' 
     endif
-    return join(parts, "[")
+    return a:key
 endfunction
 
 func! s:compare(i1, i2)
@@ -204,6 +206,7 @@ function! fuzzymenu#MainSource(options) abort
   let currentMode = has_key(a:options, 'mode') ?  a:options['mode'] : 'n'
   let extension = has_key(a:options, 'filetype') ? a:options['filetype'] : ''
   let tags = has_key(a:options, 'tags') ? a:options['tags'] : []
+  let indent = has_key(a:options, 'indent') ? a:options['indent'] : 1
   let ret = []
   let rows = []
   let width = winwidth(0)
@@ -266,12 +269,16 @@ function! fuzzymenu#MainSource(options) abort
 
   "" handle whitespace indentation
   for i in rows
-    let gap=float2nr(width)-len(i[0])-25
-    if gap<6
-      let gap=6
-    endif
-    let l = repeat(' ', gap-5)
-    if l == ''
+    if indent == 1
+      let gap=float2nr(width)-len(i[0])-25
+      if gap<6
+        let gap=6
+      endif
+      let l = repeat(' ', gap-5)
+      if l == ''
+        let l = ' '
+      endif
+    else
       let l = ' '
     endif
     let line = printf("%s".l."\t%s", s:colorizeTags(i[0]), i[1])
@@ -404,6 +411,7 @@ function! fuzzymenu#Run(params) abort
       let pluginbase = '--pluginbase "~/.vim/plugged"'
     endif
     let options = options + ['--preview', 'fzmpreview vim:help '.pluginbase.'--piper bat -f 1 -k {}']
+    let sourceOpts['indent'] = 0
   endif
   let opts = {
     \ 'source': fuzzymenu#MainSource(sourceOpts),
