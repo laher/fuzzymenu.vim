@@ -82,7 +82,7 @@ call fuzzymenu#AddAll({
       \ 'Show info': {'exec': 'CocInfo'},
       \ 'Install language server': {'exec': 'CocInstall'},
       \ 'Find references': {'exec': 'call CocActionSync("jumpReferences")'},
-      \ 'Rename': {'exec': 'CocRename'},
+      \ 'Rename': {'exec': 'call CocActionAsync("rename")'},
       \ 'Organize imports': {'exec': 'CocCommand editor.action.organizeImport'},
       \ 'Go to implementation': {'exec': 'call CocActionAsync("jumpImplementation")'},
     \ },
